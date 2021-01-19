@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Copyright (C) 2021 Filip Szymański <fszymanski.pl@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
