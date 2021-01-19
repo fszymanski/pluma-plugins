@@ -1,0 +1,9 @@
+[Plugin]
+Loader=python3
+Module=joinlines
+IAge=3
+Name=Join Lines
+Description=Join selected lines
+Authors=Filip Szymański <fszymanski.pl@gmail.com>
+Copyright=Copyright © 2021 Filip Szymański
+Website=https://github.com/fszymanski/pluma-plugins
