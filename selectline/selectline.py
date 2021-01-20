@@ -15,7 +15,6 @@
 #
 
 import gi
-
 gi.require_version('Gtk', '3.0')
 
 from gi.repository import GObject, Gtk, Peas
@@ -55,7 +54,7 @@ class SelectLinePlugin(GObject.Object, Peas.Activatable):
         manager = self.window.get_ui_manager()
 
         action = Gtk.Action.new('SelectLine', _('Select Line'))
-        action.connect('activate', lambda _: self.on_select_line())
+        action.connect('activate', lambda _: self.select_line())
 
         self.action_group = Gtk.ActionGroup.new('SelectLinePluginActions')
         self.action_group.add_action_with_accel(action, '<Ctrl>l')
@@ -69,7 +68,10 @@ class SelectLinePlugin(GObject.Object, Peas.Activatable):
         manager.remove_action_group(self.action_group)
         manager.ensure_update()
 
-    def on_select_line(self):
+    def do_update_state(self):
+        pass
+
+    def select_line(self):
         doc = self.window.get_active_document()
         if doc is None:
             return

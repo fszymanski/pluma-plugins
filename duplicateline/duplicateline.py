@@ -15,7 +15,6 @@
 #
 
 import gi
-
 gi.require_version('Gtk', '3.0')
 
 from gi.repository import GObject, Gtk, Peas
@@ -55,7 +54,7 @@ class DuplicateLinePlugin(GObject.Object, Peas.Activatable):
         manager = self.window.get_ui_manager()
 
         action = Gtk.Action.new('DuplicateLine', _('Duplicate Line/Selection'))
-        action.connect('activate', lambda _: self.on_duplicate_line())
+        action.connect('activate', lambda _: self.duplicate_line())
 
         self.action_group = Gtk.ActionGroup.new('DuplicateLinePluginActions')
         self.action_group.add_action_with_accel(action, '<Ctrl><Shift>D')
@@ -69,7 +68,10 @@ class DuplicateLinePlugin(GObject.Object, Peas.Activatable):
         manager.remove_action_group(self.action_group)
         manager.ensure_update()
 
-    def on_duplicate_line(self):
+    def do_update_state(self):
+        pass
+
+    def duplicate_line(self):
         doc = self.window.get_active_document()
         if doc is None:
             return

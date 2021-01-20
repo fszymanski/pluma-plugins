@@ -1,0 +1,9 @@
+[Plugin]
+Loader=python3
+Module=restoreopenfiles
+IAge=3
+Name=Restore Open Files
+Description=Restore previously open files
+Authors=Filip Szymański <fszymanski.pl@gmail.com>
+Copyright=Copyright © 2021 Filip Szymański
+Website=https://github.com/fszymanski/pluma-plugins
