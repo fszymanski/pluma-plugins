@@ -83,7 +83,7 @@ class DuplicateLinePlugin(GObject.Object, Peas.Activatable):
 
                 lines = doc.get_text(start, end, False)
                 if lines[-1] != '\n':
-                    sel = f'\n{lines}'
+                    lines = f'\n{lines}'
 
                 doc.insert(end, lines)
             else:
@@ -95,7 +95,7 @@ class DuplicateLinePlugin(GObject.Object, Peas.Activatable):
             start = doc.get_iter_at_mark(doc.get_insert())
             start.set_line_offset(0)
 
-            end = doc.get_iter_at_mark(doc.get_insert())
+            end = start.copy()
             end.forward_to_line_end()
 
             curr_line = doc.get_text(start, end, False)
