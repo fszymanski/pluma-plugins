@@ -33,8 +33,8 @@ ui_str = """
 <ui>
     <menubar name='MenuBar'>
        <menu name='EditMenu' action='Edit'>
-         <placeholder name='EditOps_1'>
-            <menuitem name='DuplicateLine' action='DuplicateLine'/>
+         <placeholder name='EditOps_2'>
+            <menuitem name='SelectLine' action='SelectLine'/>
          </placeholder>
        </menu>
     </menubar>
@@ -42,8 +42,8 @@ ui_str = """
 """
 
 
-class DuplicateLinePlugin(GObject.Object, Peas.Activatable):
-    __gtype_name__ = 'DuplicateLinePlugin'
+class SelectLinePlugin(GObject.Object, Peas.Activatable):
+    __gtype_name__ = 'SelectLinePlugin'
 
     object = GObject.Property(type=GObject.Object)
 
@@ -54,11 +54,11 @@ class DuplicateLinePlugin(GObject.Object, Peas.Activatable):
         self.window = self.object
         manager = self.window.get_ui_manager()
 
-        action = Gtk.Action.new('DuplicateLine', _('Duplicate Line/Selection'))
-        action.connect('activate', lambda _: self.on_duplicate_line())
+        action = Gtk.Action.new('SelectLine', _('Select Line'))
+        action.connect('activate', lambda _: self.on_select_line())
 
-        self.action_group = Gtk.ActionGroup.new('DuplicateLinePluginActions')
-        self.action_group.add_action_with_accel(action, '<Ctrl><Shift>D')
+        self.action_group = Gtk.ActionGroup.new('SelectLinePluginActions')
+        self.action_group.add_action_with_accel(action, '<Ctrl>l')
 
         manager.insert_action_group(self.action_group, -1)
         self.merge_id = manager.add_ui_from_string(ui_str)
@@ -69,37 +69,18 @@ class DuplicateLinePlugin(GObject.Object, Peas.Activatable):
         manager.remove_action_group(self.action_group)
         manager.ensure_update()
 
-    def on_duplicate_line(self):
+    def on_select_line(self):
         doc = self.window.get_active_document()
         if doc is None:
             return
 
-        if doc.get_has_selection():
-            start, end = doc.get_selection_bounds()
-            if start.get_line() != end.get_line():
-                start.set_line_offset(0)
-                if not end.ends_line():
-                    end.forward_to_line_end()
+        start = doc.get_iter_at_mark(doc.get_insert())
+        start.set_line_offset(0)
 
-                lines = doc.get_text(start, end, False)
-                if lines[-1] != '\n':
-                    lines = f'\n{lines}'
+        end = start.copy()
+        if not end.ends_line():
+            end.forward_to_line_end()
 
-                doc.insert(end, lines)
-            else:
-                sel = doc.get_text(start, end, False)
-
-                doc.move_mark_by_name('selection_bound', start)
-                doc.insert(end, sel)
-        else:
-            start = doc.get_iter_at_mark(doc.get_insert())
-            start.set_line_offset(0)
-
-            end = start.copy()
-            if not end.ends_line():
-                end.forward_to_line_end()
-
-            curr_line = doc.get_text(start, end, False)
-            doc.insert(end, f'\n{curr_line}')
+        doc.select_range(start, end)
 
 # vim: ts=4 et

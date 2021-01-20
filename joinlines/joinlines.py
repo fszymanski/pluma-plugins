@@ -78,6 +78,7 @@ class JoinLinesPlugin(GObject.Object, Peas.Activatable):
             start, end = doc.get_selection_bounds()
         else:
             start = doc.get_iter_at_mark(doc.get_insert())
+
             end = start.copy()
             end.forward_line()
 
