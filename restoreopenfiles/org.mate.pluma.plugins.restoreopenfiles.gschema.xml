@@ -4,7 +4,7 @@
     <key name="uris" type="as">
       <default>[]</default>
       <summary>File URIs</summary>
-      <description>A list of URIs to restore when Pluma starts.</description>
+      <description>A list of URIs to restore when pluma starts.</description>
     </key>
   </schema>
 </schemalist>
