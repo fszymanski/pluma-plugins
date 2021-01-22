@@ -30,11 +30,11 @@ except:
 ui_str = """
 <ui>
     <menubar name='MenuBar'>
-       <menu name='EditMenu' action='Edit'>
-         <placeholder name='EditOps_1'>
-            <menuitem name='JoinLines' action='JoinLines'/>
-         </placeholder>
-       </menu>
+        <menu name='EditMenu' action='Edit'>
+            <placeholder name='EditOps_1'>
+                <menuitem name='JoinLines' action='JoinLines'/>
+            </placeholder>
+        </menu>
     </menubar>
 </ui>
 """
