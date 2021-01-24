@@ -62,8 +62,7 @@ class RestoreOpenFilesPlugin(GObject.Object, Peas.Activatable):
         if self.is_only_window():
             settings = Gio.Settings.new(SCHEMA_ID)
             for uri in settings.get_value('uris'):
-                f = Gio.file_new_for_uri(uri)
-                if f.query_exists():
+                if Pluma.utils_uri_exists(uri):
                     Pluma.commands_load_uri(window, uri, None, -1)
 
 # vim: ts=4 et
