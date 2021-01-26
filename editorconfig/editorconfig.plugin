@@ -1,0 +1,9 @@
+[Plugin]
+Loader=python3
+Module=_editorconfig
+IAge=3
+Name=EditorConfig
+Description=Maintain consistent coding style using EditorConfig files
+Authors=Filip Szymański <fszymanski.pl@gmail.com>
+Copyright=Copyright © 2021 Filip Szymański
+Website=https://github.com/fszymanski/pluma-plugins

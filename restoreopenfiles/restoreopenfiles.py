@@ -27,7 +27,7 @@ class RestoreOpenFilesPlugin(GObject.Object, Peas.Activatable):
     object = GObject.Property(type=GObject.Object)
 
     def __init__(self):
-        GObject.Object.__init__(self)
+        super().__init__()
 
     def do_activate(self):
         window = self.object
