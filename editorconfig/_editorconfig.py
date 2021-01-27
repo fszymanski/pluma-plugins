@@ -16,7 +16,7 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import GLib, GObject, Peas, Pluma
+from gi.repository import Gio, GLib, GObject, Peas, Pluma
 
 import editorconfig
 
@@ -63,8 +63,7 @@ class EditorConfigPlugin(GObject.Object, Peas.Activatable):
                     view.set_insert_spaces_instead_of_tabs(False)
                 elif val == 'space':
                     view.set_insert_spaces_instead_of_tabs(True)
-
-            if name == 'indent_size':
+            elif name == 'indent_size':
                 if val == 'tab' and 'tab_width' in config:
                     view.set_tab_width(int(config['tab_width']))
                 else:
@@ -72,25 +71,29 @@ class EditorConfigPlugin(GObject.Object, Peas.Activatable):
                         view.set_tab_width(int(val))
                     except ValueError:
                         pass
-
-            if name == 'tab_width':
+            elif name == 'tab_width':
                 view.set_tab_width(int(val))
-
-            if name == 'end_of_line':
+            elif name == 'end_of_line':
                 if val == 'lf':
                     doc.set_property('newline-type', Pluma.DocumentNewlineType.LF)
                 elif val == 'cr':
                     doc.set_property('newline-type', Pluma.DocumentNewlineType.CR)
                 elif val == 'crlf':
                     doc.set_property('newline-type', Pluma.DocumentNewlineType.CR_LF)
-
-            if name == 'trim_trailing_whitespace':
-                pass  # TODO
-
-            if name == 'insert_final_newline':
-                pass  # TODO
-
-            if name == 'max_line_length':
+            elif name == 'trim_trailing_whitespace':
+                settings = Gio.Settings.new('org.mate.pluma')
+                if 'trailsave' not in settings.get_value('active-plugins'):
+                    if not hasattr(doc, 'editorconfig_trim_trailing_whitespace'):
+                        doc.editorconfig_trim_trailing_whitespace = doc.connect('save', self.trim_trailing_whitespace)
+            elif name == 'insert_final_newline':
+                pass
+            elif name == 'max_line_length':
                 view.set_right_margin_position(int(val))
+
+    def trim_trailing_whitespace(self, doc, *args):
+        pass
+
+    def insert_final_newline(self):
+        pass
 
 # vim: ts=4 et
