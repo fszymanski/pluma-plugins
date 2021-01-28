@@ -84,14 +84,26 @@ class EditorConfigPlugin(GObject.Object, Peas.Activatable):
                 settings = Gio.Settings.new('org.mate.pluma')
                 if 'trailsave' not in settings.get_value('active-plugins'):
                     if not hasattr(doc, 'editorconfig_trim_trailing_whitespace'):
-                        doc.editorconfig_trim_trailing_whitespace = doc.connect('save', self.trim_trailing_whitespace)
+                        doc.editorconfig_trim_trailing_whitespace = doc.connect('save',
+                            self.trim_trailing_whitespace)
             elif name == 'insert_final_newline':
-                pass
+                pass  # TODO
             elif name == 'max_line_length':
                 view.set_right_margin_position(int(val))
 
     def trim_trailing_whitespace(self, doc, *args):
-        pass
+        for linenr in range(0, doc.get_line_count()):
+            start = doc.get_iter_at_line(linenr)
+
+            end = start.copy()
+            if not end.ends_line():
+                end.forward_to_line_end()
+
+            line = doc.get_text(start, end, False).rstrip()
+            start.forward_chars(len(line))
+
+            if not start.equal(end):
+                doc.delete(start, end)
 
     def insert_final_newline(self):
         pass
