@@ -86,10 +86,6 @@ class EditorConfigPlugin(GObject.Object, Peas.Activatable):
                     if not hasattr(doc, 'editorconfig_trim_trailing_whitespace'):
                         doc.editorconfig_trim_trailing_whitespace = doc.connect(
                             'save', self.trim_trailing_whitespace)
-            elif name == 'insert_final_newline':
-                if not hasattr(doc, 'editorconfig_insert_final_newline'):
-                    doc.editorconfig_insert_final_newline = doc.connect('save',
-                                                                        self.insert_final_newline)
             elif name == 'max_line_length':
                 view.set_right_margin_position(int(value))
 
@@ -106,8 +102,5 @@ class EditorConfigPlugin(GObject.Object, Peas.Activatable):
 
             if not start.equal(end):
                 doc.delete(start, end)
-
-    def insert_final_newline(self, doc, *args):
-        pass  # TODO
 
 # vim: ts=4 et
