@@ -53,7 +53,7 @@ class SelectLinePlugin(GObject.Object, Peas.Activatable):
         manager = self.window.get_ui_manager()
 
         action = Gtk.Action.new('SelectLine', _('Select Line'))
-        action.connect('activate', lambda _: self.select_line())
+        action.connect('activate', lambda a: self.select_line())
 
         self.action_group = Gtk.ActionGroup.new('SelectLinePluginActions')
         self.action_group.add_action_with_accel(action, '<Ctrl>l')

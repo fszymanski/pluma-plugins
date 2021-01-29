@@ -57,39 +57,41 @@ class EditorConfigPlugin(GObject.Object, Peas.Activatable):
 
         view = tab.get_view()
 
-        for name, val in config.items():
+        for name, value in config.items():
             if name == 'indent_style':
-                if val == 'tab':
+                if value == 'tab':
                     view.set_insert_spaces_instead_of_tabs(False)
-                elif val == 'space':
+                elif value == 'space':
                     view.set_insert_spaces_instead_of_tabs(True)
             elif name == 'indent_size':
-                if val == 'tab' and 'tab_width' in config:
+                if value == 'tab' and 'tab_width' in config:
                     view.set_tab_width(int(config['tab_width']))
                 else:
                     try:
-                        view.set_tab_width(int(val))
+                        view.set_tab_width(int(value))
                     except ValueError:
                         pass
             elif name == 'tab_width':
-                view.set_tab_width(int(val))
+                view.set_tab_width(int(value))
             elif name == 'end_of_line':
-                if val == 'lf':
+                if value == 'lf':
                     doc.set_property('newline-type', Pluma.DocumentNewlineType.LF)
-                elif val == 'cr':
+                elif value == 'cr':
                     doc.set_property('newline-type', Pluma.DocumentNewlineType.CR)
-                elif val == 'crlf':
+                elif value == 'crlf':
                     doc.set_property('newline-type', Pluma.DocumentNewlineType.CR_LF)
             elif name == 'trim_trailing_whitespace':
                 settings = Gio.Settings.new('org.mate.pluma')
                 if 'trailsave' not in settings.get_value('active-plugins'):
                     if not hasattr(doc, 'editorconfig_trim_trailing_whitespace'):
-                        doc.editorconfig_trim_trailing_whitespace = doc.connect('save',
-                            self.trim_trailing_whitespace)
+                        doc.editorconfig_trim_trailing_whitespace = doc.connect(
+                            'save', self.trim_trailing_whitespace)
             elif name == 'insert_final_newline':
-                pass  # TODO
+                if not hasattr(doc, 'editorconfig_insert_final_newline'):
+                    doc.editorconfig_insert_final_newline = doc.connect('save',
+                                                                        self.insert_final_newline)
             elif name == 'max_line_length':
-                view.set_right_margin_position(int(val))
+                view.set_right_margin_position(int(value))
 
     def trim_trailing_whitespace(self, doc, *args):
         for linenr in range(0, doc.get_line_count()):
@@ -105,7 +107,7 @@ class EditorConfigPlugin(GObject.Object, Peas.Activatable):
             if not start.equal(end):
                 doc.delete(start, end)
 
-    def insert_final_newline(self):
-        pass
+    def insert_final_newline(self, doc, *args):
+        pass  # TODO
 
 # vim: ts=4 et

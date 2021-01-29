@@ -53,7 +53,7 @@ class DuplicateLinePlugin(GObject.Object, Peas.Activatable):
         manager = self.window.get_ui_manager()
 
         action = Gtk.Action.new('DuplicateLine', _('Duplicate Line/Selection'))
-        action.connect('activate', lambda _: self.duplicate_line())
+        action.connect('activate', lambda a: self.duplicate_line())
 
         self.action_group = Gtk.ActionGroup.new('DuplicateLinePluginActions')
         self.action_group.add_action_with_accel(action, '<Ctrl><Shift>D')

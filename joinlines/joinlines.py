@@ -53,7 +53,7 @@ class JoinLinesPlugin(GObject.Object, Peas.Activatable):
         manager = self.window.get_ui_manager()
 
         action = Gtk.Action.new('JoinLines', _('Join Lines'))
-        action.connect('activate', lambda _: self.join_lines())
+        action.connect('activate', lambda a: self.join_lines())
 
         self.action_group = Gtk.ActionGroup.new('JoinLinesPluginActions')
         self.action_group.add_action_with_accel(action, '<Ctrl>J')

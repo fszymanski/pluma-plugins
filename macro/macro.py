@@ -59,9 +59,9 @@ class MacroPlugin(GObject.Object, Peas.Activatable):
         self.action_group = Gtk.ActionGroup.new('MacroPluginActions')
         self.action_group.add_actions([
             ('Macro', None, _('Macro'), None, None, None),
-            ('StartRecording', Gtk.STOCK_MEDIA_RECORD, _('Start Recording'), None, None, lambda _: self.start_recording_macro()),
-            ('StopRecording', Gtk.STOCK_MEDIA_STOP, _('Stop Recording'), None, None, lambda _: self.stop_recording_macro()),
-            ('Playback', Gtk.STOCK_MEDIA_PLAY, _('Playback'), '<Ctrl><Alt>m', None, lambda _: self.playback_macro())
+            ('StartRecording', Gtk.STOCK_MEDIA_RECORD, _('Start Recording'), None, None, lambda a: self.start_recording_macro()),
+            ('StopRecording', Gtk.STOCK_MEDIA_STOP, _('Stop Recording'), None, None, lambda a: self.stop_recording_macro()),
+            ('Playback', Gtk.STOCK_MEDIA_PLAY, _('Playback'), '<Ctrl><Alt>m', None, lambda a: self.playback_macro())
         ])
 
         self.set_action_sensitivity([True, False, False])
