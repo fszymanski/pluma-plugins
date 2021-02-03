@@ -15,7 +15,9 @@
 #
 
 import gi
-gi.require_version('Gtk', '3.0')
+gi.require_version('Peas', '1.0')
+gi.require_version('Pluma', '1.0')
+
 from gi.repository import Gio, GLib, GObject, Peas, Pluma
 
 import editorconfig
@@ -31,7 +33,6 @@ class EditorConfigPlugin(GObject.Object, Peas.Activatable):
 
     def do_activate(self):
         window = self.object
-
         window.connect('active-tab-state-changed', self.apply_config)
 
     def do_deactivate(self):

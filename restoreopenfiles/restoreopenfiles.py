@@ -15,7 +15,9 @@
 #
 
 import gi
-gi.require_version('Gtk', '3.0')
+gi.require_version('Peas', '1.0')
+gi.require_version('Pluma', '1.0')
+
 from gi.repository import Gio, GLib, GObject, Peas, Pluma
 
 SCHEMA_ID = 'org.mate.pluma.plugins.restoreopenfiles'
@@ -31,7 +33,6 @@ class RestoreOpenFilesPlugin(GObject.Object, Peas.Activatable):
 
     def do_activate(self):
         window = self.object
-
         window.connect('delete-event', self.save_open_files)
         window.connect('show', self.restore_open_files)
 
