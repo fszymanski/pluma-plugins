@@ -42,10 +42,10 @@ class EditorConfigPlugin(GObject.Object, Peas.Activatable):
         pass
 
     def parse_config(self, doc):
-        uri = doc.get_uri()
-        if uri is not None and Pluma.utils_uri_has_file_scheme(uri):
+        location = doc.get_location()
+        if location is not None and location.query_exists():
             try:
-                return editorconfig.get_properties(GLib.filename_from_uri(uri)[0])
+                return editorconfig.get_properties(location.get_path())
             except editorconfig.EditorConfigError:
                 pass
 
