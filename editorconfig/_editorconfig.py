@@ -43,7 +43,7 @@ class EditorConfigPlugin(GObject.Object, Peas.Activatable):
 
     def parse_config(self, doc):
         location = doc.get_location()
-        if location is not None and location.query_exists():
+        if location is not None and location.has_uri_scheme('file'):
             try:
                 return editorconfig.get_properties(location.get_path())
             except editorconfig.EditorConfigError:
