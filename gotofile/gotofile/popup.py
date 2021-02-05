@@ -16,9 +16,8 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-gi.require_version('Peas', '1.0')
 
-from gi.repository import Gtk, Peas
+from gi.repository import Gtk, Pango
 
 from .source import *
 
@@ -43,5 +42,21 @@ class Popup(Gtk.Window):
                          title=_('Go To File'),
                          transient_for=parent,
                          window_position=Gtk.WindowPosition.CENTER_ON_PARENT)
+
+        filter_entry = Gtk.SearchEntry.new()
+        filter_entry.grab_focus_without_selecting()
+        filter_entry.set_placeholder_text(_('Search...'))
+
+        scroller = Gtk.ScrolledWindow.new(None, None)
+
+        filename_label = Gtk.Label.new(None)
+        filename_label.set_halign(Gtk.Align.START)
+        filename_label.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
+
+        vbox = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
+        vbox.pack_start(filter_entry, False, False, 0)
+        vbox.pack_start(scroller, True, True, 0)
+        vbox.pack_start(filename_label, False, False, 0)
+        self.add(vbox)
 
 # vim: ts=4 et
