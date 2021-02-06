@@ -17,7 +17,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
 
-from gi.repository import Gtk, Pango
+from gi.repository import Gio, Gtk, Pango
 
 from .source import *
 
@@ -34,29 +34,69 @@ except:
 class Popup(Gtk.Window):
     __gtype_name__ = 'Popup'
 
-    def __init__(self, parent):
+    def __init__(self, window):
         super().__init__(default_height=360,
                          default_width=500,
                          destroy_with_parent=True,
                          modal=True,
                          title=_('Go To File'),
-                         transient_for=parent,
+                         transient_for=window,
                          window_position=Gtk.WindowPosition.CENTER_ON_PARENT)
 
         filter_entry = Gtk.SearchEntry.new()
         filter_entry.grab_focus_without_selecting()
         filter_entry.set_placeholder_text(_('Search...'))
 
-        scroller = Gtk.ScrolledWindow.new(None, None)
+        model = self.create_and_fill_model(window, filter_entry)
 
-        filename_label = Gtk.Label.new(None)
-        filename_label.set_halign(Gtk.Align.START)
-        filename_label.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
+        file_view = Gtk.TreeView.new_with_model(model)
+        file_view.set_activate_on_single_click(True)
+        file_view.set_enable_search(False)
+        file_view.set_headers_visible(False)
+
+        renderer = Gtk.CellRendererPixbuf.new()
+        column = Gtk.TreeViewColumn.new()
+        column.pack_start(renderer, False)
+        column.add_attribute(renderer, 'gicon', 0)
+
+        renderer = Gtk.CellRendererText.new()
+        column.pack_start(renderer, True)
+        column.add_attribute(renderer, 'text', 1)
+
+        file_view.append_column(column)
+
+        scroller = Gtk.ScrolledWindow.new(None, None)
+        scroller.add(file_view)
+
+        preview_label = Gtk.Label.new(None)
+        preview_label.set_halign(Gtk.Align.START)
+        preview_label.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
 
         vbox = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
         vbox.pack_start(filter_entry, False, False, 0)
         vbox.pack_start(scroller, True, True, 0)
-        vbox.pack_start(filename_label, False, False, 0)
+        vbox.pack_start(preview_label, False, False, 0)
         self.add(vbox)
+
+    def create_and_fill_model(self, window, filter_entry):
+        store = Gtk.ListStore.new([Gio.Icon, str, str])
+
+        for filename in set(Bookmarks() +
+                            DesktopDirectory() +
+                            HomeDirectory() +
+                            OpenDocumentsDirectory(window) +
+                            RecentFiles()):
+            location = Gio.file_new_for_path(filename)
+            info = location.query_info('standard::*', Gio.FileQueryInfoFlags.NONE, None)
+            if info is not None:
+                store.append([info.get_icon(), info.get_display_name(), filename])
+
+        filter_ = store.filter_new()
+        filter_.set_visible_func(self.file_visible, filter_entry)
+
+        return filter_
+
+    def file_visible(self, model, iter_, filter_entry):
+        return True
 
 # vim: ts=4 et
