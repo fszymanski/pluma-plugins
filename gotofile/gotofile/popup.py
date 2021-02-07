@@ -112,10 +112,27 @@ class Popup(Gtk.Window):
                 if info is not None:
                     store.append([info.get_icon(), info.get_display_name(), location])
 
-        filter_ = store.filter_new()
+        sortable = Gtk.TreeModelSort.new_with_model(store)
+        sortable.set_sort_func(Column.DISPLAY_NAME, self.compare_display_name, None)
+        sortable.set_sort_column_id(Column.DISPLAY_NAME, Gtk.SortType.ASCENDING)
+
+        filter_ = sortable.filter_new()
         filter_.set_visible_func(self.file_visible, filter_entry)
 
         return filter_
+
+    def compare_display_name(self, model, iter_a, iter_b, user_data):
+        name_a = model.get_value(iter_a, Column.DISPLAY_NAME)
+        name_b = GLib.utf8_collate_key_for_filename(name_a, -1)
+
+        name_a = model.get_value(iter_b, Column.DISPLAY_NAME)
+        name_b = GLib.utf8_collate_key_for_filename(name_b, -1)
+        if name_a < name_b:
+            return -1
+        elif name_a == name_b:
+            return 0
+
+        return 1
 
     def file_visible(self, model, iter_, filter_entry):
         needle = filter_entry.get_text().strip()
