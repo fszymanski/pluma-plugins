@@ -123,9 +123,9 @@ class Popup(Gtk.Window):
 
     def compare_display_name(self, model, iter_a, iter_b, user_data):
         name_a = model.get_value(iter_a, Column.DISPLAY_NAME)
-        name_b = GLib.utf8_collate_key_for_filename(name_a, -1)
+        name_a = GLib.utf8_collate_key_for_filename(name_a, -1)
 
-        name_a = model.get_value(iter_b, Column.DISPLAY_NAME)
+        name_b = model.get_value(iter_b, Column.DISPLAY_NAME)
         name_b = GLib.utf8_collate_key_for_filename(name_b, -1)
         if name_a < name_b:
             return -1
