@@ -65,6 +65,8 @@ class Popup(Gtk.Window):
 
         file_view.append_column(column)
 
+        selection = file_view.get_selection()
+
         scroller = Gtk.ScrolledWindow.new(None, None)
         scroller.add(file_view)
 
@@ -77,6 +79,10 @@ class Popup(Gtk.Window):
         vbox.pack_start(scroller, True, True, 0)
         vbox.pack_start(preview_label, False, False, 0)
         self.add(vbox)
+
+        filter_entry.connect('search-changed', self.select_first_row, file_view)
+
+        self.select_first_row(None, file_view)
 
     def create_and_fill_model(self, window, filter_entry):
         store = Gtk.ListStore.new([Gio.Icon, str, str])
@@ -98,5 +104,10 @@ class Popup(Gtk.Window):
 
     def file_visible(self, model, iter_, filter_entry):
         return True
+
+    def select_first_row(self, filter_entry, file_view):
+        path = Gtk.TreePath.new_first()
+        selection = file_view.get_selection()
+        selection.select_path(path)
 
 # vim: ts=4 et

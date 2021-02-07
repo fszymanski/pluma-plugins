@@ -90,10 +90,10 @@ class DuplicateLinePlugin(GObject.Object, Peas.Activatable):
 
                 doc.insert(end, lines)
             else:
-                sel = doc.get_text(start, end, False)
+                selection = doc.get_text(start, end, False)
 
                 doc.move_mark_by_name('selection_bound', start)
-                doc.insert(end, sel)
+                doc.insert(end, selection)
         else:
             start = doc.get_iter_at_mark(doc.get_insert())
             start.set_line_offset(0)
