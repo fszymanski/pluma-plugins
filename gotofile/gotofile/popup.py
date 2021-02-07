@@ -21,7 +21,7 @@ import gi
 gi.require_version('Gdk', '3.0')
 gi.require_version('Gtk', '3.0')
 
-from gi.repository import Gdk, Gio, Gtk, Pango, Pluma
+from gi.repository import Gdk, Gio, GLib, Gtk, Pango, Pluma
 
 from .source import *
 
@@ -92,6 +92,7 @@ class Popup(Gtk.Window):
 
         self.connect('key-press-event', self.close_on_escape_key)
         filter_entry.connect('search-changed', self.select_first_row, file_view)
+        filter_entry.connect('search-changed', self.update_visible_elements, model)
         file_view.connect('row-activated', self.open_file, window)
         selection.connect('changed', self.preview_filename, preview_label)
 
@@ -117,7 +118,19 @@ class Popup(Gtk.Window):
         return filter_
 
     def file_visible(self, model, iter_, filter_entry):
-        return True
+        result = True
+
+        needle = filter_entry.get_text().strip()
+        if not needle:
+            return result
+
+        haystack = model.get_value(iter_, Column.DISPLAY_NAME)
+        result = GLib.str_match_string(needle, haystack, True)
+
+        return result
+
+    def update_visible_elements(self, filter_entry, model):
+        model.refilter()
 
     def select_first_row(self, filter_entry, file_view):
         path = Gtk.TreePath.new_first()
@@ -127,6 +140,8 @@ class Popup(Gtk.Window):
     def close_on_escape_key(self, window, event):
         if event.keyval == Gdk.KEY_Escape:
             self.destroy()
+
+        return False
 
     def preview_filename(self, selection, preview_label):
         model, iter_ = selection.get_selected()
