@@ -14,10 +14,12 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
+from enum import IntEnum
+
 import gi
 gi.require_version('Gtk', '3.0')
 
-from gi.repository import Gio, Gtk, Pango
+from gi.repository import Gio, GLib, Gtk, Pango, Pluma
 
 from .source import *
 
@@ -29,6 +31,12 @@ try:
     _ = gettext.gettext
 except:
     _ = lambda s: s
+
+
+class Column(IntEnum):
+    ICON = 0
+    BASENAME = 1
+    FILENAME = 2
 
 
 class Popup(Gtk.Window):
@@ -57,11 +65,11 @@ class Popup(Gtk.Window):
         renderer = Gtk.CellRendererPixbuf.new()
         column = Gtk.TreeViewColumn.new()
         column.pack_start(renderer, False)
-        column.add_attribute(renderer, 'gicon', 0)
+        column.add_attribute(renderer, 'gicon', Column.ICON)
 
         renderer = Gtk.CellRendererText.new()
         column.pack_start(renderer, True)
-        column.add_attribute(renderer, 'text', 1)
+        column.add_attribute(renderer, 'text', Column.BASENAME)
 
         file_view.append_column(column)
 
@@ -81,6 +89,7 @@ class Popup(Gtk.Window):
         self.add(vbox)
 
         filter_entry.connect('search-changed', self.select_first_row, file_view)
+        file_view.connect('row-activated', self.open_file, window)
 
         self.select_first_row(None, file_view)
 
@@ -109,5 +118,19 @@ class Popup(Gtk.Window):
         path = Gtk.TreePath.new_first()
         selection = file_view.get_selection()
         selection.select_path(path)
+
+    def open_file(self, file_view, path, column, window):
+        model = file_view.get_model()
+        try:
+            iter_ = model.get_iter(path)
+        except ValueError:
+            pass
+        else:
+            filename = model.get_value(iter_, Column.FILENAME)
+            uri = GLib.filename_to_uri(filename, None)
+            if uri is not None:
+                Pluma.commands_load_uri(window, uri, None, -1)
+
+                self.destroy()
 
 # vim: ts=4 et
