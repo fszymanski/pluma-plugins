@@ -118,16 +118,12 @@ class Popup(Gtk.Window):
         return filter_
 
     def file_visible(self, model, iter_, filter_entry):
-        result = True
-
         needle = filter_entry.get_text().strip()
         if not needle:
-            return result
+            return True
 
         haystack = model.get_value(iter_, Column.DISPLAY_NAME)
-        result = GLib.str_match_string(needle, haystack, True)
-
-        return result
+        return GLib.str_match_string(needle, haystack, True)
 
     def update_visible_elements(self, filter_entry, model):
         model.refilter()
