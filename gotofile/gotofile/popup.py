@@ -15,11 +15,13 @@
 #
 
 from enum import IntEnum
+import xml.sax.saxutils
 
 import gi
+gi.require_version('Gdk', '3.0')
 gi.require_version('Gtk', '3.0')
 
-from gi.repository import Gio, GLib, Gtk, Pango, Pluma
+from gi.repository import Gdk, Gio, Gtk, Pango, Pluma
 
 from .source import *
 
@@ -35,8 +37,8 @@ except:
 
 class Column(IntEnum):
     ICON = 0
-    BASENAME = 1
-    FILENAME = 2
+    DISPLAY_NAME = 1
+    LOCATION = 2
 
 
 class Popup(Gtk.Window):
@@ -69,7 +71,7 @@ class Popup(Gtk.Window):
 
         renderer = Gtk.CellRendererText.new()
         column.pack_start(renderer, True)
-        column.add_attribute(renderer, 'text', Column.BASENAME)
+        column.add_attribute(renderer, 'text', Column.DISPLAY_NAME)
 
         file_view.append_column(column)
 
@@ -88,13 +90,15 @@ class Popup(Gtk.Window):
         vbox.pack_start(preview_label, False, False, 0)
         self.add(vbox)
 
+        self.connect('key-press-event', self.close_on_escape_key)
         filter_entry.connect('search-changed', self.select_first_row, file_view)
         file_view.connect('row-activated', self.open_file, window)
+        selection.connect('changed', self.preview_filename, preview_label)
 
         self.select_first_row(None, file_view)
 
     def create_and_fill_model(self, window, filter_entry):
-        store = Gtk.ListStore.new([Gio.Icon, str, str])
+        store = Gtk.ListStore.new([Gio.Icon, str, Gio.File])
 
         for filename in set(Bookmarks() +
                             DesktopDirectory() +
@@ -102,9 +106,10 @@ class Popup(Gtk.Window):
                             OpenDocumentsDirectory(window) +
                             RecentFiles()):
             location = Gio.file_new_for_path(filename)
-            info = location.query_info('standard::*', Gio.FileQueryInfoFlags.NONE, None)
-            if info is not None:
-                store.append([info.get_icon(), info.get_display_name(), filename])
+            if location.is_native():
+                info = location.query_info('standard::*', Gio.FileQueryInfoFlags.NONE, None)
+                if info is not None:
+                    store.append([info.get_icon(), info.get_display_name(), location])
 
         filter_ = store.filter_new()
         filter_.set_visible_func(self.file_visible, filter_entry)
@@ -119,6 +124,18 @@ class Popup(Gtk.Window):
         selection = file_view.get_selection()
         selection.select_path(path)
 
+    def close_on_escape_key(self, window, event):
+        if event.keyval == Gdk.KEY_Escape:
+            self.destroy()
+
+    def preview_filename(self, selection, preview_label):
+        model, iter_ = selection.get_selected()
+        if iter_ is not None:
+            location = model.get_value(iter_, Column.LOCATION)
+            filename = xml.sax.saxutils.escape(location.get_path())
+
+            preview_label.set_markup(filename)
+
     def open_file(self, file_view, path, column, window):
         model = file_view.get_model()
         try:
@@ -126,11 +143,9 @@ class Popup(Gtk.Window):
         except ValueError:
             pass
         else:
-            filename = model.get_value(iter_, Column.FILENAME)
-            uri = GLib.filename_to_uri(filename, None)
-            if uri is not None:
-                Pluma.commands_load_uri(window, uri, None, -1)
+            location = model.get_value(iter_, Column.LOCATION)
+            Pluma.commands_load_uri(window, location.get_uri(), None, -1)
 
-                self.destroy()
+            self.destroy()
 
 # vim: ts=4 et
