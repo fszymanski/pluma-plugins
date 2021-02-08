@@ -15,7 +15,8 @@
 #
 
 __all__ = [
-    'Bookmarks', 'DesktopDirectory', 'HomeDirectory', 'OpenDocumentsDirectory', 'RecentFiles'
+    'Bookmarks', 'DesktopDirectory', 'FileBrowserVirtualRootDirectory',
+    'HomeDirectory', 'OpenDocumentsDirectory', 'RecentFiles'
 ]
 
 import os
@@ -25,8 +26,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('Pluma', '1.0')
 
-from gi.repository import GLib, Gtk, Pluma
-
+from gi.repository import Gio, GLib, Gtk, Pluma
 
 def get_files_from_dir(path):
     try:
@@ -70,6 +70,23 @@ class DesktopDirectory(list):
         desktop_dir = GLib.get_user_special_dir(GLib.USER_DIRECTORY_DESKTOP)
         if desktop_dir is not None:
             for filename in get_files_from_dir(desktop_dir):
+                self.append(filename)
+
+
+class FileBrowserVirtualRootDirectory(list):
+    def __init__(self):
+        self.fill()
+
+    def get_file_browser_virtual_root_uri(self):
+        settings = Gio.Settings.new('org.mate.pluma')
+        if 'filebrowser' in settings.get_value('active-plugins'):
+            settings = Gio.Settings.new('org.mate.pluma.plugins.filebrowser.on-load')
+            return settings.get_string('virtual-root')
+
+    def fill(self):
+        uri = self.get_file_browser_virtual_root_uri()
+        if uri is not None:
+            for filename in get_files_from_dir(GLib.filename_from_uri(uri)[0]):
                 self.append(filename)
 
 

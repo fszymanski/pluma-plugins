@@ -58,7 +58,7 @@ class JoinLinesPlugin(GObject.Object, Peas.Activatable):
         action.connect('activate', lambda a: self.join_lines())
 
         self.action_group = Gtk.ActionGroup.new('JoinLinesPluginActions')
-        self.action_group.add_action_with_accel(action, '<Ctrl>J')
+        self.action_group.add_action_with_accel(action, '<Ctrl>j')
 
         manager.insert_action_group(self.action_group, -1)
         self.merge_id = manager.add_ui_from_string(ui_str)

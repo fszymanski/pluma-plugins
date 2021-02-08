@@ -90,7 +90,7 @@ class EditorConfigPlugin(GObject.Object, Peas.Activatable):
             elif name == 'max_line_length':
                 view.set_right_margin_position(int(value))
 
-    def trim_trailing_whitespace(self, doc, *args):
+    def trim_trailing_whitespace(self, doc, uri, encoding, flags):
         for linenr in range(0, doc.get_line_count()):
             start = doc.get_iter_at_line(linenr)
 
