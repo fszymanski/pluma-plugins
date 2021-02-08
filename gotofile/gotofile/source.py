@@ -57,9 +57,11 @@ class Bookmarks(list):
             pass
 
     def fill(self):
-        for dirname in self.get_bookmark_dirs():
-            for filename in get_files_from_dir(dirname):
-                self.append(filename)
+        bookmark_dirs = self.get_bookmark_dirs()
+        if bookmark_dirs is not None:
+            for dirname in bookmark_dirs:
+                for filename in get_files_from_dir(dirname):
+                    self.append(filename)
 
 
 class DesktopDirectory(list):
