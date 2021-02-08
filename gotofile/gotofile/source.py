@@ -15,7 +15,7 @@
 #
 
 __all__ = [
-    'Bookmarks', 'DesktopDirectory', 'FileBrowserVirtualRootDirectory',
+    'Bookmarks', 'DesktopDirectory', 'FileBrowserRootDirectory',
     'HomeDirectory', 'OpenDocumentsDirectory', 'RecentFiles'
 ]
 
@@ -73,18 +73,18 @@ class DesktopDirectory(list):
                 self.append(filename)
 
 
-class FileBrowserVirtualRootDirectory(list):
+class FileBrowserRootDirectory(list):
     def __init__(self):
         self.fill()
 
-    def get_file_browser_virtual_root_uri(self):
+    def get_file_browser_root_dir_uri(self):
         settings = Gio.Settings.new('org.mate.pluma')
         if 'filebrowser' in settings.get_value('active-plugins'):
             settings = Gio.Settings.new('org.mate.pluma.plugins.filebrowser.on-load')
             return settings.get_string('virtual-root')
 
     def fill(self):
-        uri = self.get_file_browser_virtual_root_uri()
+        uri = self.get_file_browser_root_dir_uri()
         if uri is not None:
             for filename in get_files_from_dir(GLib.filename_from_uri(uri)[0]):
                 self.append(filename)

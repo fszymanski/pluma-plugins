@@ -103,7 +103,7 @@ class Popup(Gtk.Window):
 
         for filename in set(Bookmarks() +
                             DesktopDirectory() +
-                            FileBrowserVirtualRootDirectory() +
+                            FileBrowserRootDirectory() +
                             HomeDirectory() +
                             OpenDocumentsDirectory(window) +
                             RecentFiles()):

@@ -88,6 +88,25 @@ class GoToFileConfigurable(GObject.Object, PeasGtk.Configurable):
     __gtype_name__ = 'GoToFileConfigurable'
 
     def do_create_configure_widget(self):
-        return Gtk.Label.new('Not Implemented')
+        look_label = Gtk.Label.new(None)
+        look_label.set_markup('<b>{}</b>'.format(_('Look for files in:')))
+
+        bookmarks_checkbox = Gtk.CheckButton.new_with_label(_('Directories you have bookmarked in Files/Caja'))
+        desktop_dir_checkbox = Gtk.CheckButton.new_with_label(_('Desktop directory'))
+        file_browser_root_dir_checkbox = Gtk.CheckButton.new_with_label(_('File browser root directory'))
+        home_dir_checkbox = Gtk.CheckButton.new_with_label(_('Home directory'))
+        open_docs_dir_checkbox = Gtk.CheckButton.new_with_label(_('Directory of the currently opened document(s)'))
+        recent_files_checkbox = Gtk.CheckButton.new_with_label(_('Recently used files'))
+
+        vbox = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
+        vbox.pack_start(look_label, False, False, 0)
+        vbox.pack_start(bookmarks_checkbox, False, False, 0)
+        vbox.pack_start(desktop_dir_checkbox, False, False, 0)
+        vbox.pack_start(file_browser_root_dir_checkbox, False, False, 0)
+        vbox.pack_start(home_dir_checkbox, False, False, 0)
+        vbox.pack_start(open_docs_dir_checkbox, False, False, 0)
+        vbox.pack_start(recent_files_checkbox, False, False, 0)
+
+        return vbox
 
 # vim: ts=4 et
