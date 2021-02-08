@@ -20,8 +20,9 @@ locale.setlocale(locale.LC_ALL, '')
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('Peas', '1.0')
+gi.require_version('PeasGtk', '1.0')
 
-from gi.repository import GObject, Gtk, Peas
+from gi.repository import GObject, Gtk, Peas, PeasGtk
 
 from .popup import Popup
 
@@ -81,5 +82,12 @@ class GoToFilePlugin(GObject.Object, Peas.Activatable):
     def goto_file(self):
         popup = Popup(self.window)
         popup.show_all()
+
+
+class GoToFileConfigurable(GObject.Object, PeasGtk.Configurable):
+    __gtype_name__ = 'GoToFileConfigurable'
+
+    def do_create_configure_widget(self):
+        return Gtk.Label.new('Not Implemented')
 
 # vim: ts=4 et
