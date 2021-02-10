@@ -38,9 +38,21 @@ def get_files_from_dir(path):
         pass
 
 
-class Bookmarks(list):
-    def __init__(self):
-        self.fill()
+class Source(list):
+    def __init__(self, key, settings):
+        self.key = key
+        self.settings = settings
+
+    def is_enabled(self):
+        return self.settings.get_boolean(self.key)
+
+
+class Bookmarks(Source):
+    def __init__(self, settings):
+        super().__init__('bookmarks', settings)
+
+        if self.is_enabled():
+            self.fill()
 
     def get_bookmark_dirs(self):
         filename = Path(GLib.get_user_config_dir()) / 'gtk-3.0' / 'bookmarks'
@@ -64,9 +76,12 @@ class Bookmarks(list):
                     self.append(filename)
 
 
-class DesktopDirectory(list):
-    def __init__(self):
-        self.fill()
+class DesktopDirectory(Source):
+    def __init__(self, settings):
+        super().__init__('desktop-dir', settings)
+
+        if self.is_enabled():
+            self.fill()
 
     def fill(self):
         desktop_dir = GLib.get_user_special_dir(GLib.USER_DIRECTORY_DESKTOP)
@@ -75,9 +90,12 @@ class DesktopDirectory(list):
                 self.append(filename)
 
 
-class FileBrowserRootDirectory(list):
-    def __init__(self):
-        self.fill()
+class FileBrowserRootDirectory(Source):
+    def __init__(self, settings):
+        super().__init__('file-browser-root-dir', settings)
+
+        if self.is_enabled():
+            self.fill()
 
     def get_file_browser_root_dir_uri(self):
         settings = Gio.Settings.new('org.mate.pluma')
@@ -92,20 +110,26 @@ class FileBrowserRootDirectory(list):
                 self.append(filename)
 
 
-class HomeDirectory(list):
-    def __init__(self):
-        self.fill()
+class HomeDirectory(Source):
+    def __init__(self, settings):
+        super().__init__('home-dir', settings)
+
+        if self.is_enabled():
+            self.fill()
 
     def fill(self):
         for filename in get_files_from_dir(Path.home()):
             self.append(filename)
 
 
-class OpenDocumentsDirectory(list):
-    def __init__(self, window):
+class OpenDocumentsDirectory(Source):
+    def __init__(self, settings, window):
+        super().__init__('open-docs-dir', settings)
+
         self.window = window
 
-        self.fill()
+        if self.is_enabled():
+            self.fill()
 
     def get_open_document_dirs(self):
         locations = filter(lambda l: l is not None, [d.get_location() for d in self.window.get_documents()])
@@ -122,11 +146,14 @@ class OpenDocumentsDirectory(list):
                 self.append(filename)
 
 
-class RecentFiles(list):
-    def __init__(self, max_recents=200):
+class RecentFiles(Source):
+    def __init__(self, settings, max_recents=200):
+        super().__init__('recent-files', settings)
+
         self.max_recents = max_recents
 
-        self.fill()
+        if self.is_enabled():
+            self.fill()
 
     def fill(self):
         manager = Gtk.RecentManager.get_default()

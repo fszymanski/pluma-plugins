@@ -101,12 +101,13 @@ class Popup(Gtk.Window):
     def create_and_fill_model(self, window, filter_entry):
         store = Gtk.ListStore.new([Gio.Icon, str, Gio.File])
 
-        for filename in set(Bookmarks() +
-                            DesktopDirectory() +
-                            FileBrowserRootDirectory() +
-                            HomeDirectory() +
-                            OpenDocumentsDirectory(window) +
-                            RecentFiles()):
+        settings = Gio.Settings.new('org.mate.pluma.plugins.gotofile')
+        for filename in set(Bookmarks(settings) +
+                            DesktopDirectory(settings) +
+                            FileBrowserRootDirectory(settings) +
+                            HomeDirectory(settings) +
+                            OpenDocumentsDirectory(settings, window) +
+                            RecentFiles(settings)):
             location = Gio.file_new_for_path(filename)
             if location.is_native():
                 info = location.query_info('standard::*', Gio.FileQueryInfoFlags.NONE, None)
