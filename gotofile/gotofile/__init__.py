@@ -22,7 +22,7 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Peas', '1.0')
 gi.require_version('PeasGtk', '1.0')
 
-from gi.repository import GObject, Gtk, Peas, PeasGtk
+from gi.repository import Gio, GObject, Gtk, Peas, PeasGtk
 
 from .popup import Popup
 
@@ -87,16 +87,38 @@ class GoToFilePlugin(GObject.Object, Peas.Activatable):
 class GoToFileConfigurable(GObject.Object, PeasGtk.Configurable):
     __gtype_name__ = 'GoToFileConfigurable'
 
+    def __init__(self):
+        super().__init__()
+
+        self.settings = Gio.Settings.new('org.mate.pluma.plugins.gotofile')
+
     def do_create_configure_widget(self):
         look_label = Gtk.Label.new(None)
         look_label.set_markup('<b>{}</b>'.format(_('Look for files in:')))
 
         bookmarks_checkbox = Gtk.CheckButton.new_with_label(_('Directories you have bookmarked in Files/Caja'))
+        bookmarks_checkbox.set_active(self.settings.get_boolean('bookmarks'))
+        bookmarks_checkbox.connect('toggled', self.set_setting, 'bookmarks')
+
         desktop_dir_checkbox = Gtk.CheckButton.new_with_label(_('Desktop directory'))
+        desktop_dir_checkbox.set_active(self.settings.get_boolean('desktop-dir'))
+        desktop_dir_checkbox.connect('toggled', self.set_setting, 'desktop-dir')
+
         file_browser_root_dir_checkbox = Gtk.CheckButton.new_with_label(_('File browser root directory'))
+        file_browser_root_dir_checkbox.set_active(self.settings.get_boolean('file-browser-root-dir'))
+        file_browser_root_dir_checkbox.connect('toggled', self.set_setting, 'file-browser-root-dir')
+
         home_dir_checkbox = Gtk.CheckButton.new_with_label(_('Home directory'))
+        home_dir_checkbox.set_active(self.settings.get_boolean('home-dir'))
+        home_dir_checkbox.connect('toggled', self.set_setting, 'home-dir')
+
         open_docs_dir_checkbox = Gtk.CheckButton.new_with_label(_('Directory of the currently opened document(s)'))
+        open_docs_dir_checkbox.set_active(self.settings.get_boolean('open-docs-dir'))
+        open_docs_dir_checkbox.connect('toggled', self.set_setting, 'open-docs-dir')
+
         recent_files_checkbox = Gtk.CheckButton.new_with_label(_('Recently used files'))
+        recent_files_checkbox.set_active(self.settings.get_boolean('recent-files'))
+        recent_files_checkbox.connect('toggled', self.set_setting, 'recent-files')
 
         vbox = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
         vbox.pack_start(look_label, False, False, 0)
@@ -108,5 +130,8 @@ class GoToFileConfigurable(GObject.Object, PeasGtk.Configurable):
         vbox.pack_start(recent_files_checkbox, False, False, 0)
 
         return vbox
+
+    def set_setting(self, button, key):
+        self.settings.set_boolean(key, button.get_active())
 
 # vim: ts=4 et

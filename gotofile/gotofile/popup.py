@@ -59,11 +59,6 @@ class Popup(Gtk.Window):
 
         model = self.create_and_fill_model(window, filter_entry)
 
-        file_view = Gtk.TreeView.new_with_model(model)
-        file_view.set_activate_on_single_click(True)
-        file_view.set_enable_search(False)
-        file_view.set_headers_visible(False)
-
         renderer = Gtk.CellRendererPixbuf.new()
         column = Gtk.TreeViewColumn.new()
         column.pack_start(renderer, False)
@@ -73,9 +68,15 @@ class Popup(Gtk.Window):
         column.pack_start(renderer, True)
         column.add_attribute(renderer, 'text', Column.DISPLAY_NAME)
 
+        file_view = Gtk.TreeView.new_with_model(model)
+        file_view.set_activate_on_single_click(True)
+        file_view.set_enable_search(False)
+        file_view.set_headers_visible(False)
         file_view.append_column(column)
+        file_view.connect('row-activated', self.open_file, window)
 
-        selection = file_view.get_selection()
+        filter_entry.connect('search-changed', self.select_first_row, file_view)
+        filter_entry.connect('search-changed', self.update_visible_elements, model)
 
         scroller = Gtk.ScrolledWindow.new(None, None)
         scroller.add(file_view)
@@ -84,17 +85,16 @@ class Popup(Gtk.Window):
         preview_label.set_halign(Gtk.Align.START)
         preview_label.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
 
+        selection = file_view.get_selection()
+        selection.connect('changed', self.preview_filename, preview_label)
+
         vbox = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
         vbox.pack_start(filter_entry, False, False, 0)
         vbox.pack_start(scroller, True, True, 0)
         vbox.pack_start(preview_label, False, False, 0)
         self.add(vbox)
 
-        self.connect('key-press-event', self.close_on_escape_key)
-        filter_entry.connect('search-changed', self.select_first_row, file_view)
-        filter_entry.connect('search-changed', self.update_visible_elements, model)
-        file_view.connect('row-activated', self.open_file, window)
-        selection.connect('changed', self.preview_filename, preview_label)
+        self.connect('key-press-event', self.destroy_on_escape_key)
 
         self.select_first_row(None, file_view)
 
@@ -151,7 +151,7 @@ class Popup(Gtk.Window):
         selection = file_view.get_selection()
         selection.select_path(path)
 
-    def close_on_escape_key(self, window, event):
+    def destroy_on_escape_key(self, window, event):
         if event.keyval == Gdk.KEY_Escape:
             self.destroy()
 

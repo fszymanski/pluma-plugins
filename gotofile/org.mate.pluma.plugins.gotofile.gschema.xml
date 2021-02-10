@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schemalist>
+  <schema id="org.mate.pluma.plugins.gotofile" path="/org/mate/pluma/plugins/gotofile/">
+    <key name="bookmarks" type="b">
+      <default>false</default>
+      <summary></summary>
+      <description></description>
+    </key>
+    <key name="desktop-dir" type="b">
+      <default>false</default>
+      <summary></summary>
+      <description></description>
+    </key>
+    <key name="file-browser-root-dir" type="b">
+      <default>false</default>
+      <summary></summary>
+      <description></description>
+    </key>
+    <key name="home-dir" type="b">
+      <default>false</default>
+      <summary></summary>
+      <description></description>
+    </key>
+    <key name="open-docs-dir" type="b">
+      <default>false</default>
+      <summary></summary>
+      <description></description>
+    </key>
+    <key name="recent-files" type="b">
+      <default>true</default>
+      <summary></summary>
+      <description></description>
+    </key>
+  </schema>
+</schemalist>
