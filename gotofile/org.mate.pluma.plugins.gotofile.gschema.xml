@@ -3,33 +3,27 @@
   <schema id="org.mate.pluma.plugins.gotofile" path="/org/mate/pluma/plugins/gotofile/">
     <key name="bookmarks" type="b">
       <default>false</default>
-      <summary></summary>
-      <description></description>
+      <summary>Directories you have bookmarked in Files/Caja</summary>
     </key>
     <key name="desktop-dir" type="b">
       <default>false</default>
-      <summary></summary>
-      <description></description>
+      <summary>Desktop directory</summary>
     </key>
     <key name="file-browser-root-dir" type="b">
       <default>false</default>
-      <summary></summary>
-      <description></description>
+      <summary>File browser root directory</summary>
     </key>
     <key name="home-dir" type="b">
       <default>false</default>
-      <summary></summary>
-      <description></description>
+      <summary>Home directory</summary>
     </key>
     <key name="open-docs-dir" type="b">
       <default>false</default>
-      <summary></summary>
-      <description></description>
+      <summary>Directory of the currently opened document(s)</summary>
     </key>
     <key name="recent-files" type="b">
       <default>true</default>
-      <summary></summary>
-      <description></description>
+      <summary>Recently used files</summary>
     </key>
   </schema>
 </schemalist>

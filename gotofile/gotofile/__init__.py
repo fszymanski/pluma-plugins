@@ -94,7 +94,7 @@ class GoToFileConfigurable(GObject.Object, PeasGtk.Configurable):
 
     def do_create_configure_widget(self):
         look_label = Gtk.Label.new(None)
-        look_label.set_markup('<b>{}</b>'.format(_('Look for files in:')))
+        look_label.set_markup(_('<b>Look for files in:</b>'))
 
         bookmarks_checkbox = Gtk.CheckButton.new_with_label(_('Directories you have bookmarked in Files/Caja'))
         bookmarks_checkbox.set_active(self.settings.get_boolean('bookmarks'))

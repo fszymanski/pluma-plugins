@@ -28,6 +28,7 @@ gi.require_version('Pluma', '1.0')
 
 from gi.repository import Gio, GLib, Gtk, Pluma
 
+
 def get_files_from_dir(path):
     try:
         with os.scandir(path) as entries:

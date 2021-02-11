@@ -49,7 +49,6 @@ class Popup(Gtk.Window):
                          default_width=500,
                          destroy_with_parent=True,
                          modal=True,
-                         title=_('Go To File'),
                          transient_for=window,
                          window_position=Gtk.WindowPosition.CENTER_ON_PARENT)
 
@@ -95,6 +94,9 @@ class Popup(Gtk.Window):
         self.add(vbox)
 
         self.connect('key-press-event', self.destroy_on_escape_key)
+
+        self.total_rows = len(model)
+        self.set_title(_('Go To File ({0}/{0})').format(self.total_rows))
 
         self.select_first_row(None, file_view)
 
@@ -146,6 +148,9 @@ class Popup(Gtk.Window):
 
     def update_visible_elements(self, filter_entry, model):
         model.refilter()
+
+        filtered_rows = len(model)
+        self.set_title(_('Go To File ({0}/{1})').format(self.total_rows, filtered_rows))
 
     def select_first_row(self, filter_entry, file_view):
         path = Gtk.TreePath.new_first()
