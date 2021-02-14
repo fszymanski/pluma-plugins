@@ -14,12 +14,6 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
-import gi
-gi.require_version('Gtk', '3.0')
-gi.require_version('Peas', '1.0')
-
-from gi.repository import GObject, Gtk, Peas
-
 try:
     import gettext
 
@@ -28,6 +22,13 @@ try:
     _ = gettext.gettext
 except:
     _ = lambda s: s
+
+import gi
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('Peas', '1.0')
+
+from gi.repository import GObject, Gtk, Peas
 
 ui_str = """
 <ui>

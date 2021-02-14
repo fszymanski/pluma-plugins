@@ -14,17 +14,6 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
-from enum import IntEnum
-import xml.sax.saxutils
-
-import gi
-gi.require_version('Gdk', '3.0')
-gi.require_version('Gtk', '3.0')
-
-from gi.repository import Gdk, Gio, GLib, Gtk, Pango, Pluma
-
-from .source import *
-
 try:
     import gettext
 
@@ -34,6 +23,18 @@ try:
 except:
     _ = lambda s: s
 
+import xml.sax.saxutils
+from enum import IntEnum
+
+import gi
+
+gi.require_version('Gdk', '3.0')
+gi.require_version('Gtk', '3.0')
+
+from gi.repository import Gdk, Gio, GLib, Gtk, Pango, Pluma
+
+from .source import *
+
 
 class Column(IntEnum):
     ICON = 0
@@ -42,7 +43,7 @@ class Column(IntEnum):
 
 
 class Popup(Gtk.Window):
-    __gtype_name__ = 'Popup'
+    __gtype_name__ = 'GoToFilePopup'
 
     def __init__(self, window):
         super().__init__(default_height=360,

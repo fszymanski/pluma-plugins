@@ -15,16 +15,8 @@
 #
 
 import locale
+
 locale.setlocale(locale.LC_ALL, '')
-
-import gi
-gi.require_version('Gtk', '3.0')
-gi.require_version('Peas', '1.0')
-gi.require_version('PeasGtk', '1.0')
-
-from gi.repository import Gio, GObject, Gtk, Peas, PeasGtk
-
-from .popup import Popup
 
 try:
     import gettext
@@ -34,6 +26,16 @@ try:
     _ = gettext.gettext
 except:
     _ = lambda s: s
+
+import gi
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('Peas', '1.0')
+gi.require_version('PeasGtk', '1.0')
+
+from gi.repository import Gio, GObject, Gtk, Peas, PeasGtk
+
+from .popup import Popup
 
 ui_str = """
 <ui>

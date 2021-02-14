@@ -15,6 +15,7 @@
 #
 
 import gi
+
 gi.require_version('Peas', '1.0')
 gi.require_version('Pluma', '1.0')
 
