@@ -48,6 +48,9 @@ class Source(list):
     def is_enabled(self):
         return self.settings.get_boolean(self.key)
 
+    def fill(self):
+        raise NotImplementedError('You need to implement a fill() method')
+
 
 class Bookmarks(Source):
     def __init__(self, settings):
