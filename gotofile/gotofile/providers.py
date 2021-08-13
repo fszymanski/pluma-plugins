@@ -15,8 +15,8 @@
 #
 
 __all__ = [
-    'Bookmarks', 'DesktopDirectory', 'FileBrowserRootDirectory',
-    'HomeDirectory', 'OpenDocumentsDirectory', 'RecentFiles'
+    'BookmarksProvider', 'DesktopDirectoryProvider', 'FileBrowserRootDirectoryProvider',
+    'HomeDirectoryProvider', 'OpenDocumentsDirectoryProvider', 'RecentFilesProvider'
 ]
 
 import os
@@ -40,7 +40,7 @@ def get_files_from_dir(path):
         pass
 
 
-class Source(list):
+class Provider(list):
     def __init__(self, key, settings):
         self.key = key
         self.settings = settings
@@ -52,7 +52,7 @@ class Source(list):
         raise NotImplementedError('You need to implement a fill() method')
 
 
-class Bookmarks(Source):
+class BookmarksProvider(Provider):
     def __init__(self, settings):
         super().__init__('bookmarks', settings)
 
@@ -81,7 +81,7 @@ class Bookmarks(Source):
                     self.append(filename)
 
 
-class DesktopDirectory(Source):
+class DesktopDirectoryProvider(Provider):
     def __init__(self, settings):
         super().__init__('desktop-dir', settings)
 
@@ -95,7 +95,7 @@ class DesktopDirectory(Source):
                 self.append(filename)
 
 
-class FileBrowserRootDirectory(Source):
+class FileBrowserRootDirectoryProvider(Provider):
     def __init__(self, settings):
         super().__init__('file-browser-root-dir', settings)
 
@@ -115,7 +115,7 @@ class FileBrowserRootDirectory(Source):
                 self.append(filename)
 
 
-class HomeDirectory(Source):
+class HomeDirectoryProvider(Provider):
     def __init__(self, settings):
         super().__init__('home-dir', settings)
 
@@ -127,7 +127,7 @@ class HomeDirectory(Source):
             self.append(filename)
 
 
-class OpenDocumentsDirectory(Source):
+class OpenDocumentsDirectoryProvider(Provider):
     def __init__(self, settings, window):
         super().__init__('open-docs-dir', settings)
 
@@ -151,7 +151,7 @@ class OpenDocumentsDirectory(Source):
                 self.append(filename)
 
 
-class RecentFiles(Source):
+class RecentFilesProvider(Provider):
     def __init__(self, settings, max_recents=200):
         super().__init__('recent-files', settings)
 

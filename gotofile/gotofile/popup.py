@@ -33,7 +33,7 @@ gi.require_version('Gtk', '3.0')
 
 from gi.repository import Gdk, Gio, GLib, Gtk, Pango, Pluma
 
-from .source import *
+from .providers import *
 
 
 class Column(IntEnum):
@@ -105,12 +105,12 @@ class Popup(Gtk.Window):
         store = Gtk.ListStore.new([Gio.Icon, str, Gio.File])
 
         settings = Gio.Settings.new('org.mate.pluma.plugins.gotofile')
-        for filename in set(Bookmarks(settings) +
-                            DesktopDirectory(settings) +
-                            FileBrowserRootDirectory(settings) +
-                            HomeDirectory(settings) +
-                            OpenDocumentsDirectory(settings, window) +
-                            RecentFiles(settings)):
+        for filename in set(BookmarksProvider(settings) +
+                            DesktopDirectoryProvider(settings) +
+                            FileBrowserRootDirectoryProvider(settings) +
+                            HomeDirectoryProvider(settings) +
+                            OpenDocumentsDirectoryProvider(settings, window) +
+                            RecentFilesProvider(settings)):
             location = Gio.file_new_for_path(filename)
             if location.is_native():
                 info = location.query_info('standard::*', Gio.FileQueryInfoFlags.NONE, None)
