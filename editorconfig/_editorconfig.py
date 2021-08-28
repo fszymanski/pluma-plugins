@@ -16,65 +16,43 @@
 
 import gi
 
-gi.require_version('Peas', '1.0')
 gi.require_version('Pluma', '1.0')
 
-from gi.repository import Gio, GLib, GObject, Peas, Pluma
+from gi.repository import Gio, GObject, Pluma
 
 import editorconfig
 
 
-class EditorConfigPlugin(GObject.Object, Peas.Activatable):
+class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
     __gtype_name__ = 'EditorConfigPlugin'
 
-    object = GObject.Property(type=GObject.Object)
+    view = GObject.Property(type=Pluma.View)
 
     def __init__(self):
         super().__init__()
 
     def do_activate(self):
-        window = self.object
-        window.connect('active-tab-state-changed', self.apply_config)
-
-    def do_deactivate(self):
-        pass
-
-    def do_update_state(self):
-        pass
-
-    def parse_config(self, doc):
-        location = doc.get_location()
-        if location is not None and location.query_exists():
-            try:
-                return editorconfig.get_properties(location.get_path())
-            except editorconfig.EditorConfigError:
-                pass
-
-    def apply_config(self, window):
-        tab = window.get_active_tab()
-        doc = tab.get_document()
+        doc = self.view.get_buffer()
         config = self.parse_config(doc)
         if config is None:
             return
 
-        view = tab.get_view()
-
         for name, value in config.items():
             if name == 'indent_style':
                 if value == 'tab':
-                    view.set_insert_spaces_instead_of_tabs(False)
+                    self.view.set_insert_spaces_instead_of_tabs(False)
                 elif value == 'space':
-                    view.set_insert_spaces_instead_of_tabs(True)
+                    self.view.set_insert_spaces_instead_of_tabs(True)
             elif name == 'indent_size':
                 if value == 'tab' and 'tab_width' in config:
-                    view.set_tab_width(int(config['tab_width']))
+                    self.view.set_tab_width(int(config['tab_width']))
                 else:
                     try:
-                        view.set_tab_width(int(value))
+                        self.view.set_tab_width(int(value))
                     except ValueError:
                         pass
             elif name == 'tab_width':
-                view.set_tab_width(int(value))
+                self.view.set_tab_width(int(value))
             elif name == 'end_of_line':
                 if value == 'lf':
                     doc.set_property('newline-type', Pluma.DocumentNewlineType.LF)
@@ -89,7 +67,21 @@ class EditorConfigPlugin(GObject.Object, Peas.Activatable):
                         doc.editorconfig_trim_trailing_whitespace = doc.connect(
                             'save', self.trim_trailing_whitespace)
             elif name == 'max_line_length':
-                view.set_right_margin_position(int(value))
+                self.view.set_right_margin_position(int(value))
+
+    def do_deactivate(self):
+        pass
+
+    def do_update_state(self):
+        pass
+
+    def parse_config(self, doc):
+        location = doc.get_location()
+        if location is not None and location.query_exists():
+            try:
+                return editorconfig.get_properties(location.get_path())
+            except editorconfig.EditorConfigError:
+                pass
 
     def trim_trailing_whitespace(self, doc, uri, encoding, flags):
         for linenr in range(0, doc.get_line_count()):

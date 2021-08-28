@@ -16,26 +16,24 @@
 
 import gi
 
-gi.require_version('Peas', '1.0')
 gi.require_version('Pluma', '1.0')
 
-from gi.repository import Gio, GLib, GObject, Peas, Pluma
+from gi.repository import Gio, GLib, GObject, Pluma
 
 SCHEMA_ID = 'org.mate.pluma.plugins.restoreopenfiles'
 
 
-class RestoreOpenFilesPlugin(GObject.Object, Peas.Activatable):
+class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
     __gtype_name__ = 'RestoreOpenFilesPlugin'
 
-    object = GObject.Property(type=GObject.Object)
+    window = GObject.Property(type=Pluma.Window)
 
     def __init__(self):
         super().__init__()
 
     def do_activate(self):
-        window = self.object
-        window.connect('delete-event', self.save_open_files)
-        window.connect('show', self.restore_open_files)
+        self.window.connect('delete-event', lambda w, e: self.save_open_files())
+        self.window.connect('show', lambda w: self.restore_open_files())
 
     def do_deactivate(self):
         pass
@@ -50,9 +48,9 @@ class RestoreOpenFilesPlugin(GObject.Object, Peas.Activatable):
 
         return True
 
-    def save_open_files(self, window, event):
+    def save_open_files(self):
         uris = []
-        for doc in window.get_documents():
+        for doc in self.window.get_documents():
             uri = doc.get_uri()
             if uri is not None:
                 uris.append(uri)
@@ -60,11 +58,11 @@ class RestoreOpenFilesPlugin(GObject.Object, Peas.Activatable):
         settings = Gio.Settings.new(SCHEMA_ID)
         settings.set_value('uris', GLib.Variant('as', uris))
 
-    def restore_open_files(self, window):
+    def restore_open_files(self):
         if self.is_only_window():
             settings = Gio.Settings.new(SCHEMA_ID)
             for uri in settings.get_value('uris'):
                 if Pluma.utils_uri_exists(uri):
-                    Pluma.commands_load_uri(window, uri, None, -1)
+                    Pluma.commands_load_uri(self.window, uri, None, -1)
 
 # vim: ts=4 et

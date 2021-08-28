@@ -30,10 +30,9 @@ except:
 import gi
 
 gi.require_version('Gtk', '3.0')
-gi.require_version('Peas', '1.0')
-gi.require_version('PeasGtk', '1.0')
+gi.require_version('Pluma', '1.0')
 
-from gi.repository import Gio, GObject, Gtk, Peas, PeasGtk
+from gi.repository import Gio, GObject, Gtk, PeasGtk, Pluma
 
 from .popup import Popup
 
@@ -50,16 +49,15 @@ ui_str = """
 """
 
 
-class GoToFilePlugin(GObject.Object, Peas.Activatable):
+class GoToFilePlugin(GObject.Object, Pluma.WindowActivatable):
     __gtype_name__ = 'GoToFilePlugin'
 
-    object = GObject.Property(type=GObject.Object)
+    window = GObject.Property(type=Pluma.Window)
 
     def __init__(self):
         super().__init__()
 
     def do_activate(self):
-        self.window = self.object
         manager = self.window.get_ui_manager()
 
         action = Gtk.Action.new('GoToFile', _('Go to File...'))

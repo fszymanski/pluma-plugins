@@ -26,9 +26,9 @@ except:
 import gi
 
 gi.require_version('Gtk', '3.0')
-gi.require_version('Peas', '1.0')
+gi.require_version('Pluma', '1.0')
 
-from gi.repository import GObject, Gtk, Peas
+from gi.repository import GObject, Gtk, Pluma
 
 ui_str = """
 <ui>
@@ -47,16 +47,15 @@ ui_str = """
 """
 
 
-class MacroPlugin(GObject.Object, Peas.Activatable):
+class MacroPlugin(GObject.Object, Pluma.WindowActivatable):
     __gtype_name__ = 'MacroPlugin'
 
-    object = GObject.Property(type=GObject.Object)
+    window = GObject.Property(type=Pluma.Window)
 
     def __init__(self):
         super().__init__()
 
     def do_activate(self):
-        self.window = self.object
         manager = self.window.get_ui_manager()
 
         self.action_group = Gtk.ActionGroup.new('MacroPluginActions')
@@ -97,7 +96,7 @@ class MacroPlugin(GObject.Object, Peas.Activatable):
         for event in self.macro:
             event.put()
 
-    def record_macro(self, window, event):
+    def record_macro(self, widget, event):
         self.macro.append(event.copy())
 
     def set_action_sensitivity(self, sensitive):
