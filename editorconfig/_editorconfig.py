@@ -63,7 +63,7 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
             elif name == 'trim_trailing_whitespace':
                 settings = Gio.Settings.new('org.mate.pluma')
                 if 'trailsave' not in settings.get_value('active-plugins'):
-                    if not (hasattr(doc, 'editorconfig_trim_trailing_whitespace') or
+                    if (not hasattr(doc, 'editorconfig_trim_trailing_whitespace') or
                             doc.editorconfig_trim_trailing_whitespace is None):
                         doc.editorconfig_trim_trailing_whitespace = doc.connect(
                             'save', self.trim_trailing_whitespace)
