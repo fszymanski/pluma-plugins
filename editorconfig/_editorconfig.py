@@ -63,14 +63,24 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
             elif name == 'trim_trailing_whitespace':
                 settings = Gio.Settings.new('org.mate.pluma')
                 if 'trailsave' not in settings.get_value('active-plugins'):
-                    if not hasattr(doc, 'editorconfig_trim_trailing_whitespace'):
+                    if not (hasattr(doc, 'editorconfig_trim_trailing_whitespace') or
+                            doc.editorconfig_trim_trailing_whitespace is None):
                         doc.editorconfig_trim_trailing_whitespace = doc.connect(
                             'save', self.trim_trailing_whitespace)
             elif name == 'max_line_length':
                 self.view.set_right_margin_position(int(value))
 
     def do_deactivate(self):
-        pass
+        app = Pluma.App.get_default()
+        window = app.get_active_window()
+        for doc in window.get_documents():
+            if hasattr(doc, 'editorconfig_trim_trailing_whitespace'):
+                try:
+                    doc.disconnect(doc.editorconfig_trim_trailing_whitespace)
+                except TypeError:
+                    pass
+
+                doc.editorconfig_trim_trailing_whitespace = None
 
     def do_update_state(self):
         pass
