@@ -1,6 +1,6 @@
 [Plugin]
 Loader=python3
-Module=_editorconfig
+Module=editorconfig_
 IAge=3
 Name=EditorConfig
 Description=Maintain consistent coding style using EditorConfig files
