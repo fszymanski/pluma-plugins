@@ -58,7 +58,7 @@ class SelectLinePlugin(GObject.Object, Pluma.WindowActivatable):
         action.connect('activate', lambda a: self.select_line())
 
         self.action_group = Gtk.ActionGroup.new('SelectLinePluginActions')
-        self.action_group.add_action_with_accel(action, '<Ctrl>l')
+        self.action_group.add_action_with_accel(action, '<Ctrl>t')
 
         manager.insert_action_group(self.action_group, -1)
         self.merge_id = manager.add_ui_from_string(ui_str)
