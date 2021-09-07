@@ -34,7 +34,7 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
     def do_activate(self):
         doc = self.view.get_buffer()
         if not hasattr(doc, 'editorconfig_handler'):
-            doc.editorconfig_handler = doc.connect('loaded', self.set_config)
+            doc.editorconfig_handler = doc.connect('loaded', self.apply_editorconfig)
 
     def do_deactivate(self):
         app = Pluma.App.get_default()
@@ -51,7 +51,7 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
     def do_update_state(self):
         pass
 
-    def parse_config(self, doc):
+    def parse_editorconfig(self, doc):
         location = doc.get_location()
         if location is not None and location.query_exists():
             try:
@@ -59,8 +59,8 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
             except editorconfig.EditorConfigError:
                 pass
 
-    def set_config(self, doc, arg):
-        config = self.parse_config(doc)
+    def apply_editorconfig(self, doc, arg):
+        config = self.parse_editorconfig(doc)
         if config is None:
             return
 
