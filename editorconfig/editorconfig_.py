@@ -33,6 +33,33 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
 
     def do_activate(self):
         doc = self.view.get_buffer()
+        if not hasattr(doc, 'editorconfig_handler'):
+            doc.editorconfig_handler = doc.connect('loaded', self.set_config)
+
+    def do_deactivate(self):
+        app = Pluma.App.get_default()
+        window = app.get_active_window()
+        for doc in window.get_documents():
+            if hasattr(doc, 'editorconfig_handler'):
+                doc.disconnect(doc.editorconfig_handler)
+                del doc.editorconfig_handler
+
+            if hasattr(doc, 'editorconfig_trim_trailing_whitespace_handler'):
+                doc.disconnect(doc.editorconfig_trim_trailing_whitespace_handler)
+                del doc.editorconfig_trim_trailing_whitespace_handler
+
+    def do_update_state(self):
+        pass
+
+    def parse_config(self, doc):
+        location = doc.get_location()
+        if location is not None and location.query_exists():
+            try:
+                return editorconfig.get_properties(location.get_path())
+            except editorconfig.EditorConfigError:
+                pass
+
+    def set_config(self, doc, arg):
         config = self.parse_config(doc)
         if config is None:
             return
@@ -63,31 +90,11 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
             elif name == 'trim_trailing_whitespace':
                 settings = Gio.Settings.new('org.mate.pluma')
                 if 'trailsave' not in settings.get_value('active-plugins'):
-                    if not hasattr(doc, 'editorconfig_trim_trailing_whitespace'):
-                        doc.editorconfig_trim_trailing_whitespace = doc.connect(
+                    if not hasattr(doc, 'editorconfig_trim_trailing_whitespace_handler'):
+                        doc.editorconfig_trim_trailing_whitespace_handler = doc.connect(
                             'save', self.trim_trailing_whitespace)
             elif name == 'max_line_length':
                 self.view.set_right_margin_position(int(value))
-
-    def do_deactivate(self):
-        app = Pluma.App.get_default()
-        window = app.get_active_window()
-        for doc in window.get_documents():
-            if hasattr(doc, 'editorconfig_trim_trailing_whitespace'):
-                doc.disconnect(doc.editorconfig_trim_trailing_whitespace)
-
-                del doc.editorconfig_trim_trailing_whitespace
-
-    def do_update_state(self):
-        pass
-
-    def parse_config(self, doc):
-        location = doc.get_location()
-        if location is not None and location.query_exists():
-            try:
-                return editorconfig.get_properties(location.get_path())
-            except editorconfig.EditorConfigError:
-                pass
 
     def trim_trailing_whitespace(self, doc, uri, encoding, flags):
         for linenr in range(0, doc.get_line_count()):
