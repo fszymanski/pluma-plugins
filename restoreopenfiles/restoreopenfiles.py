@@ -17,10 +17,9 @@
 import gi
 
 gi.require_version('Pluma', '1.0')
-
 from gi.repository import Gio, GLib, GObject, Pluma
 
-SCHEMA_ID = 'org.mate.pluma.plugins.restoreopenfiles'
+RESTORE_OPEN_FILES_SCHEMA = 'org.mate.pluma.plugins.restoreopenfiles'
 
 
 class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
@@ -58,12 +57,12 @@ class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
             if uri is not None:
                 uris.append(uri)
 
-        settings = Gio.Settings.new(SCHEMA_ID)
+        settings = Gio.Settings.new(RESTORE_OPEN_FILES_SCHEMA)
         settings.set_value('uris', GLib.Variant('as', uris))
 
     def restore_open_files(self):
         if self.is_only_window():
-            settings = Gio.Settings.new(SCHEMA_ID)
+            settings = Gio.Settings.new(RESTORE_OPEN_FILES_SCHEMA)
             for uri in settings.get_value('uris'):
                 if Pluma.utils_uri_exists(uri):
                     Pluma.commands_load_uri(self.window, uri, None, -1)

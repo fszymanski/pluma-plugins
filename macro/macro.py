@@ -27,7 +27,6 @@ import gi
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('Pluma', '1.0')
-
 from gi.repository import GObject, Gtk, Pluma
 
 ui_str = """

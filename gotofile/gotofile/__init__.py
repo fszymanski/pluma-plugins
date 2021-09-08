@@ -14,10 +14,6 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
-import locale
-
-locale.setlocale(locale.LC_ALL, '')
-
 try:
     import gettext
 
@@ -32,7 +28,6 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('PeasGtk', '1.0')
 gi.require_version('Pluma', '1.0')
-
 from gi.repository import Gio, GObject, Gtk, PeasGtk, Pluma
 
 from .popup import Popup
@@ -95,6 +90,7 @@ class GoToFileConfigurable(GObject.Object, PeasGtk.Configurable):
 
     def do_create_configure_widget(self):
         look_label = Gtk.Label.new(None)
+        look_label.set_halign(Gtk.Align.START)
         look_label.set_markup('<b>{}</b>'.format(_('Look for files in:')))
 
         bookmarks_checkbox = Gtk.CheckButton.new_with_label(_('Directories you have bookmarked in Files/Caja'))

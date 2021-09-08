@@ -17,7 +17,6 @@
 import gi
 
 gi.require_version('Pluma', '1.0')
-
 from gi.repository import Gio, GObject, Pluma
 
 import editorconfig
