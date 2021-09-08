@@ -121,6 +121,8 @@ class WebSearchConfigurable(GObject.Object, PeasGtk.Configurable):
         entry.set_width_chars(40)
         entry.set_text(settings.get_string('query-url'))
 
+        entry.connect('changed', lambda e: settings.set_string('query-url', entry.get_text()))
+
         button = Gtk.Button.new_from_icon_name('edit-clear', Gtk.IconSize.MENU)
         button.connect('clicked', lambda b: entry.set_text(''))
 
@@ -136,8 +138,6 @@ class WebSearchConfigurable(GObject.Object, PeasGtk.Configurable):
         vbox.pack_start(query_label, False, False, 0)
         vbox.pack_start(hbox, False, False, 0)
         vbox.pack_start(info_label, False, False, 0)
-
-        vbox.connect('destroy', lambda w: settings.set_string('query-url', entry.get_text()))
 
         return vbox
 
