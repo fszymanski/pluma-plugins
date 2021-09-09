@@ -23,6 +23,8 @@ try:
 except:
     _ = lambda s: s
 
+import os
+
 import gi
 
 gi.require_version('Gtk', '3.0')
@@ -86,49 +88,37 @@ class GoToFileConfigurable(GObject.Object, PeasGtk.Configurable):
     def __init__(self):
         super().__init__()
 
-        self.settings = Gio.Settings.new('org.mate.pluma.plugins.gotofile')
-
     def do_create_configure_widget(self):
-        look_label = Gtk.Label.new(None)
-        look_label.set_halign(Gtk.Align.START)
-        look_label.set_markup('<b>{}</b>'.format(_('Look for files in:')))
+        settings = Gio.Settings.new('org.mate.pluma.plugins.gotofile')
 
-        bookmarks_checkbox = Gtk.CheckButton.new_with_label(_('Directories you have bookmarked in Files/Caja'))
-        bookmarks_checkbox.set_active(self.settings.get_boolean('bookmarks'))
-        bookmarks_checkbox.connect('toggled', self.set_setting, 'bookmarks')
+        builder = Gtk.Builder()
+        builder.add_from_file(os.path.join(self.plugin_info.get_data_dir(), 'gotofile', 'preferences.ui'))
 
-        desktop_dir_checkbox = Gtk.CheckButton.new_with_label(_('Desktop directory'))
-        desktop_dir_checkbox.set_active(self.settings.get_boolean('desktop-dir'))
-        desktop_dir_checkbox.connect('toggled', self.set_setting, 'desktop-dir')
+        bookmarks_checkbox = builder.get_object('bookmarks_checkbox')
+        bookmarks_checkbox.set_active(settings.get_boolean('bookmarks'))
+        bookmarks_checkbox.connect('toggled', lambda b: settings.set_boolean('bookmarks', b.get_active()))
 
-        file_browser_root_dir_checkbox = Gtk.CheckButton.new_with_label(_('File browser root directory'))
-        file_browser_root_dir_checkbox.set_active(self.settings.get_boolean('file-browser-root-dir'))
-        file_browser_root_dir_checkbox.connect('toggled', self.set_setting, 'file-browser-root-dir')
+        desktop_dir_checkbox = builder.get_object('desktop_dir_checkbox')
+        desktop_dir_checkbox.set_active(settings.get_boolean('desktop-dir'))
+        desktop_dir_checkbox.connect('toggled', lambda b: settings.set_boolean('desktop-dir', b.get_active()))
 
-        home_dir_checkbox = Gtk.CheckButton.new_with_label(_('Home directory'))
-        home_dir_checkbox.set_active(self.settings.get_boolean('home-dir'))
-        home_dir_checkbox.connect('toggled', self.set_setting, 'home-dir')
+        file_browser_root_dir_checkbox = builder.get_object('file_browser_root_dir_checkbox')
+        file_browser_root_dir_checkbox.set_active(settings.get_boolean('file-browser-root-dir'))
+        file_browser_root_dir_checkbox.connect('toggled', lambda b: settings.set_boolean('file-browser-root-dir',
+                                                                                         b.get_active()))
 
-        open_docs_dir_checkbox = Gtk.CheckButton.new_with_label(_('Directory of the currently opened document(s)'))
-        open_docs_dir_checkbox.set_active(self.settings.get_boolean('open-docs-dir'))
-        open_docs_dir_checkbox.connect('toggled', self.set_setting, 'open-docs-dir')
+        home_dir_checkbox = builder.get_object('home_dir_checkbox')
+        home_dir_checkbox.set_active(settings.get_boolean('home-dir'))
+        home_dir_checkbox.connect('toggled', lambda b: settings.set_boolean('home-dir', b.get_active()))
 
-        recent_files_checkbox = Gtk.CheckButton.new_with_label(_('Recently used files'))
-        recent_files_checkbox.set_active(self.settings.get_boolean('recent-files'))
-        recent_files_checkbox.connect('toggled', self.set_setting, 'recent-files')
+        open_docs_dir_checkbox = builder.get_object('open_docs_dir_checkbox')
+        open_docs_dir_checkbox.set_active(settings.get_boolean('open-docs-dir'))
+        open_docs_dir_checkbox.connect('toggled', lambda b: settings.set_boolean('open-docs-dir', b.get_active()))
 
-        vbox = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
-        vbox.pack_start(look_label, False, False, 0)
-        vbox.pack_start(bookmarks_checkbox, False, False, 0)
-        vbox.pack_start(desktop_dir_checkbox, False, False, 0)
-        vbox.pack_start(file_browser_root_dir_checkbox, False, False, 0)
-        vbox.pack_start(home_dir_checkbox, False, False, 0)
-        vbox.pack_start(open_docs_dir_checkbox, False, False, 0)
-        vbox.pack_start(recent_files_checkbox, False, False, 0)
+        recent_files_checkbox = builder.get_object('recent_files_checkbox')
+        recent_files_checkbox.set_active(settings.get_boolean('recent-files'))
+        recent_files_checkbox.connect('toggled', lambda b: settings.set_boolean('recent-files', b.get_active()))
 
-        return vbox
-
-    def set_setting(self, button, key):
-        self.settings.set_boolean(key, button.get_active())
+        return builder.get_object('preferences_widget')
 
 # vim: ts=4 et
