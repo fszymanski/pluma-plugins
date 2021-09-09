@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <schemalist>
   <schema id="org.mate.pluma.plugins.websearch" path="/org/mate/pluma/plugins/websearch/">
+    <key name="use-custom-browser" type="b">
+      <default>false</default>
+      <summary>Use custom browser</summary>
+      <description>Whether to use a custom browser.</description>
+    </key>
+    <key name="browser" type="s">
+      <default>"firefox"</default>
+      <summary>Browser</summary>
+      <description>Browser name.</description>
+    </key>
     <key name="query-url" type="s">
       <default>"https://www.google.com/search?q=%s"</default>
       <summary>Query URL</summary>

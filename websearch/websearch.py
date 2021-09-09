@@ -23,6 +23,7 @@ try:
 except:
     _ = lambda s: s
 
+import os
 import re
 import webbrowser
 
@@ -101,6 +102,14 @@ class WebSearchPlugin(GObject.Object, Pluma.ViewActivatable):
             except TypeError:
                 return
 
+            if settings.get_boolean('use-custom-browser'):
+                try:
+                    webbrowser.get(settings.get_string('browser')).open(url)
+
+                    return
+                except webbrowser.Error:
+                    pass
+
             webbrowser.open(url)
 
 
@@ -113,32 +122,23 @@ class WebSearchConfigurable(GObject.Object, PeasGtk.Configurable):
     def do_create_configure_widget(self):
         settings = Gio.Settings.new(WEB_SEARCH_SCHEMA)
 
-        query_label = Gtk.Label.new(None)
-        query_label.set_halign(Gtk.Align.START)
-        query_label.set_markup('<b>{}</b>'.format(_('Query URL:')))
+        builder = Gtk.Builder()
+        builder.add_from_file(os.path.join(self.plugin_info.get_data_dir(), 'preferences.ui'))
 
-        entry = Gtk.Entry.new()
-        entry.set_width_chars(40)
-        entry.set_text(settings.get_string('query-url'))
+        browser_entry = builder.get_object('browser_entry')
+        browser_entry.set_text(settings.get_string('browser'))
+        browser_entry.set_sensitive(settings.get_boolean('use-custom-browser'))
+        browser_entry.connect('changed', lambda e: settings.set_string('browser', browser_entry.get_text()))
 
-        entry.connect('changed', lambda e: settings.set_string('query-url', entry.get_text()))
+        query_url_entry = builder.get_object('query_url_entry')
+        query_url_entry.set_text(settings.get_string('query-url'))
+        query_url_entry.connect('changed', lambda e: settings.set_string('query-url', query_url_entry.get_text()))
 
-        button = Gtk.Button.new_from_icon_name('edit-clear', Gtk.IconSize.MENU)
-        button.connect('clicked', lambda b: entry.set_text(''))
+        custom_browser_checkbox = builder.get_object('custom_browser_checkbox')
+        custom_browser_checkbox.set_active(settings.get_boolean('use-custom-browser'))
+        custom_browser_checkbox.connect('toggled', lambda b: settings.set_boolean('use-custom-browser', b.get_active()))
+        custom_browser_checkbox.connect('toggled', lambda b: browser_entry.set_sensitive(b.get_active()))
 
-        hbox = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
-        hbox.pack_start(entry, True, True, 0)
-        hbox.pack_start(button, False, False, 0)
-
-        info_label = Gtk.Label.new(None)
-        info_label.set_halign(Gtk.Align.START)
-        info_label.set_markup('<i>{}</i>'.format(_('URL with %s in place of query')))
-
-        vbox = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
-        vbox.pack_start(query_label, False, False, 0)
-        vbox.pack_start(hbox, False, False, 0)
-        vbox.pack_start(info_label, False, False, 0)
-
-        return vbox
+        return builder.get_object('preferences_widget')
 
 # vim: ts=4 et
