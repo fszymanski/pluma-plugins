@@ -65,6 +65,6 @@ class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
             settings = Gio.Settings.new(RESTORE_OPEN_FILES_SCHEMA)
             for uri in settings.get_value('uris'):
                 if Pluma.utils_uri_exists(uri):
-                    Pluma.commands_load_uri(self.window, uri, None, -1)
+                    self.window.create_tab_from_uri(uri, Pluma.encoding_get_utf8(), 0, False, False)
 
 # vim: ts=4 et

@@ -60,8 +60,8 @@ class TogglePanelPlugin(GObject.Object, Pluma.WindowActivatable):
         statusbar.add(self.hbox)
 
         side_panel = self.window.get_side_panel()
-        side_button.connect('toggled', lambda b: side_panel.set_property('visible', b.get_active()))
         side_panel.connect('notify::visible', lambda p, v: side_button.set_active(p.get_property('visible')))
+        side_button.connect('toggled', lambda b: side_panel.set_property('visible', b.get_active()))
 
         bottom_panel = self.window.get_bottom_panel()
         bottom_panel.connect('notify::visible', lambda p, v: bottom_button.set_active(p.get_property('visible')))
