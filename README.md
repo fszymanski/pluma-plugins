@@ -8,6 +8,7 @@ Currently available plugins:
 
 - **duplicateline** - *Duplicate current line, selected text or lines.*
 - **editorconfig** - *Maintain consistent coding style using EditorConfig files.*
+- **gitbranchindicator** - *Show the current git branch on status bar.*
 - **gotofile** - *Quickly find and open a file.*
 - **joinlines** - *Join selected lines.*
 - **macro** - *Record and playback a macro.*
@@ -18,6 +19,7 @@ Currently available plugins:
 
 Note:
 - The *editorconfig* plugin requires `python3-editorconfig`.
+- The *gitbranchindicator* plugin requires `python3-pygit2`.
 
 ## Installation
 
