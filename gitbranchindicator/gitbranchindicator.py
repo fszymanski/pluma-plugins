@@ -49,11 +49,16 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
 
         self.window.get_statusbar().pack_start(self.hbox, False, False, 48)
 
-        self.window.connect('active-tab-changed', lambda w, t: self.show_git_branch(t))
-        self.window.connect('active-tab-state-changed', lambda w: self.show_git_branch(w.get_active_tab()))
-        self.window.connect('tab-removed', lambda w, t: self.has_tabs())
+        self.handlers = [
+            self.window.connect('active-tab-changed', lambda w, t: self.show_git_branch(t)),
+            self.window.connect('active-tab-state-changed', lambda w: self.show_git_branch(w.get_active_tab())),
+            self.window.connect('tab-removed', lambda w, t: self.has_tabs())
+        ]
 
     def do_deactivate(self):
+        for handler in self.handlers:
+            self.window.disconnect(handler)
+
         self.hbox.destroy()
 
     def do_update_state(self):
