@@ -20,7 +20,7 @@ import gi
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('Pluma', '1.0')
-from gi.repository import GdkPixbuf, GObject, Gtk, Pluma
+from gi.repository import GdkPixbuf, GObject, Gtk, Pango, Pluma
 
 import pygit2
 
@@ -40,10 +40,12 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
         image = Gtk.Image.new_from_pixbuf(pixbuf)
 
         self.label = Gtk.Label.new(None)
+        self.label.set_max_width_chars(32)
+        self.label.set_ellipsize(Pango.EllipsizeMode.END)
 
         self.hbox = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
         self.hbox.pack_start(image, False, False, 0)
-        self.hbox.pack_start(self.label, False, False, 0)
+        self.hbox.pack_start(self.label, True, True, 0)
         self.hbox.show_all()
         self.hbox.hide()
 
