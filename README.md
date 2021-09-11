@@ -15,7 +15,7 @@ Currently available plugins:
 - **restoreopenfiles** - *Restore previously open files.*
 - **selectline** - *Select current line.*
 - **togglepanel** - *Show/hide panels with one click.*
-- **websearch** - *Search for word under cursor/selected text on the web.*
+- **websearch** - *Search for the current word/selection on the web.*
 
 Note:
 - All plugins require `Pluma >= 1.25.2`.

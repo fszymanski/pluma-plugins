@@ -24,7 +24,6 @@ except:
     _ = lambda s: s
 
 from pathlib import Path
-import re
 import webbrowser
 
 import gi
@@ -35,7 +34,6 @@ gi.require_version('Pluma', '1.0')
 from gi.repository import Gio, GObject, Gtk, PeasGtk, Pluma
 
 WEB_SEARCH_SCHEMA = 'org.mate.pluma.plugins.websearch'
-WORD_BOUNDARY_RE = re.compile(r'\s')
 
 
 class WebSearchPlugin(GObject.Object, Pluma.ViewActivatable):
@@ -78,15 +76,12 @@ class WebSearchPlugin(GObject.Object, Pluma.ViewActivatable):
             start, end = doc.get_selection_bounds()
         else:
             start = doc.get_iter_at_mark(doc.get_insert())
-            while start.backward_char():
-                if WORD_BOUNDARY_RE.match(start.get_char()) is not None:
-                    start.forward_char()
-                    break
-
             end = start.copy()
-            while end.forward_char():
-                if WORD_BOUNDARY_RE.match(end.get_char()) is not None:
-                    break
+            if not start.starts_word() and (start.inside_word() or start.ends_word()):
+                start.backward_word_start()
+
+            if not end.ends_word() and end.inside_word():
+                end.forward_word_end()
 
         return doc.get_text(start, end, False)
 
