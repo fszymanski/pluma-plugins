@@ -56,8 +56,6 @@ class GoToFilePlugin(GObject.Object, Pluma.WindowActivatable):
         super().__init__()
 
     def do_activate(self):
-        manager = self.window.get_ui_manager()
-
         action = Gtk.Action.new('GoToFile', _('Go to File...'))
         action.set_icon_name('document-open')
         action.connect('activate', lambda a: self.goto_file())
@@ -65,6 +63,7 @@ class GoToFilePlugin(GObject.Object, Pluma.WindowActivatable):
         self.action_group = Gtk.ActionGroup.new('GoToFilePluginActions')
         self.action_group.add_action_with_accel(action, '<Ctrl><Alt>o')
 
+        manager = self.window.get_ui_manager()
         manager.insert_action_group(self.action_group, -1)
         self.merge_id = manager.add_ui_from_string(ui_str)
 

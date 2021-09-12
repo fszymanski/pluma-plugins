@@ -55,8 +55,6 @@ class MacroPlugin(GObject.Object, Pluma.WindowActivatable):
         super().__init__()
 
     def do_activate(self):
-        manager = self.window.get_ui_manager()
-
         self.action_group = Gtk.ActionGroup.new('MacroPluginActions')
         self.action_group.add_actions([
             ('Macro', None, _('Macro'), None, None, None),
@@ -67,6 +65,7 @@ class MacroPlugin(GObject.Object, Pluma.WindowActivatable):
 
         self.set_action_sensitivity([True, False, False])
 
+        manager = self.window.get_ui_manager()
         manager.insert_action_group(self.action_group)
         self.merge_id = manager.add_ui_from_string(ui_str)
 

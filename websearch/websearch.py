@@ -23,6 +23,7 @@ try:
 except:
     _ = lambda s: s
 
+import os
 from pathlib import Path
 import webbrowser
 
@@ -118,7 +119,7 @@ class WebSearchConfigurable(GObject.Object, PeasGtk.Configurable):
         settings = Gio.Settings.new(WEB_SEARCH_SCHEMA)
 
         builder = Gtk.Builder()
-        builder.add_from_file(str(Path(self.plugin_info.get_data_dir()) / 'preferences.ui'))
+        builder.add_from_file(os.fspath(Path(self.plugin_info.get_data_dir(), 'preferences.ui')))
 
         browser_entry = builder.get_object('browser_entry')
         browser_entry.set_text(settings.get_string('browser'))

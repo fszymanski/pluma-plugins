@@ -14,6 +14,7 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
+import os
 from pathlib import Path
 
 import gi
@@ -35,7 +36,7 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
 
     def do_activate(self):
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
-            str(Path(self.plugin_info.get_data_dir()) / 'icons' / 'git-branch.svg'),
+            os.fspath(Path(self.plugin_info.get_data_dir(), 'icons/git-branch.svg')),
             *Gtk.IconSize.lookup(Gtk.IconSize.SMALL_TOOLBAR)[1:], True)
         image = Gtk.Image.new_from_pixbuf(pixbuf)
 
