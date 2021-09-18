@@ -23,6 +23,7 @@ try:
 except:
     _ = lambda s: s
 
+import platform
 from urllib.parse import urlparse
 
 import gi
@@ -31,6 +32,8 @@ gi.require_version('Pluma', '1.0')
 from gi.repository import Pluma
 
 import requests
+
+uname = platform.uname()
 
 
 class Service():
@@ -46,7 +49,7 @@ class Service():
             'api_paste_private': paste_private,
             'api_paste_expire_date': paste_expire_date
         }
-        headers = {'User-Agent': f'Pluma/{Pluma._version}'}
+        headers = {'User-Agent': f'Pluma/{Pluma._version} ({uname.system} {uname.machine})'}
 
         res = requests.post(api_url, data=body, headers=headers, timeout=60, allow_redirects=False)
         res.raise_for_status()
