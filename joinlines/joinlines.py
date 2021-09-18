@@ -68,7 +68,8 @@ class JoinLinesPlugin(GObject.Object, Pluma.WindowActivatable):
         manager.ensure_update()
 
     def do_update_state(self):
-        pass
+        view = self.window.get_active_view()
+        self.action_group.set_sensitive(bool(view) and view.get_editable())
 
     def join_lines(self):
         doc = self.window.get_active_document()
