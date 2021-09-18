@@ -12,6 +12,7 @@ Currently available plugins:
 - **gotofile** - *Quickly find and open a file.*
 - **joinlines** - *Join selected lines.*
 - **macro** - *Record and playback a macro.*
+- **pastebin** - *Store any text on Pastebin.com for easy sharing. (under development)*
 - **restoreopenfiles** - *Restore previously open files.*
 - **selectline** - *Select current line.*
 - **togglepanel** - *Show/hide panels with one click.*
@@ -21,6 +22,7 @@ Note:
 - All plugins require `Pluma >= 1.25.2`.
 - The *editorconfig* plugin requires `python3-editorconfig`.
 - The *gitbranchindicator* plugin requires `python3-pygit2`.
+- The *pastebin* plugin requires `python3-requests`.
 
 ## Installation
 

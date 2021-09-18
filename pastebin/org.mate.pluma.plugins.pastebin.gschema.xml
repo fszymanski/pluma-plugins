@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schemalist>
+  <schema id="org.mate.pluma.plugins.pastebin" path="/org/mate/pluma/plugins/pastebin/">
+    <key name="paste-format" type="s">
+      <default>"text"</default>
+      <summary></summary>
+      <description></description>
+    </key>
+    <key name="paste-expire-date" type="s">
+      <default>"N"</default>
+      <summary></summary>
+      <description></description>
+    </key>
+    <key name="paste-private" type="b">
+      <default>false</default>
+      <summary></summary>
+      <description></description>
+    </key>
+  </schema>
+</schemalist>

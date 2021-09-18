@@ -1,0 +1,9 @@
+[Plugin]
+Loader=python3
+Module=pastebin
+IAge=3
+Name=Pastebin
+Description=Store any text on Pastebin.com for easy sharing
+Authors=Filip Szymański <fszymanski.pl@gmail.com>
+Copyright=Copyright © 2021 Filip Szymański
+Website=https://github.com/fszymanski/pluma-plugins
