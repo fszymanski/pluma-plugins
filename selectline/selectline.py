@@ -69,7 +69,7 @@ class SelectLinePlugin(GObject.Object, Pluma.WindowActivatable):
 
     def do_update_state(self):
         view = self.window.get_active_view()
-        self.action_group.set_sensitive(bool(view) and view.get_editable())
+        self.action_group.set_sensitive(bool(view))
 
     def select_line(self):
         doc = self.window.get_active_document()
