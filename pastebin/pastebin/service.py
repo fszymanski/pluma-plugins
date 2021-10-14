@@ -60,4 +60,4 @@ class Service():
 
         return link
 
-# vim: ts=4 et
+# vim: ft=python3 ts=4 et

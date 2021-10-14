@@ -396,4 +396,4 @@ class PastebinDialog(Gtk.Dialog):
         settings.set_string('paste-expire-date', self.expiry_combo.get_active_id())
         settings.set_boolean('paste-private', self.private_check.get_active())
 
-# vim: ts=4 et
+# vim: ft=python3 ts=4 et

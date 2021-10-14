@@ -104,4 +104,4 @@ class DuplicateLinePlugin(GObject.Object, Pluma.WindowActivatable):
             curr_line = doc.get_text(start, end, False)
             doc.insert(end, f'\n{curr_line}')
 
-# vim: ts=4 et
+# vim: ft=python3 ts=4 et

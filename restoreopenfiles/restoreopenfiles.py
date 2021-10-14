@@ -73,4 +73,4 @@ class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
                     if self.window.get_tab_from_location(location) is None:
                         self.window.create_tab_from_uri(location.get_uri(), Pluma.encoding_get_utf8(), 0, False, False)
 
-# vim: ts=4 et
+# vim: ft=python3 ts=4 et

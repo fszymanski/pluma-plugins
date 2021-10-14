@@ -73,4 +73,4 @@ class TogglePanelPlugin(GObject.Object, Pluma.WindowActivatable):
     def do_update_state(self):
         pass
 
-# vim: ts=4 et
+# vim: ft=python3 ts=4 et

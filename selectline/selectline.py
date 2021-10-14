@@ -85,4 +85,4 @@ class SelectLinePlugin(GObject.Object, Pluma.WindowActivatable):
 
         doc.select_range(start, end)
 
-# vim: ts=4 et
+# vim: ft=python3 ts=4 et

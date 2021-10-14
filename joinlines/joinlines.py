@@ -86,4 +86,4 @@ class JoinLinesPlugin(GObject.Object, Pluma.WindowActivatable):
 
         doc.join_lines(start, end)
 
-# vim: ts=4 et
+# vim: ft=python3 ts=4 et

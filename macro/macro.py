@@ -101,4 +101,4 @@ class MacroPlugin(GObject.Object, Pluma.WindowActivatable):
         for i, v in enumerate(['StartRecording', 'StopRecording', 'Playback']):
             self.action_group.get_action(v).set_sensitive(sensitive[i])
 
-# vim: ts=4 et
+# vim: ft=python3 ts=4 et

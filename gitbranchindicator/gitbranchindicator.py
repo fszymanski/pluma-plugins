@@ -86,4 +86,4 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
         if self.window.get_active_tab() is None:
             self.hbox.hide()
 
-# vim: ts=4 et
+# vim: ft=python3 ts=4 et

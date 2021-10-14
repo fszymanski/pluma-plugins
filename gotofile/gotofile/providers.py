@@ -59,7 +59,7 @@ class BookmarksProvider(Provider):
             self.fill()
 
     def get_bookmark_dirs(self):
-        filename = Path(GLib.get_user_config_dir()) / 'gtk-3.0' / 'bookmarks'
+        filename = Path(GLib.get_user_config_dir(), 'gtk-3.0/bookmarks')
         if not filename.is_file():
             filename = Path.home() / '.gtk-bookmarks'
 
@@ -175,4 +175,4 @@ class RecentFilesProvider(Provider):
                     if count >= self.max_recents:
                         break
 
-# vim: ts=4 et
+# vim: ft=python3 ts=4 et

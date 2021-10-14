@@ -73,4 +73,4 @@ class PastebinPlugin(GObject.Object, Pluma.WindowActivatable):
         view = self.window.get_active_view()
         self.action_group.set_sensitive(bool(view))
 
-# vim: ts=4 et
+# vim: ft=python3 ts=4 et

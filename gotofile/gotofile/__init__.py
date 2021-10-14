@@ -120,4 +120,4 @@ class GoToFileConfigurable(GObject.Object, PeasGtk.Configurable):
 
         return builder.get_object('preferences_widget')
 
-# vim: ts=4 et
+# vim: ft=python3 ts=4 et

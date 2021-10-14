@@ -181,4 +181,4 @@ class Popup(Gtk.Window):
 
             self.destroy()
 
-# vim: ts=4 et
+# vim: ft=python3 ts=4 et
