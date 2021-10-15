@@ -14,16 +14,8 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
-try:
-    import gettext
-
-    gettext.bindtextdomain('pluma-plugins')
-    gettext.textdomain('pluma-plugins')
-    _ = gettext.gettext
-except:
-    _ = lambda s: s
-
 import os
+from gettext import gettext as _
 from pathlib import Path
 
 import gi

@@ -14,14 +14,10 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
-try:
-    import gettext
+import gettext
 
-    gettext.bindtextdomain('pluma-plugins')
-    gettext.textdomain('pluma-plugins')
-    _ = gettext.gettext
-except:
-    _ = lambda s: s
+gettext.textdomain('pluma-websearch')
+_ = gettext.gettext
 
 import os
 from pathlib import Path
