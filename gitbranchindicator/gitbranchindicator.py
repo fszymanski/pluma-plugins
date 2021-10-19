@@ -23,7 +23,7 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Pluma', '1.0')
 from gi.repository import GdkPixbuf, GObject, Gtk, Pango, Pluma
 
-import pygit2
+from utils import get_current_git_branch, is_git_dir
 
 
 class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
@@ -71,15 +71,9 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
         doc = tab.get_document()
         location = doc.get_location()
         if location is not None and location.query_exists():
-            path = pygit2.discover_repository(location.get_path())
-            if path is not None:
-                repo = pygit2.Repository(path)
-                try:
-                    branch = repo.head.shorthand
-                except pygit2.GitError:
-                    branch = Path(self.lookup_reference('HEAD').target).name
-
-                self.label.set_text(branch)
+            path = Path(location.get_path()).parent
+            if is_git_dir(path):
+                self.label.set_text(get_current_git_branch(path))
 
                 self.hbox.show()
 
