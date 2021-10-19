@@ -41,7 +41,7 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
         image = Gtk.Image.new_from_pixbuf(pixbuf)
 
         self.label = Gtk.Label.new(None)
-        self.label.set_max_width_chars(32)
+        self.label.set_max_width_chars(40)
         self.label.set_ellipsize(Pango.EllipsizeMode.END)
 
         self.hbox = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
