@@ -47,6 +47,6 @@ def get_current_git_branch(path):
     if branch:
         return branch
 
-    return do_shell('git symbolic-ref --short HEAD', path)
+    return do_shell('git rev-parse HEAD', path)
 
 # vim: ft=python3 ts=4 et
