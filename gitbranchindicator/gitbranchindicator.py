@@ -71,10 +71,15 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
         doc = tab.get_document()
         location = doc.get_location()
         if location is not None and location.query_exists():
-            repo_path = pygit2.discover_repository(location.get_path())
-            if repo_path is not None:
-                repo = pygit2.Repository(repo_path)
-                self.label.set_text(repo.head.shorthand)
+            path = pygit2.discover_repository(location.get_path())
+            if path is not None:
+                repo = pygit2.Repository(path)
+                try:
+                    branch = repo.head.shorthand
+                except pygit2.GitError:
+                    branch = Path(self.lookup_reference('HEAD').target).name
+
+                self.label.set_text(branch)
 
                 self.hbox.show()
 
