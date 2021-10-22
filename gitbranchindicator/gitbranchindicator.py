@@ -36,7 +36,7 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
 
     def do_activate(self):
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
-            os.fspath(Path(self.plugin_info.get_data_dir(), 'icons/git-branch.svg')),
+            os.fspath(Path(self.plugin_info.get_data_dir(), 'icons/git-branch-symbolic.svg')),
             *Gtk.IconSize.lookup(Gtk.IconSize.SMALL_TOOLBAR)[1:], True)
         image = Gtk.Image.new_from_pixbuf(pixbuf)
 
@@ -44,13 +44,13 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
         self.label.set_max_width_chars(40)
         self.label.set_ellipsize(Pango.EllipsizeMode.END)
 
-        self.hbox = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
+        self.hbox = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 2)
         self.hbox.pack_start(image, False, False, 0)
         self.hbox.pack_start(self.label, True, True, 0)
         self.hbox.show_all()
         self.hbox.hide()
 
-        self.window.get_statusbar().pack_start(self.hbox, False, False, 48)
+        self.window.get_statusbar().pack_start(self.hbox, False, False, 18)
 
         self.handlers = [
             self.window.connect('active-tab-changed', lambda w, t: self.show_git_branch(t)),
