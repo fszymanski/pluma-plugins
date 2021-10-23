@@ -14,11 +14,6 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
-import gettext
-
-gettext.textdomain('pluma-duplicateline')
-_ = gettext.gettext
-
 import gi
 
 gi.require_version('Gtk', '3.0')
@@ -47,8 +42,8 @@ class DuplicateLinePlugin(GObject.Object, Pluma.WindowActivatable):
         super().__init__()
 
     def do_activate(self):
-        action = Gtk.Action.new('DuplicateLine', _('Duplicate Line/Selection'))
-        action.connect('activate', lambda a: self.duplicate_line())
+        action = Gtk.Action.new('DuplicateLine', 'Duplicate Line/Selection')
+        action.connect('activate', lambda _: self.duplicate_line())
 
         self.action_group = Gtk.ActionGroup.new('DuplicateLinePluginActions')
         self.action_group.add_action_with_accel(action, '<Ctrl><Shift>d')

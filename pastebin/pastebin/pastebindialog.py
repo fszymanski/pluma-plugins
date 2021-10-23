@@ -15,7 +15,6 @@
 #
 
 import os
-from gettext import gettext as _
 from pathlib import Path
 
 import gi
@@ -320,32 +319,32 @@ class PastebinDialog(Gtk.Dialog):
         for hl in SYNTAX_HIGHLIGHTING:
             self.format_combo.append(*hl)
 
-        for date in [['N', _('Never')],
-                     ['10M', _('Ten minutes')],
-                     ['1H', _('One hour')],
-                     ['1D', _('One day')],
-                     ['1W', _('One week')],
-                     ['2W', _('Two weeks')],
-                     ['1M', _('One month')],
-                     ['6M', _('Six months')],
-                     ['1Y', _('One year')]]:
+        for date in [['N', 'Never'],
+                     ['10M', 'Ten minutes'],
+                     ['1H', 'One hour'],
+                     ['1D', 'One day'],
+                     ['1W', 'One week'],
+                     ['2W', 'Two weeks'],
+                     ['1M', 'One month'],
+                     ['6M', 'Six months'],
+                     ['1Y', 'One year']]:
             self.expiry_combo.append(*date)
 
         self.read_settings()
 
         self.show_all()
 
-        self.connect('destroy', lambda w: self.write_settings())
+        self.connect('destroy', lambda _: self.write_settings())
 
     @Gtk.Template.Callback()
-    def cancel_button_clicked(self, *args):
+    def cancel_button_clicked(self, *_):
         self.close()
 
     @Gtk.Template.Callback()
-    def upload_button_clicked(self, *args):
+    def upload_button_clicked(self, *_):
         self.stack.set_visible_child(self.spinner)
 
-        self.cancel_button.set_label(_('Close'))
+        self.cancel_button.set_label('Close')
         self.upload_button.set_sensitive(False)
 
         try:

@@ -14,11 +14,6 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
-import gettext
-
-gettext.textdomain('pluma-selectline')
-_ = gettext.gettext
-
 import gi
 
 gi.require_version('Gtk', '3.0')
@@ -47,8 +42,8 @@ class SelectLinePlugin(GObject.Object, Pluma.WindowActivatable):
         super().__init__()
 
     def do_activate(self):
-        action = Gtk.Action.new('SelectLine', _('Select Line'))
-        action.connect('activate', lambda a: self.select_line())
+        action = Gtk.Action.new('SelectLine', 'Select Line')
+        action.connect('activate', lambda _: self.select_line())
 
         self.action_group = Gtk.ActionGroup.new('SelectLinePluginActions')
         self.action_group.add_action_with_accel(action, '<Ctrl>t')

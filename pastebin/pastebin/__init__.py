@@ -14,11 +14,6 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
-import gettext
-
-gettext.textdomain('pluma-pastebin')
-_ = gettext.gettext
-
 import gi
 
 gi.require_version('Gtk', '3.0')
@@ -49,8 +44,8 @@ class PastebinPlugin(GObject.Object, Pluma.WindowActivatable):
         super().__init__()
 
     def do_activate(self):
-        action = action = Gtk.Action.new('UploadToPastebin', _('Upload to Pastebin...'))
-        action.connect('activate', lambda a: PastebinDialog(self.window.get_active_document()))
+        action = action = Gtk.Action.new('UploadToPastebin', 'Upload to Pastebin...')
+        action.connect('activate', lambda _: PastebinDialog(self.window.get_active_document()))
 
         self.action_group = Gtk.ActionGroup.new('PastebinPluginActions')
         self.action_group.add_action_with_accel(action, None)

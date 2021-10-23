@@ -14,11 +14,6 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
-import gettext
-
-gettext.textdomain('pluma-macro')
-_ = gettext.gettext
-
 import gi
 
 gi.require_version('Gtk', '3.0')
@@ -53,10 +48,10 @@ class MacroPlugin(GObject.Object, Pluma.WindowActivatable):
     def do_activate(self):
         self.action_group = Gtk.ActionGroup.new('MacroPluginActions')
         self.action_group.add_actions([
-            ('Macro', None, _('Macro'), None, None, None),
-            ('StartRecording', Gtk.STOCK_MEDIA_RECORD, _('Start Recording'), None, None, lambda a: self.start_recording_macro()),
-            ('StopRecording', Gtk.STOCK_MEDIA_STOP, _('Stop Recording'), None, None, lambda a: self.stop_recording_macro()),
-            ('Playback', Gtk.STOCK_MEDIA_PLAY, _('Playback'), '<Ctrl><Alt>m', None, lambda a: self.playback_macro())
+            ('Macro', None, 'Macro', None, None, None),
+            ('StartRecording', Gtk.STOCK_MEDIA_RECORD, 'Start Recording', None, None, lambda _: self.start_recording_macro()),
+            ('StopRecording', Gtk.STOCK_MEDIA_STOP, 'Stop Recording', None, None, lambda _: self.stop_recording_macro()),
+            ('Playback', Gtk.STOCK_MEDIA_PLAY, 'Playback', '<Ctrl><Alt>m', None, lambda _: self.playback_macro())
         ])
 
         self.set_action_sensitivity([True, False, False])
@@ -79,7 +74,7 @@ class MacroPlugin(GObject.Object, Pluma.WindowActivatable):
 
         self.set_action_sensitivity([False, True, False])
 
-        self.handler_id = self.window.connect('key-press-event', self.record_macro)
+        self.handler_id = self.window.connect('key-press-event', lambda _, e: self.record_macro(e))
 
     def stop_recording_macro(self):
         self.set_action_sensitivity([True, False, True])
@@ -90,7 +85,7 @@ class MacroPlugin(GObject.Object, Pluma.WindowActivatable):
         for event in self.macro:
             event.put()
 
-    def record_macro(self, widget, event):
+    def record_macro(self, event):
         self.macro.append(event.copy())
 
     def set_action_sensitivity(self, sensitive):

@@ -33,7 +33,7 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
     def do_activate(self):
         doc = self.view.get_buffer()
         if not hasattr(doc, 'editorconfig_handler'):
-            doc.editorconfig_handler = doc.connect('loaded', self.apply_editorconfig)
+            doc.editorconfig_handler = doc.connect('loaded', lambda d, _: self.apply_editorconfig(d))
 
     def do_deactivate(self):
         app = Pluma.App.get_default()
@@ -58,7 +58,7 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
             except editorconfig.EditorConfigError:
                 pass
 
-    def apply_editorconfig(self, doc, arg):
+    def apply_editorconfig(self, doc):
         config = self.parse_editorconfig(doc)
         if config is None:
             return
@@ -91,11 +91,11 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
                 if 'trailsave' not in settings.get_value('active-plugins'):
                     if not hasattr(doc, 'editorconfig_trim_trailing_whitespace_handler'):
                         doc.editorconfig_trim_trailing_whitespace_handler = doc.connect(
-                            'save', self.trim_trailing_whitespace)
+                            'save', lambda d, *_: self.trim_trailing_whitespace(d))
             elif name == 'max_line_length':
                 self.view.set_right_margin_position(int(value))
 
-    def trim_trailing_whitespace(self, doc, uri, encoding, flags):
+    def trim_trailing_whitespace(self, doc):
         for linenr in range(0, doc.get_line_count()):
             start = doc.get_iter_at_line(linenr)
 

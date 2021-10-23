@@ -32,8 +32,8 @@ class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
 
     def do_activate(self):
         self.handlers = [
-            self.window.connect('delete-event', lambda w, e: self.save_open_files()),
-            self.window.connect('show', lambda w: self.restore_open_files())
+            self.window.connect('delete-event', lambda *_: self.save_open_files()),
+            self.window.connect('show', lambda _: self.restore_open_files())
         ]
 
     def do_deactivate(self):

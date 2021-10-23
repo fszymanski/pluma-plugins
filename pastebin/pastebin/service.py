@@ -15,7 +15,6 @@
 #
 
 import platform
-from gettext import gettext as _
 from urllib.parse import urlparse
 
 import gi
@@ -48,7 +47,7 @@ class Service():
 
         link = res.text
         if not urlparse(link).scheme:
-            raise TypeError(_('No URL scheme'))
+            raise TypeError('No URL scheme')
 
         return link
 

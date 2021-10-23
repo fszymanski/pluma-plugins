@@ -14,11 +14,6 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
-import gettext
-
-gettext.textdomain('pluma-joinlines')
-_ = gettext.gettext
-
 import gi
 
 gi.require_version('Gtk', '3.0')
@@ -47,8 +42,8 @@ class JoinLinesPlugin(GObject.Object, Pluma.WindowActivatable):
         super().__init__()
 
     def do_activate(self):
-        action = Gtk.Action.new('JoinLines', _('Join Lines'))
-        action.connect('activate', lambda a: self.join_lines())
+        action = Gtk.Action.new('JoinLines', 'Join Lines')
+        action.connect('activate', lambda _: self.join_lines())
 
         self.action_group = Gtk.ActionGroup.new('JoinLinesPluginActions')
         self.action_group.add_action_with_accel(action, '<Ctrl>j')

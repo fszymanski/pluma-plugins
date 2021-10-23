@@ -14,11 +14,6 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
-import gettext
-
-gettext.textdomain('pluma-websearch')
-_ = gettext.gettext
-
 import os
 from pathlib import Path
 import webbrowser
@@ -57,8 +52,8 @@ class WebSearchPlugin(GObject.Object, Pluma.ViewActivatable):
         pass
 
     def append_search_to_context_menu(self, view, popup):
-        menu_item = Gtk.MenuItem.new_with_label(_('Web Search'))
-        menu_item.connect('activate', lambda m: self.search())
+        menu_item = Gtk.MenuItem.new_with_label('Web Search')
+        menu_item.connect('activate', lambda _: self.search())
         menu_item.show()
 
         separator = Gtk.SeparatorMenuItem.new()
@@ -120,11 +115,11 @@ class WebSearchConfigurable(GObject.Object, PeasGtk.Configurable):
         browser_entry = builder.get_object('browser_entry')
         browser_entry.set_text(settings.get_string('browser'))
         browser_entry.set_sensitive(settings.get_boolean('use-custom-browser'))
-        browser_entry.connect('changed', lambda e: settings.set_string('browser', browser_entry.get_text()))
+        browser_entry.connect('changed', lambda _: settings.set_string('browser', browser_entry.get_text()))
 
         query_url_entry = builder.get_object('query_url_entry')
         query_url_entry.set_text(settings.get_string('query-url'))
-        query_url_entry.connect('changed', lambda e: settings.set_string('query-url', query_url_entry.get_text()))
+        query_url_entry.connect('changed', lambda _: settings.set_string('query-url', query_url_entry.get_text()))
 
         custom_browser_checkbox = builder.get_object('custom_browser_checkbox')
         custom_browser_checkbox.set_active(settings.get_boolean('use-custom-browser'))
