@@ -9,7 +9,6 @@ Currently available plugins:
 - **duplicateline** - *Duplicate current line, selected text or lines.*
 - **editorconfig** - *Maintain consistent coding style using EditorConfig files.*
 - **gitbranchindicator** - *Show the current git branch on status bar.*
-- **gotofile** - *Quickly find and open a file.*
 - **joinlines** - *Join selected lines.*
 - **macro** - *Record and playback a macro.*
 - **pastebin** - *Store any text on Pastebin.com for easy sharing.*
