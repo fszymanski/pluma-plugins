@@ -332,13 +332,11 @@ class PastebinDialog(Gtk.Dialog):
 
         self.read_settings()
 
-        self.show_all()
-
         self.connect('destroy', lambda _: self.write_settings())
 
     @Gtk.Template.Callback()
     def cancel_button_clicked(self, *_):
-        self.close()
+        self.destroy()
 
     @Gtk.Template.Callback()
     def upload_button_clicked(self, *_):
