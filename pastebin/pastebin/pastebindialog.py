@@ -311,10 +311,12 @@ class PastebinDialog(Gtk.Dialog):
     cancel_button = Gtk.Template.Child()
     upload_button = Gtk.Template.Child()
 
-    def __init__(self, doc):
+    def __init__(self, window):
         super().__init__()
 
-        self.doc = doc
+        self.doc = window.get_active_document()
+
+        self.set_transient_for(window)
 
         for hl in SYNTAX_HIGHLIGHTING:
             self.format_combo.append(*hl)
