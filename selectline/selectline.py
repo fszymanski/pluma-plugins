@@ -25,7 +25,7 @@ ui_str = """
     <menubar name='MenuBar'>
         <menu name='EditMenu' action='Edit'>
             <placeholder name='EditOps_2'>
-                <menuitem name='SelectLine' action='SelectLine'/>
+                <menuitem name='EditSelectLineMenu' action='EditSelectLine'/>
             </placeholder>
         </menu>
     </menubar>
@@ -42,7 +42,7 @@ class SelectLinePlugin(GObject.Object, Pluma.WindowActivatable):
         super().__init__()
 
     def do_activate(self):
-        action = Gtk.Action(name='SelectLine', label='Select Line')
+        action = Gtk.Action(name='EditSelectLine', label='Select Line')
         action.connect('activate', lambda _: self.select_line())
 
         self.action_group = Gtk.ActionGroup(name='SelectLinePluginActions')

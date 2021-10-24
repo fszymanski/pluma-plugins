@@ -27,7 +27,7 @@ ui_str = """
     <menubar name='MenuBar'>
         <menu name='ToolsMenu' action='Tools'>
             <placeholder name='ToolsOps_1'>
-                <menuitem name='UploadToPastebin' action='UploadToPastebin'/>
+                <menuitem name='ToolsUploadToPastebinMenu' action='ToolsUploadToPastebin'/>
             </placeholder>
         </menu>
     </menubar>
@@ -44,7 +44,7 @@ class PastebinPlugin(GObject.Object, Pluma.WindowActivatable):
         super().__init__()
 
     def do_activate(self):
-        action = action = Gtk.Action(name='UploadToPastebin', label='Upload to Pastebin...')
+        action = action = Gtk.Action(name='ToolsUploadToPastebin', label='Upload to Pastebin...')
         action.connect('activate', lambda _: PastebinDialog(self.window))
 
         self.action_group = Gtk.ActionGroup(name='PastebinPluginActions')

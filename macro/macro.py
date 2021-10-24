@@ -25,10 +25,10 @@ ui_str = """
     <menubar name='MenuBar'>
         <menu name='ToolsMenu' action='Tools'>
             <placeholder name='ToolsOps_2'>
-                <menu name='Macro' action='Macro'>
-                    <menuitem name='StartRecording' action='StartRecording'/>
-                    <menuitem name='StopRecording' action='StopRecording'/>
-                    <menuitem name='Playback' action='Playback'/>
+                <menu name='ToolsMacroMenu' action='ToolsMacro'>
+                    <menuitem name='MacroStartRecordingMenu' action='MacroStartRecording'/>
+                    <menuitem name='MacroStopRecordingMenu' action='MacroStopRecording'/>
+                    <menuitem name='MacroPlaybackMenu' action='MacroPlayback'/>
                 </menu>
             </placeholder>
         </menu>
@@ -48,10 +48,10 @@ class MacroPlugin(GObject.Object, Pluma.WindowActivatable):
     def do_activate(self):
         self.action_group = Gtk.ActionGroup(name='MacroPluginActions')
         self.action_group.add_actions([
-            ('Macro', None, 'Macro', None, None, None),
-            ('StartRecording', Gtk.STOCK_MEDIA_RECORD, 'Start Recording', None, None, lambda _: self.start_recording_macro()),
-            ('StopRecording', Gtk.STOCK_MEDIA_STOP, 'Stop Recording', None, None, lambda _: self.stop_recording_macro()),
-            ('Playback', Gtk.STOCK_MEDIA_PLAY, 'Playback', '<Ctrl><Alt>m', None, lambda _: self.playback_macro())
+            ('ToolsMacro', None, 'Macro', None, None, None),
+            ('MacroStartRecording', Gtk.STOCK_MEDIA_RECORD, 'Start Recording', None, None, lambda _: self.start_recording_macro()),
+            ('MacroStopRecording', Gtk.STOCK_MEDIA_STOP, 'Stop Recording', None, None, lambda _: self.stop_recording_macro()),
+            ('MacroPlayback', Gtk.STOCK_MEDIA_PLAY, 'Playback', '<Ctrl><Alt>m', None, lambda _: self.playback_macro())
         ])
 
         self.set_action_sensitivity([True, False, False])
@@ -89,7 +89,7 @@ class MacroPlugin(GObject.Object, Pluma.WindowActivatable):
         self.macro.append(event.copy())
 
     def set_action_sensitivity(self, sensitive):
-        for i, v in enumerate(['StartRecording', 'StopRecording', 'Playback']):
+        for i, v in enumerate(['MacroStartRecording', 'MacroStopRecording', 'MacroPlayback']):
             self.action_group.get_action(v).set_sensitive(sensitive[i])
 
 # vim: ft=python3 ts=4 et

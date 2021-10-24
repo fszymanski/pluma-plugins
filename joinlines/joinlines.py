@@ -25,7 +25,7 @@ ui_str = """
     <menubar name='MenuBar'>
         <menu name='EditMenu' action='Edit'>
             <placeholder name='EditOps_1'>
-                <menuitem name='JoinLines' action='JoinLines'/>
+                <menuitem name='EditJoinLinesMenu' action='EditJoinLines'/>
             </placeholder>
         </menu>
     </menubar>
@@ -42,7 +42,7 @@ class JoinLinesPlugin(GObject.Object, Pluma.WindowActivatable):
         super().__init__()
 
     def do_activate(self):
-        action = Gtk.Action(name='JoinLines', label='Join Lines')
+        action = Gtk.Action(name='EditJoinLines', label='Join Lines')
         action.connect('activate', lambda _: self.join_lines())
 
         self.action_group = Gtk.ActionGroup(name='JoinLinesPluginActions')

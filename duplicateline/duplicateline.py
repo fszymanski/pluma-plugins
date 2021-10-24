@@ -25,7 +25,7 @@ ui_str = """
     <menubar name='MenuBar'>
         <menu name='EditMenu' action='Edit'>
             <placeholder name='EditOps_1'>
-                <menuitem name='DuplicateLine' action='DuplicateLine'/>
+                <menuitem name='EditDuplicateLineSelectionMenu' action='EditDuplicateLineSelection'/>
             </placeholder>
         </menu>
     </menubar>
@@ -42,7 +42,7 @@ class DuplicateLinePlugin(GObject.Object, Pluma.WindowActivatable):
         super().__init__()
 
     def do_activate(self):
-        action = Gtk.Action(name='DuplicateLine', label='Duplicate Line/Selection')
+        action = Gtk.Action(name='EditDuplicateLineSelection', label='Duplicate Line/Selection')
         action.connect('activate', lambda _: self.duplicate_line())
 
         self.action_group = Gtk.ActionGroup(name='DuplicateLinePluginActions')
