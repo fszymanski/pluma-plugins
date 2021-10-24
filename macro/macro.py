@@ -46,7 +46,7 @@ class MacroPlugin(GObject.Object, Pluma.WindowActivatable):
         super().__init__()
 
     def do_activate(self):
-        self.action_group = Gtk.ActionGroup.new('MacroPluginActions')
+        self.action_group = Gtk.ActionGroup(name='MacroPluginActions')
         self.action_group.add_actions([
             ('Macro', None, 'Macro', None, None, None),
             ('StartRecording', Gtk.STOCK_MEDIA_RECORD, 'Start Recording', None, None, lambda _: self.start_recording_macro()),

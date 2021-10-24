@@ -42,10 +42,10 @@ class SelectLinePlugin(GObject.Object, Pluma.WindowActivatable):
         super().__init__()
 
     def do_activate(self):
-        action = Gtk.Action.new('SelectLine', 'Select Line')
+        action = Gtk.Action(name='SelectLine', label='Select Line')
         action.connect('activate', lambda _: self.select_line())
 
-        self.action_group = Gtk.ActionGroup.new('SelectLinePluginActions')
+        self.action_group = Gtk.ActionGroup(name='SelectLinePluginActions')
         self.action_group.add_action_with_accel(action, '<Ctrl>t')
 
         manager = self.window.get_ui_manager()

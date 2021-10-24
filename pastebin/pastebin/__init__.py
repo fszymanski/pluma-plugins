@@ -44,10 +44,10 @@ class PastebinPlugin(GObject.Object, Pluma.WindowActivatable):
         super().__init__()
 
     def do_activate(self):
-        action = action = Gtk.Action.new('UploadToPastebin', 'Upload to Pastebin...')
+        action = action = Gtk.Action(name='UploadToPastebin', label='Upload to Pastebin...')
         action.connect('activate', lambda _: PastebinDialog(self.window.get_active_document()))
 
-        self.action_group = Gtk.ActionGroup.new('PastebinPluginActions')
+        self.action_group = Gtk.ActionGroup(name='PastebinPluginActions')
         self.action_group.add_action_with_accel(action, None)
 
         manager = self.window.get_ui_manager()
