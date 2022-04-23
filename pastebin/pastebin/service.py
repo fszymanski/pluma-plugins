@@ -27,7 +27,7 @@ import requests
 uname = platform.uname()
 
 
-class Service():
+class Service:
     @staticmethod
     def upload(paste_code, paste_name, paste_format, paste_private, paste_expire_date):
         api_url = 'https://pastebin.com/api/api_post.php'
