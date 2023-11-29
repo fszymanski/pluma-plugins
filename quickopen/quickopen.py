@@ -56,7 +56,7 @@ class AsyncSpawn(GObject.GObject):
                 standard_output=True,
                 standard_error=True)
         except GLib.Error as e:
-            print(f"Error: Failed to execute '{' '.join(cmd)}': {e}")  # For debugging purposes
+            print(f"Error: Failed to execute '{' '.join(cmd)}': {e}")  # debug
 
         fout = os.fdopen(stdout, "r")
         ferr = os.fdopen(stderr, "r")
@@ -115,6 +115,8 @@ class Popup(Gtk.Dialog):
 
         selection = file_view.get_selection()
 
+        filter_entry.connect("search-changed", self.select_first_row, selection)
+
         open_button.connect("clicked", self.open_file, selection)
         file_view.connect("row-activated", self.open_file, selection)
 
@@ -130,7 +132,7 @@ class Popup(Gtk.Dialog):
         self.connect("key-press-event", self.destroy_on_escape_key)
 
         spawn = AsyncSpawn()
-        spawn.connect("process-done", self.on_process_done)
+        spawn.connect("process-done", self.on_process_done, selection)
         spawn.connect("stdout", self.on_stdout, model)
         spawn.connect("stderr", self.on_stderr)
 
@@ -159,13 +161,16 @@ class Popup(Gtk.Dialog):
         if iter_ is not None:
             file_label.set_text(model.get_value(iter_, 0))
 
+    def select_first_row(self, filter_entry, selection):
+        selection.select_path(Gtk.TreePath.new_first())
+
     def cancel_process(self, button, pid):
         GLib.spawn_close_pid(pid)
 
         self.destroy()
 
     def open_file(self, *args):
-        model, iter_ = args[-1].get_selected()
+        model, iter_ = args[-1].get_selected()  # args[-1] = selection
         if iter_ is not None:
             path = model.get_value(iter_, 0)
             location = Gio.file_new_for_path(path)
@@ -177,14 +182,16 @@ class Popup(Gtk.Dialog):
 
             self.destroy()
 
-    def on_process_done(self, sender, pid):
+    def on_process_done(self, sender, pid, selection):
         GLib.spawn_close_pid(pid)
+
+        self.select_first_row(None, selection)
 
     def on_stdout(self, sender, line, model):
         model.append([line.rstrip()])
 
     def on_stderr(self, sender, line):
-        print(f"Error: {line.rstrip()}")  # For debugging purposes
+        print(f"Error: {line.rstrip()}")  # debug
 
 
 class QuickOpenPlugin(GObject.Object, Pluma.WindowActivatable):
