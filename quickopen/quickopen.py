@@ -21,7 +21,6 @@ import gi
 gi.require_version("Gdk", "3.0")
 gi.require_version("Gtk", "3.0")
 gi.require_version("Pluma", "1.0")
-
 from gi.repository import Gdk, Gio, GLib, GObject, Gtk, Pango, Pluma
 
 ui_str = """
@@ -102,14 +101,13 @@ class Popup(Gtk.Dialog):
 
         model = Gtk.ListStore(str)
         file_filter = model.filter_new()
-        file_filter.set_visible_func(self.filename_filter_func, filter_entry)
-        file_view = Gtk.TreeView(model=file_filter)
-        file_view.set_activate_on_single_click(True)
+        file_filter.set_visible_func(self.file_filter_func, filter_entry)
+        file_view = Gtk.TreeView(activate_on_single_click=True, headers_visible=False, model=file_filter)
 
         filter_entry.connect("search-changed", lambda _: file_filter.refilter())
 
         renderer = Gtk.CellRendererText()
-        column = Gtk.TreeViewColumn("Filename", renderer, text=0)
+        column = Gtk.TreeViewColumn(cell_renderer=renderer, text=0)
         file_view.append_column(column)
 
         scroller = Gtk.ScrolledWindow()
@@ -120,9 +118,7 @@ class Popup(Gtk.Dialog):
         open_button.connect("clicked", self.open_file, selection)
         file_view.connect("row-activated", self.open_file, selection)
 
-        file_label = Gtk.Label()
-        file_label.set_halign(Gtk.Align.START)
-        file_label.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
+        file_label = Gtk.Label(ellipsize=Pango.EllipsizeMode.MIDDLE, halign=Gtk.Align.START)
 
         selection.connect("changed", self.on_selection_changed, file_label)
 
@@ -144,7 +140,7 @@ class Popup(Gtk.Dialog):
 
         self.show_all()
 
-    def filename_filter_func(self, model, iter_, filter_entry):
+    def file_filter_func(self, model, iter_, filter_entry):
         needle = filter_entry.get_text().strip()
         if not needle:
             return True
