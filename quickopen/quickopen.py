@@ -160,6 +160,8 @@ class Popup(Gtk.Dialog):
         model, iter_ = selection.get_selected()
         if iter_ is not None:
             file_label.set_text(model.get_value(iter_, 0))
+        else:
+            file_label.set_text("")
 
     def select_first_row(self, filter_entry, selection):
         selection.select_path(Gtk.TreePath.new_first())
@@ -183,9 +185,9 @@ class Popup(Gtk.Dialog):
             self.destroy()
 
     def on_process_done(self, sender, pid, selection):
-        GLib.spawn_close_pid(pid)
-
         self.select_first_row(None, selection)
+
+        GLib.spawn_close_pid(pid)
 
     def on_stdout(self, sender, line, model):
         model.append([line.rstrip()])
