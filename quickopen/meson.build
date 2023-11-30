@@ -19,4 +19,4 @@ configure_file(input: '__init__.py.in',
                install_dir: conf.get('PKG_DATA_DIR'))
 
 run_command(python3, '-m', 'compileall', meson.current_source_dir() / 'src', check: true)
-install_subdir('src', install_dir: conf.get('PKG_DATA_DIR'))
+install_subdir('src', install_dir: conf.get('PKG_DATA_DIR'), strip_directory : true)

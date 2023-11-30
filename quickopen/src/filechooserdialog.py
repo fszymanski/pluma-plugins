@@ -7,7 +7,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Pluma", "1.0")
 from gi.repository import Gio, Gdk, GLib, Gtk, Pluma
 
-from providers import get_recent_files
+from .providers import get_recent_files
 
 
 class COLUMN(IntEnum):
