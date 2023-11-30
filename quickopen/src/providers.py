@@ -19,3 +19,11 @@ def get_recent_files():
             count += 1
             if count >= MAX_RECENTS:
                 break
+
+
+def get_file_browser_virtual_root_dir():
+    settings = Gio.Settings("org.mate.pluma")
+    if "filebrowser" in settings.get_value("active-plugins"):
+        settings = Gio.Settings("org.mate.pluma.plugins.filebrowser.on-load")
+        uri = settings.get_string("virtual-root")
+        return GLib.filename_from_uri(uri)[0]

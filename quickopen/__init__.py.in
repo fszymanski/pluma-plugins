@@ -30,10 +30,10 @@ class QuickOpenPlugin(GObject.Object, Pluma.WindowActivatable):
         super().__init__()
 
     def do_activate(self):
-        action = Gtk.Action(name="FileQuickOpen", label="Quick Open", icon_name="document-open")
+        action = Gtk.Action("FileQuickOpen", label="Quick Open", icon_name="document-open")
         action.connect("activate", lambda _: self.search_for_files())
 
-        self.action_group = Gtk.ActionGroup(name="PlumaQuickOpenPluginActions")
+        self.action_group = Gtk.ActionGroup("PlumaQuickOpenPluginActions")
         self.action_group.add_action_with_accel(action, "<Ctrl><Alt>o")
 
         manager = self.window.get_ui_manager()

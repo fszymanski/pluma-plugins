@@ -42,10 +42,10 @@ class DuplicateLinePlugin(GObject.Object, Pluma.WindowActivatable):
         super().__init__()
 
     def do_activate(self):
-        action = Gtk.Action(name='EditDuplicateLineSelection', label='Duplicate Line/Selection')
+        action = Gtk.Action('EditDuplicateLineSelection', label='Duplicate Line/Selection')
         action.connect('activate', lambda _: self.duplicate_line())
 
-        self.action_group = Gtk.ActionGroup(name='PlumaDuplicateLinePluginActions')
+        self.action_group = Gtk.ActionGroup('PlumaDuplicateLinePluginActions')
         self.action_group.add_action_with_accel(action, '<Ctrl><Shift>d')
 
         manager = self.window.get_ui_manager()
