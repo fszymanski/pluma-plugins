@@ -1,0 +1,57 @@
+import sys
+
+sys.path.insert(0, "@PKG_DATA_DIR@/src")
+
+import gi
+
+gi.require_version("Pluma", "1.0")
+from gi.repository import Gio, GObject, Gtk, Pluma
+
+resource = Gio.resource_load("@PKG_DATA_DIR@/quickopen.gresource")
+Gio.Resource._register(resource)
+
+from ui.filechooserdialog import FileChooserDialog
+
+UI_STR = """
+<ui>
+    <menubar name='MenuBar'>
+        <menu name='FileMenu' action='File'>
+            <placeholder name='FileOps_2'>
+                <menuitem name='FileQuickOpenMenu' action='FileQuickOpen'/>
+            </placeholder>
+        </menu>
+    </menubar>
+</ui>
+"""
+
+
+class QuickOpenPlugin(GObject.Object, Pluma.WindowActivatable):
+    __gtype_name__ = "QuickOpenPlugin"
+
+    window = GObject.Property(type=Pluma.Window)
+
+    def __init__(self):
+        super().__init__()
+
+    def do_activate(self):
+        action = Gtk.Action(name="FileQuickOpen", label="Quick Open", icon_name="document-open")
+        action.connect("activate", lambda _: self.search_for_files())
+
+        self.action_group = Gtk.ActionGroup(name="PlumaQuickOpenPluginActions")
+        self.action_group.add_action_with_accel(action, "<Ctrl><Alt>o")
+
+        manager = self.window.get_ui_manager()
+        manager.insert_action_group(self.action_group, -1)
+        self.merge_id = manager.add_ui_from_string(UI_STR)
+
+    def do_deactivate(self):
+        manager = self.window.get_ui_manager()
+        manager.remove_ui(self.merge_id)
+        manager.remove_action_group(self.action_group)
+        manager.ensure_update()
+
+    def do_update_state(self):
+        pass
+
+    def search_for_files(self):
+        FileChooserDialog(self.window)

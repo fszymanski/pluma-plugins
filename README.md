@@ -12,7 +12,7 @@ Currently available plugins:
 - **joinlines** - *Join selected lines.*
 - **macro** - *Record and playback a macro.*
 - **pastebin** - *Store any text on Pastebin.com for easy sharing.*
-- **quickopen** - *WORK IN PROGRESS!!!*
+- **quickopen** - *WORK IN PROGRESS, DO NOT USE!!!*
 - **restoreopenfiles** - *Restore previously open files.*
 - **selectline** - *Select current line.*
 - **togglepanel** - *Show/hide panels with one click.*

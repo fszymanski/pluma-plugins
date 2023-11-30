@@ -45,7 +45,7 @@ class JoinLinesPlugin(GObject.Object, Pluma.WindowActivatable):
         action = Gtk.Action(name='EditJoinLines', label='Join Lines')
         action.connect('activate', lambda _: self.join_lines())
 
-        self.action_group = Gtk.ActionGroup(name='JoinLinesPluginActions')
+        self.action_group = Gtk.ActionGroup(name='PlumaJoinLinesPluginActions')
         self.action_group.add_action_with_accel(action, '<Ctrl>j')
 
         manager = self.window.get_ui_manager()
