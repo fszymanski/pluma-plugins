@@ -143,6 +143,12 @@ class FileChooserDialog(Gtk.Dialog):
 
             self.destroy()
 
+    def switch_model(self, provider_func, title):
+        self.set_title(f"Quick Open - {title}")
+
+        self.model = self.create_and_fill_model(provider_func)
+        self.file_view.set_model(self.model)
+
     def on_key_press(self, _, event):
         ctrl = (event.state & Gdk.ModifierType.CONTROL_MASK)
 
@@ -150,10 +156,8 @@ class FileChooserDialog(Gtk.Dialog):
             self.destroy()
 
         if ctrl and event.keyval == Gdk.KEY_r:
-            self.model = self.create_and_fill_model(get_recent_files)
-            self.file_view.set_model(self.model)
+            self.switch_model(get_recent_files, "Recent Files")
         elif ctrl and event.keyval == Gdk.KEY_b:
-            self.model = self.create_and_fill_model(get_files_from_virtual_root_dir)
-            self.file_view.set_model(self.model)
+            self.switch_model(get_files_from_virtual_root_dir, "Virtual Root Directory")
 
         return False
