@@ -1,0 +1,10 @@
+[Plugin]
+Loader=python3
+Module=quickopen
+IAge=3
+Name=Quick Open
+Description=Quickly open files
+Icon=document-open
+Authors=Filip Szymański <fszymanski.pl@gmail.com>
+Copyright=Copyright © 2023 Filip Szymański
+Website=https://github.com/fszymanski/pluma-plugins

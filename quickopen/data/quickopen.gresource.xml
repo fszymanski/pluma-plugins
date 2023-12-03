@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/mate/pluma/plugins/quickopen">
+    <file preprocess="xml-stripblanks">ui/filechooserdialog.ui</file>
+  </gresource>
+</gresources>
