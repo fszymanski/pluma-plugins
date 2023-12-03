@@ -45,6 +45,10 @@ HELP_HTML = """
         <td>Ctrl + b</td>
         <td>Show files from <i>File Browser Pane</i> plugin root directory.</td>
       </tr>
+      <tr>
+        <td>Ctrl + o</td>
+        <td>Show files from the directory of currently open documents.</td>
+      </tr>
     </table>
     <p>
       <b>Note:</b> Recursively traversing directories containing several thousand of files may take 3-5 seconds.

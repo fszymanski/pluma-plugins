@@ -19,17 +19,21 @@ from pathlib import Path
 import gi
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gio, GLib, Gtk
+from gi.repository import Gio, GLib, Gtk, Pluma
 
 DIRS_TO_IGNORE = [".git"]
 MAX_RECENTS = 200
 
 
 # Utility functions
-def get_files_from_dir(path):
+def get_files_from_dir(dirname):
+    return [Gio.File.new_for_path(str(p)) for p in Path(dirname).iterdir() if p.is_file()]
+
+
+def get_files_from_dir_r(dirname):
     return [
         Gio.File.new_for_path(str(p))
-        for p in Path(path).rglob("*")
+        for p in Path(dirname).rglob("*")
         if set(p.parts).isdisjoint(DIRS_TO_IGNORE) and p.is_file()
     ]
 
@@ -40,6 +44,15 @@ def get_file_browser_virtual_root_dir():
         settings = Gio.Settings("org.mate.pluma.plugins.filebrowser.on-load")
         uri = settings.get_string("virtual-root")
         return GLib.filename_from_uri(uri)[0]
+
+
+def get_open_document_dirs():
+    app = Pluma.App.get_default()
+    window = app.get_active_window()
+    for location in filter(lambda l: l is not None, [d.get_location() for d in window.get_documents()]):
+        if (parent := location.get_parent()) is not None:
+            if (dirname := parent.get_path()) is not None:
+                yield dirname
 
 
 # Provider functions
@@ -60,6 +73,16 @@ def get_recent_files():
 
 def get_files_from_virtual_root_dir():
      if (root_dir := get_file_browser_virtual_root_dir()) is not None:
-        return get_files_from_dir(root_dir)
+        return get_files_from_dir_r(root_dir)
 
      return []
+
+
+def get_files_from_open_documents_dirs():
+    locations = []
+    for dirname in set(get_open_document_dirs()):
+        locations += get_files_from_dir(dirname)
+
+    return locations
+
+
