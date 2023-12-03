@@ -27,17 +27,20 @@ Note:
 
 ## Installation
 
-`Quickopen` plugin
+```sh
+$ git clone https://github.com/fszymanski/pluma-plugins.git
+```
+
+`quickopen` plugin
 
 ```sh
 $ cd path/to/plugin
 $ ./install.sh
 ```
 
-the rest of the plugins
+and the rest of the plugins
 
 ```sh
-$ git clone https://github.com/fszymanski/pluma-plugins.git
 $ mkdir -p ~/.local/share/pluma/plugins
 $ cp -r path/to/plugin ~/.local/share/pluma/plugins/
 
