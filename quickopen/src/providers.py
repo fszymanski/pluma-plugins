@@ -78,7 +78,7 @@ def get_files_from_virtual_root_dir():
      return []
 
 
-def get_files_from_open_documents_dirs():
+def get_files_from_open_documents_dir():
     locations = []
     for dirname in set(get_open_document_dirs()):
         locations += get_files_from_dir(dirname)
