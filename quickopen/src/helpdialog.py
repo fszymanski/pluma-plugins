@@ -55,7 +55,7 @@ HELP_HTML = """
       </tr>
       <tr>
         <td>Ctrl + m</td>
-        <td>Show files from bookmark directors.</td>
+        <td>Show files from bookmark directories.</td>
       </tr>
     </table>
     <p>

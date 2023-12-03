@@ -168,6 +168,6 @@ class FileChooserDialog(Gtk.Dialog):
         elif ctrl and event.keyval == Gdk.KEY_g:
             self.switch_model(get_files_from_git_dir, "Active Document Git Directory")
         elif ctrl and event.keyval == Gdk.KEY_m:
-            self.switch_model(get_files_from_bookmark_dirs, "Bookmark Directors")
+            self.switch_model(get_files_from_bookmark_dirs, "Bookmark Directories")
 
         return False
