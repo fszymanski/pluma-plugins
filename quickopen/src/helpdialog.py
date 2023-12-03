@@ -53,6 +53,10 @@ HELP_HTML = """
         <td>Ctrl + g</td>
         <td>Show files from git directory of currently active document.</td>
       </tr>
+      <tr>
+        <td>Ctrl + m</td>
+        <td>Show files from bookmark directors.</td>
+      </tr>
     </table>
     <p>
       <b>Note:</b> Recursively traversing directories containing several thousand of files may take 3-5 seconds.
@@ -70,7 +74,7 @@ class HelpDialog(Gtk.Dialog):
                          parent=dialog,
                          flags=Gtk.DialogFlags.MODAL|Gtk.DialogFlags.DESTROY_WITH_PARENT,
                          default_width=800,
-                         default_height=240,
+                         default_height=260,
                          buttons=(Gtk.STOCK_CLOSE, Gtk.ResponseType.CLOSE))
 
         help_view = WebKit2.WebView()

@@ -25,8 +25,9 @@ from gi.repository import Gio, Gdk, GLib, Gtk, Pluma
 
 from .helpdialog import HelpDialog
 from .providers import (
-    get_files_from_git_dir, get_files_from_open_documents_dir,
-    get_files_from_virtual_root_dir, get_recent_files
+    get_files_from_bookmark_dirs, get_files_from_git_dir,
+    get_files_from_open_documents_dir, get_files_from_virtual_root_dir,
+    get_recent_files
 )
 
 
@@ -166,5 +167,7 @@ class FileChooserDialog(Gtk.Dialog):
             self.switch_model(get_files_from_open_documents_dir, "Open Documents Directory")
         elif ctrl and event.keyval == Gdk.KEY_g:
             self.switch_model(get_files_from_git_dir, "Active Document Git Directory")
+        elif ctrl and event.keyval == Gdk.KEY_m:
+            self.switch_model(get_files_from_bookmark_dirs, "Bookmark Directors")
 
         return False

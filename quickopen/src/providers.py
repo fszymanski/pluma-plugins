@@ -76,6 +76,21 @@ def get_git_top_level_dir(path):
                           cwd=path)
     return proc.stdout.decode("utf-8").strip()
 
+
+def get_bookmark_dirs():
+        path = Path(GLib.get_user_config_dir(), "gtk-3.0/bookmarks")
+        if not path.is_file():
+            path = Path.home() / ".gtk-bookmarks"
+
+        try:
+            with path.open() as bookmarks:
+                for bookmark in bookmarks:
+                    uri = bookmark.strip().split(" ")[0]
+                    if Pluma.utils_uri_has_file_scheme(uri):
+                        yield GLib.filename_from_uri(uri)[0]
+        except FileNotFoundError:
+            pass
+
 #############
 # Providers #
 #############
@@ -116,3 +131,11 @@ def get_files_from_git_dir():
             return get_files_from_dir_r(git_dir)
 
     return []
+
+
+def get_files_from_bookmark_dirs():
+    locations = []
+    for path in get_bookmark_dirs():
+        locations += get_files_from_dir(path)
+
+    return locations
