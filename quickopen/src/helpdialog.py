@@ -47,7 +47,11 @@ HELP_HTML = """
       </tr>
       <tr>
         <td>Ctrl + d</td>
-        <td>Show files from the directory of currently open documents.</td>
+        <td>Show files from directory of currently open documents.</td>
+      </tr>
+      <tr>
+        <td>Ctrl + g</td>
+        <td>Show files from git directory of currently active document.</td>
       </tr>
     </table>
     <p>
@@ -66,7 +70,7 @@ class HelpDialog(Gtk.Dialog):
                          parent=dialog,
                          flags=Gtk.DialogFlags.MODAL|Gtk.DialogFlags.DESTROY_WITH_PARENT,
                          default_width=800,
-                         default_height=200,
+                         default_height=240,
                          buttons=(Gtk.STOCK_CLOSE, Gtk.ResponseType.CLOSE))
 
         help_view = WebKit2.WebView()

@@ -14,6 +14,7 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
+import subprocess
 from pathlib import Path
 
 import gi
@@ -24,16 +25,18 @@ from gi.repository import Gio, GLib, Gtk, Pluma
 DIRS_TO_IGNORE = [".git"]
 MAX_RECENTS = 200
 
+#############
+# Utilities #
+#############
 
-# Utility functions
-def get_files_from_dir(dirname):
-    return [Gio.File.new_for_path(str(p)) for p in Path(dirname).iterdir() if p.is_file()]
+def get_files_from_dir(path):
+    return [Gio.File.new_for_path(str(p)) for p in Path(path).iterdir() if p.is_file()]
 
 
-def get_files_from_dir_r(dirname):
+def get_files_from_dir_r(path):
     return [
         Gio.File.new_for_path(str(p))
-        for p in Path(dirname).rglob("*")
+        for p in Path(path).rglob("*")
         if set(p.parts).isdisjoint(DIRS_TO_IGNORE) and p.is_file()
     ]
 
@@ -50,12 +53,33 @@ def get_open_document_dirs():
     app = Pluma.App.get_default()
     window = app.get_active_window()
     for location in filter(lambda l: l is not None, [d.get_location() for d in window.get_documents()]):
-        if (parent := location.get_parent()) is not None:
-            if (dirname := parent.get_path()) is not None:
-                yield dirname
+        if (parent_dir := location.get_parent()) is not None:
+            if (path := parent_dir.get_path()) is not None:
+                yield path
 
 
-# Provider functions
+def get_active_document_dir():
+    app = Pluma.App.get_default()
+    window = app.get_active_window()
+    if (doc := window.get_active_document()) is not None:
+        if (location := doc.get_location()) is not None:
+            if (parent_dir := location.get_parent()) is not None:
+                if (path := parent_dir.get_path()) is not None:
+                    return path
+
+
+def get_git_top_level_dir(path):
+    proc = subprocess.run("git rev-parse --show-toplevel",
+                          stdout=subprocess.PIPE,
+                          stderr=subprocess.DEVNULL,
+                          shell=True,
+                          cwd=path)
+    return proc.stdout.decode("utf-8").strip()
+
+#############
+# Providers #
+#############
+
 def get_recent_files():
     manager = Gtk.RecentManager.get_default()
     items = manager.get_items()
@@ -80,9 +104,15 @@ def get_files_from_virtual_root_dir():
 
 def get_files_from_open_documents_dir():
     locations = []
-    for dirname in set(get_open_document_dirs()):
-        locations += get_files_from_dir(dirname)
+    for path in set(get_open_document_dirs()):
+        locations += get_files_from_dir(path)
 
     return locations
 
 
+def get_files_from_git_dir():
+    if (path := get_active_document_dir()) is not None:
+        if git_dir := get_git_top_level_dir(path):
+            return get_files_from_dir_r(git_dir)
+
+    return []

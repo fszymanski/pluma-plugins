@@ -24,7 +24,10 @@ gi.require_version("Pluma", "1.0")
 from gi.repository import Gio, Gdk, GLib, Gtk, Pluma
 
 from .helpdialog import HelpDialog
-from .providers import get_files_from_open_documents_dir, get_files_from_virtual_root_dir, get_recent_files
+from .providers import (
+    get_files_from_git_dir, get_files_from_open_documents_dir,
+    get_files_from_virtual_root_dir, get_recent_files
+)
 
 
 class COLUMN(IntEnum):
@@ -160,6 +163,8 @@ class FileChooserDialog(Gtk.Dialog):
         elif ctrl and event.keyval == Gdk.KEY_b:
             self.switch_model(get_files_from_virtual_root_dir, "Virtual Root Directory")
         elif ctrl and event.keyval == Gdk.KEY_d:
-            self.switch_model(get_files_from_open_documents_dir, "Currently Open Documents Directory")
+            self.switch_model(get_files_from_open_documents_dir, "Open Documents Directory")
+        elif ctrl and event.keyval == Gdk.KEY_g:
+            self.switch_model(get_files_from_git_dir, "Active Document Git Directory")
 
         return False
