@@ -18,7 +18,8 @@ import gi
 
 gi.require_version("Gtk", "3.0")
 gi.require_version("WebKit2", "4.1")
-from gi.repository import Gtk, WebKit2
+from gi.repository import Gtk
+from gi.repository.WebKit2 import WebView
 
 HELP_HTML = """
 <!DOCTYPE html>
@@ -66,26 +67,18 @@ HELP_HTML = """
 """
 
 
+@Gtk.Template(resource_path="/org/mate/pluma/plugins/quickopen/ui/helpdialog.ui")
 class HelpDialog(Gtk.Dialog):
     __gtype_name__ = "QuickOpenHelpDialog"
 
+    close_button = Gtk.Template.Child()
+    help_view = Gtk.Template.Child()
+
     def __init__(self, dialog):
-        super().__init__(title="Quick Open Help",
-                         parent=dialog,
-                         flags=Gtk.DialogFlags.MODAL|Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                         default_width=800,
-                         default_height=260,
-                         buttons=(Gtk.STOCK_CLOSE, Gtk.ResponseType.CLOSE))
+        super().__init__(parent=dialog)
 
-        help_view = WebKit2.WebView()
-        help_view.load_html(HELP_HTML, None)
+        self.help_view.load_html(HELP_HTML, None)
 
-        scroller = Gtk.ScrolledWindow()
-        scroller.add(help_view)
-
-        vbox = self.get_content_area()
-        vbox.pack_start(scroller, True, True, 0)
-
-        self.connect("response", lambda *_: self.destroy())
+        self.close_button.connect("clicked", lambda *_: self.destroy())
 
         self.show_all()
