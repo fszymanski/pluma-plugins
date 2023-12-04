@@ -52,7 +52,7 @@ def get_file_browser_virtual_root_dir():
 def get_open_document_dirs():
     app = Pluma.App.get_default()
     window = app.get_active_window()
-    for location in filter(lambda l: l is not None, [d.get_location() for d in window.get_documents()]):
+    for location in filter(lambda l: l is not None, [d.get_location() for d in window.get_documents() if d.is_local()]):
         if (parent_dir := location.get_parent()) is not None:
             if (path := parent_dir.get_path()) is not None:
                 yield path
@@ -62,10 +62,11 @@ def get_active_document_dir():
     app = Pluma.App.get_default()
     window = app.get_active_window()
     if (doc := window.get_active_document()) is not None:
-        if (location := doc.get_location()) is not None:
-            if (parent_dir := location.get_parent()) is not None:
-                if (path := parent_dir.get_path()) is not None:
-                    return path
+        if doc.is_local():
+            if (location := doc.get_location()) is not None:
+                if (parent_dir := location.get_parent()) is not None:
+                    if (path := parent_dir.get_path()) is not None:
+                        return path
 
 
 def get_git_top_level_dir(path):

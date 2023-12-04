@@ -87,7 +87,6 @@ class FileChooserDialog(Gtk.Dialog):
 
     def create_and_fill_model(self, provider_func):
         store = Gtk.ListStore(Gio.Icon, str, Gio.File)
-
         for location in provider_func():
             if location.is_native():
                 info = location.query_info("standard::*", Gio.FileQueryInfoFlags.NONE, None)
