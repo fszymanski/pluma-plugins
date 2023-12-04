@@ -87,7 +87,6 @@ class FileChooserDialog(Gtk.Dialog):
 
     def create_and_fill_model(self, provider_func):
         store = Gtk.ListStore(Gio.Icon, str, Gio.File)
-        store.clear()
 
         for location in provider_func():
             if location.is_native():
