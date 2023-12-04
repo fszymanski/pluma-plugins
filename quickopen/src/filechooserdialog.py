@@ -65,9 +65,6 @@ class FileChooserDialog(Gtk.Dialog):
 
         self.file_view.append_column(column)
 
-        self.model = self.create_and_fill_model(get_recent_files)
-        self.file_view.set_model(self.model)
-
         self.filter_entry.connect("search-changed", lambda _: self.model.refilter())
 
         selection = self.file_view.get_selection()
@@ -85,7 +82,12 @@ class FileChooserDialog(Gtk.Dialog):
 
         self.show_all()
 
+        self.model = self.create_and_fill_model(get_recent_files)
+        self.file_view.set_model(self.model)
+
     def create_and_fill_model(self, provider_func):
+        self.set_busy_cursor()
+
         store = Gtk.ListStore(Gio.Icon, str, Gio.File)
         for location in provider_func():
             if location.is_native():
@@ -100,7 +102,17 @@ class FileChooserDialog(Gtk.Dialog):
         file_filter = sortable.filter_new()
         file_filter.set_visible_func(self.file_filter_func)
 
+        self.set_busy_cursor(False)
+
         return file_filter
+
+    def set_busy_cursor(self, busy=True):
+        if busy:
+            self.get_window().set_cursor(Gdk.Cursor(Gdk.CursorType.WATCH))
+        else:
+            self.get_window().set_cursor(None)
+
+        Gdk.flush()
 
     def compare_names(self, model, iter_a, iter_b, _):
         name_a = GLib.utf8_collate_key_for_filename(model.get_value(iter_a, COLUMN.NAME), -1)
