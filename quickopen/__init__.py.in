@@ -16,8 +16,9 @@
 
 import gi
 
+gi.require_version("PeasGtk", "1.0")
 gi.require_version("Pluma", "1.0")
-from gi.repository import Gio, GObject, Gtk, Pluma
+from gi.repository import Gio, GObject, Gtk, PeasGtk, Pluma
 
 resource = Gio.resource_load("@PKG_DATA_DIR@/quickopen.gresource")
 Gio.Resource._register(resource)
@@ -67,3 +68,21 @@ class QuickOpenPlugin(GObject.Object, Pluma.WindowActivatable):
 
     def search_for_files(self):
         FileChooserDialog(self.window)
+
+
+class QuickOpenConfigurable(GObject.Object, PeasGtk.Configurable):
+    __gtype_name__ = "QuickOpenConfigurable"
+
+    def __init__(self):
+        super().__init__()
+
+    def do_create_configure_widget(self):
+        settings = Gio.Settings("org.mate.pluma.plugins.quickopen")
+
+        builder = Gtk.Builder.new_from_resource("/org/mate/pluma/plugins/quickopen/ui/configurationbox.ui")
+
+        recursive_search_check = builder.get_object("recursive_search_check")
+        recursive_search_check.set_active(settings.get_boolean("recursive-search"))
+        recursive_search_check.connect("toggled", lambda b: settings.set_boolean("recursive-search", b.get_active()))
+
+        return builder.get_object("configuration_box")

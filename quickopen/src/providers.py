@@ -30,15 +30,15 @@ MAX_RECENTS = 200
 #############
 
 def get_files_from_dir(path):
-    return [Gio.File.new_for_path(str(p)) for p in Path(path).iterdir() if p.is_file()]
-
-
-def get_files_from_dir_r(path):
-    return [
-        Gio.File.new_for_path(str(p))
-        for p in Path(path).rglob("*")
-        if set(p.parts).isdisjoint(DIRS_TO_IGNORE) and p.is_file()
-    ]
+    settings = Gio.Settings("org.mate.pluma.plugins.quickopen")
+    if settings.get_boolean("recursive-search"):
+        return [
+            Gio.File.new_for_path(str(p))
+            for p in Path(path).rglob("*")
+            if set(p.parts).isdisjoint(DIRS_TO_IGNORE) and p.is_file()
+        ]
+    else:
+        return [Gio.File.new_for_path(str(p)) for p in Path(path).iterdir() if p.is_file()]
 
 
 def get_file_browser_virtual_root_dir():
@@ -113,7 +113,7 @@ def get_recent_files():
 
 def get_files_from_virtual_root_dir():
      if (root_dir := get_file_browser_virtual_root_dir()) is not None:
-        return get_files_from_dir_r(root_dir)
+        return get_files_from_dir(root_dir)
 
      return []
 
@@ -128,8 +128,8 @@ def get_files_from_open_documents_dir():
 
 def get_files_from_git_dir():
     if (path := get_active_document_dir()) is not None:
-        if git_dir := get_git_top_level_dir(path):
-            return get_files_from_dir_r(git_dir)
+        if top_level_dir := get_git_top_level_dir(path):
+            return get_files_from_dir(top_level_dir)
 
     return []
 

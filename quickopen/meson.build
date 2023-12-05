@@ -5,12 +5,15 @@ py = import('python')
 python3 = py.find_installation('python3')
 
 conf = configuration_data()
+conf.set('GSETTINGS_SCHEMAS_DIR', get_option('prefix') / get_option('datadir') / 'glib-2.0' / 'schemas')
 conf.set('PLUMA_PLUGINS_DATA_DIR', get_option('prefix') / get_option('datadir') / 'pluma' / 'plugins')
 conf.set('PKG_DATA_DIR', conf.get('PLUMA_PLUGINS_DATA_DIR') / meson.project_name())
 
 subdir('data')
 
-install_data('quickopen.plugin.desktop.in.in', rename: 'quickopen.plugin', install_dir: conf.get('PLUMA_PLUGINS_DATA_DIR'))
+install_data('quickopen.plugin.desktop.in.in',
+             rename: 'quickopen.plugin',
+             install_dir: conf.get('PLUMA_PLUGINS_DATA_DIR'))
 
 configure_file(input: '__init__.py.in',
                output: '__init__.py',
