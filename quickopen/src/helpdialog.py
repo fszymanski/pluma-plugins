@@ -60,7 +60,7 @@ HELP_HTML = """
       </tr>
     </table>
     <p>
-      <b>Note:</b> Recursively traversing directories containing several thousand of files may take 3-5 seconds.
+      <b>Note:</b> Recursive search in directories containing several thousand of files may take 3-5 seconds.
     </p>
   </body>
 </html>
