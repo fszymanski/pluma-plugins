@@ -47,7 +47,7 @@ HELP_HTML = """
         <td>Show files from <i>File Browser Pane</i> plugin root directory.</td>
       </tr>
       <tr>
-        <td>Ctrl + d</td>
+        <td>Ctrl + o</td>
         <td>Show files from directory of currently open documents.</td>
       </tr>
       <tr>

@@ -173,7 +173,7 @@ class FileChooserDialog(Gtk.Dialog):
             self.switch_model(get_recent_files, "Recent Files")
         elif ctrl and event.keyval == Gdk.KEY_b:
             self.switch_model(get_files_from_virtual_root_dir, "Virtual Root Directory")
-        elif ctrl and event.keyval == Gdk.KEY_d:
+        elif ctrl and event.keyval == Gdk.KEY_o:
             self.switch_model(get_files_from_open_documents_dir, "Open Documents Directory")
         elif ctrl and event.keyval == Gdk.KEY_g:
             self.switch_model(get_files_from_git_dir, "Active Document Git Directory")
