@@ -22,7 +22,6 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gio, GLib, Gtk, Pluma
 
-DIRS_TO_IGNORE = [".git"]
 MAX_RECENTS = 200
 
 #############
@@ -31,11 +30,12 @@ MAX_RECENTS = 200
 
 def get_files_from_dir(path):
     settings = Gio.Settings("org.mate.pluma.plugins.quickopen")
-    if settings.get_boolean("recursive-search"):
+    if settings.get_boolean("recursive-file-search"):
+        exclude_dirs = [d for d in settings.get_string("exclude-dirs").split(",") if d]
         return [
             Gio.File.new_for_path(str(p))
             for p in Path(path).rglob("*")
-            if set(p.parts).isdisjoint(DIRS_TO_IGNORE) and p.is_file()
+            if set(p.parts).isdisjoint(exclude_dirs) and p.is_file()
         ]
     else:
         return [Gio.File.new_for_path(str(p)) for p in Path(path).iterdir() if p.is_file()]

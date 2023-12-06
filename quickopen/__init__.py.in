@@ -82,7 +82,18 @@ class QuickOpenConfigurable(GObject.Object, PeasGtk.Configurable):
         builder = Gtk.Builder.new_from_resource("/org/mate/pluma/plugins/quickopen/ui/configurationbox.ui")
 
         recursive_search_check = builder.get_object("recursive_search_check")
-        recursive_search_check.set_active(settings.get_boolean("recursive-search"))
-        recursive_search_check.connect("toggled", lambda b: settings.set_boolean("recursive-search", b.get_active()))
+        recursive_search_check.set_active(settings.get_boolean("recursive-file-search"))
+        recursive_search_check.connect("toggled", lambda b: settings.set_boolean("recursive-file-search", b.get_active()))
+
+        exclude_dirs_label = builder.get_object("exclude_dirs_label")
+        exclude_dirs_label.set_sensitive(settings.get_boolean("recursive-file-search"))
+
+        exclude_dirs_entry = builder.get_object("exclude_dirs_entry")
+        exclude_dirs_entry.set_text(settings.get_string("exclude-dirs"))
+        exclude_dirs_entry.set_sensitive(settings.get_boolean("recursive-file-search"))
+        exclude_dirs_entry.connect("changed", lambda e: settings.set_string("exclude-dirs", e.get_text()))
+
+        recursive_search_check.connect("toggled", lambda b: exclude_dirs_label.set_sensitive(b.get_active()))
+        recursive_search_check.connect("toggled", lambda b: exclude_dirs_entry.set_sensitive(b.get_active()))
 
         return builder.get_object("configuration_box")
