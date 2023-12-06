@@ -46,7 +46,7 @@
           <object class="GtkEntry" id="exclude_dirs_entry">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="tooltip-markup" translatable="yes">Comma separated list of directories (e.g. &lt;i&gt;.git, .hg, .svn&lt;/i&gt;)</property>
+            <property name="tooltip-markup" translatable="yes">Comma separated list of directories (e.g. &lt;i&gt;.git,.hg,.svn&lt;/i&gt;)</property>
           </object>
           <packing>
             <property name="expand">True</property>
