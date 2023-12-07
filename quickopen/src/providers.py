@@ -31,7 +31,7 @@ MAX_RECENTS = 200
 def get_files_from_dir(path):
     settings = Gio.Settings("org.mate.pluma.plugins.quickopen")
     if settings.get_boolean("recursive-file-search"):
-        exclude_dirs = [d for d in settings.get_string("exclude-dirs").split(",") if d]
+        exclude_dirs = settings.get_value("exclude-dirs").unpack()
         return [
             Gio.File.new_for_path(str(p))
             for p in Path(path).rglob("*")

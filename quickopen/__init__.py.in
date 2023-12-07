@@ -18,7 +18,7 @@ import gi
 
 gi.require_version("PeasGtk", "1.0")
 gi.require_version("Pluma", "1.0")
-from gi.repository import Gio, GObject, Gtk, PeasGtk, Pluma
+from gi.repository import Gio, GLib, GObject, Gtk, PeasGtk, Pluma
 
 resource = Gio.resource_load("@PKG_DATA_DIR@/quickopen.gresource")
 Gio.Resource._register(resource)
@@ -89,9 +89,10 @@ class QuickOpenConfigurable(GObject.Object, PeasGtk.Configurable):
         exclude_dirs_label.set_sensitive(settings.get_boolean("recursive-file-search"))
 
         exclude_dirs_entry = builder.get_object("exclude_dirs_entry")
-        exclude_dirs_entry.set_text(settings.get_string("exclude-dirs"))
+        exclude_dirs_entry.set_text(",".join(settings.get_value("exclude-dirs").unpack()))
         exclude_dirs_entry.set_sensitive(settings.get_boolean("recursive-file-search"))
-        exclude_dirs_entry.connect("changed", lambda e: settings.set_string("exclude-dirs", e.get_text()))
+        exclude_dirs_entry.connect("changed", lambda e: settings.set_value(
+            "exclude-dirs", GLib.Variant("as", [d for d in e.get_text().split(",") if d])))
 
         recursive_search_check.connect("toggled", lambda b: exclude_dirs_label.set_sensitive(b.get_active()))
         recursive_search_check.connect("toggled", lambda b: exclude_dirs_entry.set_sensitive(b.get_active()))

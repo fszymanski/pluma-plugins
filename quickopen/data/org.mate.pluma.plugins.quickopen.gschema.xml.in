@@ -5,8 +5,8 @@
       <default>false</default>
       <summary>Search for files under each directory, recursively</summary>
     </key>
-    <key name="exclude-dirs" type="s">
-      <default>'.git'</default>
+    <key name="exclude-dirs" type="as">
+      <default>['.git']</default>
       <summary>Exclude these directories from file searches</summary>
     </key>
   </schema>
