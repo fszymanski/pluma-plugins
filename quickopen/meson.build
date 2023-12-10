@@ -4,22 +4,23 @@ py = import('python')
 
 python3 = py.find_installation('python3')
 
-conf = configuration_data()
-conf.set('GSETTINGS_SCHEMAS_DIR', get_option('prefix') / get_option('datadir') / 'glib-2.0' / 'schemas')
-conf.set('PLUMA_PLUGINS_DATA_DIR', get_option('prefix') / get_option('datadir') / 'pluma' / 'plugins')
-conf.set('PKG_DATA_DIR', conf.get('PLUMA_PLUGINS_DATA_DIR') / meson.project_name())
+pluma_plugins_data_dir = get_option('prefix') / get_option('datadir') / 'pluma' / 'plugins'
+schemas_dir = get_option('prefix') / get_option('datadir') / 'glib-2.0' / 'schemas'
+
+conf_data = configuration_data()
+conf_data.set('PLUGIN_DATA_DIR', pluma_plugins_data_dir / meson.project_name())
 
 subdir('data')
 
 install_data('quickopen.plugin.desktop.in.in',
              rename: 'quickopen.plugin',
-             install_dir: conf.get('PLUMA_PLUGINS_DATA_DIR'))
+             install_dir: pluma_plugins_data_dir)
 
 configure_file(input: '__init__.py.in',
                output: '__init__.py',
-               configuration: conf,
+               configuration: conf_data,
                install: true,
-               install_dir: conf.get('PKG_DATA_DIR'))
+               install_dir:  pluma_plugins_data_dir / meson.project_name())
 
 run_command(python3, '-m', 'compileall', meson.current_source_dir() / 'src', check: true)
-install_subdir('src', install_dir: conf.get('PKG_DATA_DIR'), strip_directory : true)
+install_subdir('src', install_dir: pluma_plugins_data_dir / meson.project_name(), strip_directory : true)

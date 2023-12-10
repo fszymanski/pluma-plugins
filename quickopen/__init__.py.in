@@ -20,7 +20,7 @@ gi.require_version("PeasGtk", "1.0")
 gi.require_version("Pluma", "1.0")
 from gi.repository import Gio, GLib, GObject, Gtk, PeasGtk, Pluma
 
-resource = Gio.resource_load("@PKG_DATA_DIR@/quickopen.gresource")
+resource = Gio.resource_load("@PLUGIN_DATA_DIR@/quickopen.gresource")
 Gio.Resource._register(resource)
 
 from .filechooserdialog import FileChooserDialog
