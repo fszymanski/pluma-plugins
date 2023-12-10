@@ -83,7 +83,8 @@ class QuickOpenConfigurable(GObject.Object, PeasGtk.Configurable):
 
         recursive_search_check = builder.get_object("recursive_search_check")
         recursive_search_check.set_active(settings.get_boolean("recursive-file-search"))
-        recursive_search_check.connect("toggled", lambda b: settings.set_boolean("recursive-file-search", b.get_active()))
+        recursive_search_check.connect("toggled", lambda b: settings.set_boolean(
+            "recursive-file-search", b.get_active()))
 
         exclude_dirs_label = builder.get_object("exclude_dirs_label")
         exclude_dirs_label.set_sensitive(settings.get_boolean("recursive-file-search"))

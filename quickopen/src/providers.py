@@ -28,17 +28,18 @@ MAX_RECENTS = 200
 # Utilities #
 #############
 
-def get_files_from_dir(path):
+
+def get_files_from_dir(dirname):
     settings = Gio.Settings("org.mate.pluma.plugins.quickopen")
     if settings.get_boolean("recursive-file-search"):
         exclude_dirs = settings.get_value("exclude-dirs").unpack()
         return [
             Gio.File.new_for_path(str(p))
-            for p in Path(path).rglob("*")
+            for p in Path(dirname).rglob("*")
             if set(p.parts).isdisjoint(exclude_dirs) and p.is_file()
         ]
     else:
-        return [Gio.File.new_for_path(str(p)) for p in Path(path).iterdir() if p.is_file()]
+        return [Gio.File.new_for_path(str(p)) for p in Path(dirname).iterdir() if p.is_file()]
 
 
 def get_file_browser_virtual_root_dir():
@@ -54,8 +55,8 @@ def get_open_document_dirs():
     window = app.get_active_window()
     for location in filter(lambda l: l is not None, [d.get_location() for d in window.get_documents() if d.is_local()]):
         if (parent_dir := location.get_parent()) is not None:
-            if (path := parent_dir.get_path()) is not None:
-                yield path
+            if (dirname := parent_dir.get_path()) is not None:
+                yield dirname
 
 
 def get_active_document_dir():
@@ -65,36 +66,37 @@ def get_active_document_dir():
         if doc.is_local():
             if (location := doc.get_location()) is not None:
                 if (parent_dir := location.get_parent()) is not None:
-                    if (path := parent_dir.get_path()) is not None:
-                        return path
+                    if (dirname := parent_dir.get_path()) is not None:
+                        return dirname
 
 
-def get_git_top_level_dir(path):
+def get_git_top_level_dir(dirname):
     proc = subprocess.run("git rev-parse --show-toplevel",
                           stdout=subprocess.PIPE,
                           stderr=subprocess.DEVNULL,
                           shell=True,
-                          cwd=path)
+                          cwd=dirname)
     return proc.stdout.decode("utf-8").strip()
 
 
 def get_bookmark_dirs():
-        path = Path(GLib.get_user_config_dir(), "gtk-3.0/bookmarks")
-        if not path.is_file():
-            path = Path.home() / ".gtk-bookmarks"
+    filename = Path(GLib.get_user_config_dir(), "gtk-3.0/bookmarks")
+    if not filename.is_file():
+        filename = Path.home() / ".gtk-bookmarks"
 
-        try:
-            with path.open() as bookmarks:
-                for bookmark in bookmarks:
-                    uri = bookmark.strip().split(" ")[0]
-                    if Pluma.utils_uri_has_file_scheme(uri):
-                        yield GLib.filename_from_uri(uri)[0]
-        except FileNotFoundError:
-            pass
+    try:
+        with filename.open() as bookmarks:
+            for bookmark in bookmarks:
+                uri = bookmark.strip().split(" ")[0]
+                if Pluma.utils_uri_has_file_scheme(uri):
+                    yield GLib.filename_from_uri(uri)[0]
+    except FileNotFoundError:
+        pass
 
 #############
 # Providers #
 #############
+
 
 def get_recent_files():
     manager = Gtk.RecentManager.get_default()
@@ -112,23 +114,23 @@ def get_recent_files():
 
 
 def get_files_from_virtual_root_dir():
-     if (root_dir := get_file_browser_virtual_root_dir()) is not None:
+    if (root_dir := get_file_browser_virtual_root_dir()) is not None:
         return get_files_from_dir(root_dir)
 
-     return []
+    return []
 
 
 def get_files_from_open_documents_dir():
     locations = []
-    for path in set(get_open_document_dirs()):
-        locations += get_files_from_dir(path)
+    for dirname in set(get_open_document_dirs()):
+        locations += get_files_from_dir(dirname)
 
     return locations
 
 
 def get_files_from_git_dir():
-    if (path := get_active_document_dir()) is not None:
-        if top_level_dir := get_git_top_level_dir(path):
+    if (dirname := get_active_document_dir()) is not None:
+        if top_level_dir := get_git_top_level_dir(dirname):
             return get_files_from_dir(top_level_dir)
 
     return []
@@ -136,7 +138,7 @@ def get_files_from_git_dir():
 
 def get_files_from_bookmark_dirs():
     locations = []
-    for path in get_bookmark_dirs():
-        locations += get_files_from_dir(path)
+    for dirname in get_bookmark_dirs():
+        locations += get_files_from_dir(dirname)
 
     return locations
