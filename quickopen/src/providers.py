@@ -138,7 +138,10 @@ def get_files_from_git_dir():
 
 def get_files_from_bookmark_dirs():
     locations = []
-    for dirname in get_bookmark_dirs():
-        locations += get_files_from_dir(dirname)
+    try:
+        for dirname in get_bookmark_dirs():
+            locations += get_files_from_dir(dirname)
+    except TypeError:
+        pass
 
     return locations
