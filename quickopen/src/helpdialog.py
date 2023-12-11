@@ -43,7 +43,7 @@ HELP_HTML = """
         <td>Show recently opened files. <i>(Default)</i></td>
       </tr>
       <tr>
-        <td>Ctrl + v</td>
+        <td>Ctrl + f</td>
         <td>Show files from <i>File Browser Pane</i> plugin root directory.</td>
       </tr>
       <tr>
