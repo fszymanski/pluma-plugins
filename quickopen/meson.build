@@ -1,9 +1,5 @@
 project('quickopen', license: 'GPL-3.0-or-later')
 
-python = import('python')
-
-python3 = python.find_installation('python3')
-
 datadir = get_option('prefix') / get_option('datadir')
 pluginsdir = datadir / 'pluma' / 'plugins'
 schemasdir = datadir / 'glib-2.0' / 'schemas'
@@ -24,5 +20,6 @@ configure_file(input: '__init__.py.in',
                install: true,
                install_dir: pkgdatadir)
 
-run_command(python3, '-m', 'compileall', meson.current_source_dir() / 'src', check: true)
 install_subdir('src', install_dir: pkgdatadir, strip_directory : true)
+
+meson.add_install_script('build-aux/meson/post_install.py', pkgdatadir)
