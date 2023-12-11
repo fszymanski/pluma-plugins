@@ -14,7 +14,7 @@
     <key name="query-url" type="s">
       <default>"https://www.google.com/search?q=%s"</default>
       <summary>Query URL</summary>
-      <description>Search engine URL with %s in place of query</description>
+      <description>Search engine URL with %s in place of query.</description>
     </key>
   </schema>
 </schemalist>
