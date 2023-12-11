@@ -43,19 +43,23 @@ HELP_HTML = """
         <td>Show recently opened files. <i>(Default)</i></td>
       </tr>
       <tr>
-        <td>Ctrl + b</td>
+        <td>Ctrl + v</td>
         <td>Show files from <i>File Browser Pane</i> plugin root directory.</td>
+      </tr>
+      <tr>
+        <td>Ctrl + d</td>
+        <td>Show files from directory of currently active document.</td>
+      </tr>
+      <tr>
+        <td>Ctrl + g</td>
+        <td>Show files from <i>git</i> directory of currently active document.</td>
       </tr>
       <tr>
         <td>Ctrl + o</td>
         <td>Show files from directory of currently open documents.</td>
       </tr>
       <tr>
-        <td>Ctrl + g</td>
-        <td>Show files from git directory of currently active document.</td>
-      </tr>
-      <tr>
-        <td>Ctrl + m</td>
+        <td>Ctrl + b</td>
         <td>Show files from bookmark directories.</td>
       </tr>
     </table>

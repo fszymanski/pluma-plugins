@@ -120,6 +120,14 @@ def get_files_from_virtual_root_dir():
     return []
 
 
+def get_files_from_active_document_dir():
+    locations = []
+    if (dirname := get_active_document_dir()) is not None:
+        locations += get_files_from_dir(dirname)
+
+    return locations
+
+
 def get_files_from_open_documents_dir():
     locations = []
     for dirname in set(get_open_document_dirs()):
