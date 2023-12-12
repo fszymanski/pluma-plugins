@@ -23,7 +23,7 @@ Note:
 - The *editorconfig* plugin requires `python3-editorconfig`.
 - The *gitbranchindicator* plugin requires `git`.
 - The *pastebin* plugin requires `python3-requests`.
-- The *quickopen* plugin requires `meson` for installation.
+- The *quickopen* plugin requires `git`.
 
 ## Installation
 
@@ -31,14 +31,14 @@ Note:
 $ git clone https://github.com/fszymanski/pluma-plugins.git
 ```
 
-`quickopen` plugin
+**Note:** `quickopen` plugin installation requires [meson](https://mesonbuild.com/).
 
 ```sh
-$ cd path/to/plugin
+$ cd pluma-plugins/quickopen
 $ ./install.sh
 ```
 
-and the rest of the plugins
+For the rest of the plugins just:
 
 ```sh
 $ mkdir -p ~/.local/share/pluma/plugins
