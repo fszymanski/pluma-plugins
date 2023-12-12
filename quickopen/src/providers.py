@@ -70,6 +70,7 @@ def get_active_document_dir():
                         return dirname
 
 
+# NOTE: Maybe I should use `libgit2-glib` instead of `git`?
 def get_git_top_level_dir(dirname):
     proc = subprocess.run("git rev-parse --show-toplevel",
                           stdout=subprocess.PIPE,
