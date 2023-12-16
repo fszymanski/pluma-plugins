@@ -92,8 +92,11 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
             elif name == "insert_final_newline":
                 continue
             elif name == "max_line_length":
-                self.view.set_property("show-right-margin", True)
-                with suppress(ValueError): self.view.set_right_margin_position(int(val))
+                if val == "off":
+                    self.view.set_property("show-right-margin", False)
+                else:
+                    with suppress(ValueError): self.view.set_right_margin_position(int(val))
+                    self.view.set_property("show-right-margin", True)
             else:
                 print(f"EditorConfig: Property not supported: {name}={val}", file=sys.stderr)
 
