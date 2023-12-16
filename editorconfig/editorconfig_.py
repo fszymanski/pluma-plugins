@@ -95,7 +95,7 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
                 self.view.set_property("show-right-margin", True)
                 with suppress(ValueError): self.view.set_right_margin_position(int(val))
             else:
-                print(f"Not supported property {name}={val}", file=sys.stderr)
+                print(f"EditorConfig: Property not supported: {name}={val}", file=sys.stderr)
 
     def trim_trailing_whitespace(self, doc):
         for linenr in range(0, doc.get_line_count()):
