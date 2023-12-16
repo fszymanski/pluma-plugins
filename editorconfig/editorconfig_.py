@@ -14,6 +14,7 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
+import sys
 from contextlib import suppress
 
 import gi
@@ -63,35 +64,38 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
         if (conf := self.parse_editorconfig(doc)) is None:
             return
 
-        for name, value in conf.items():
+        for name, val in conf.items():
             if name == "indent_style":
-                if value == "tab":
-                    self.view.set_insert_spaces_instead_of_tabs(False)
-                elif value == "space":
-                    self.view.set_insert_spaces_instead_of_tabs(True)
+                self.view.set_insert_spaces_instead_of_tabs(val == "space")
             elif name == "indent_size":
-                if value == "tab" and "tab_width" in conf:
+                if val == "tab" and "tab_width" in conf:
                     with suppress(ValueError): self.view.set_tab_width(int(conf["tab_width"]))
                 else:
-                    with suppress(ValueError): self.view.set_tab_width(int(value))
+                    with suppress(ValueError): self.view.set_tab_width(int(val))
             elif name == "tab_width":
-                with suppress(ValueError): self.view.set_tab_width(int(value))
+                with suppress(ValueError): self.view.set_tab_width(int(val))
             elif name == "end_of_line":
-                if value == "lf":
+                if val == "lf":
                     doc.set_property("newline-type", Pluma.DocumentNewlineType.LF)
-                elif value == "cr":
+                elif val == "cr":
                     doc.set_property("newline-type", Pluma.DocumentNewlineType.CR)
-                elif value == "crlf":
+                elif val == "crlf":
                     doc.set_property("newline-type", Pluma.DocumentNewlineType.CR_LF)
+            elif name == "charset":
+                continue
             elif name == "trim_trailing_whitespace":
                 settings = Gio.Settings("org.mate.pluma")
                 if "trailsave" not in settings.get_value("active-plugins"):
                     if not hasattr(doc, "editorconfig_trim_trailing_whitespace_handler"):
                         doc.editorconfig_trim_trailing_whitespace_handler = doc.connect(
                             "save", lambda d, *_: self.trim_trailing_whitespace(d))
+            elif name == "insert_final_newline":
+                continue
             elif name == "max_line_length":
                 self.view.set_property("show-right-margin", True)
-                with suppress(ValueError): self.view.set_right_margin_position(int(value))
+                with suppress(ValueError): self.view.set_right_margin_position(int(val))
+            else:
+                print(f"Not supported property {name}={val}", file=sys.stderr)
 
     def trim_trailing_whitespace(self, doc):
         for linenr in range(0, doc.get_line_count()):
