@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Filip Szymański <fszymanski.pl@gmail.com>
+# Copyright (C) 2021-2023 Filip Szymański <fszymanski.pl@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,16 +14,18 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
+# TODO: Once opened, go to the most recently active document (tab)
+
 import gi
 
-gi.require_version('Pluma', '1.0')
+gi.require_version("Pluma", "1.0")
 from gi.repository import Gio, GLib, GObject, Pluma
 
-RESTORE_OPEN_FILES_SCHEMA = 'org.mate.pluma.plugins.restoreopenfiles'
+RESTORE_OPEN_FILES_SCHEMA = "org.mate.pluma.plugins.restoreopenfiles"
 
 
 class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
-    __gtype_name__ = 'RestoreOpenFilesPlugin'
+    __gtype_name__ = "RestoreOpenFilesPlugin"
 
     window = GObject.Property(type=Pluma.Window)
 
@@ -32,8 +34,8 @@ class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
 
     def do_activate(self):
         self.handlers = [
-            self.window.connect('delete-event', lambda *_: self.save_open_files()),
-            self.window.connect('show', lambda _: self.restore_open_files())
+            self.window.connect("delete-event", lambda *_: self.save_open_files()),
+            self.window.connect("show", lambda _: self.restore_open_files())
         ]
 
     def do_deactivate(self):
@@ -45,10 +47,8 @@ class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
 
     def is_only_window(self):
         app = Pluma.App.get_default()
-        if len(app.get_windows()) > 1:
-            return False
 
-        return True
+        return len(app.get_windows()) <= 1
 
     def save_open_files(self):
         uris = []
@@ -57,20 +57,20 @@ class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
             if uri is not None:
                 uris.append(uri)
 
-        settings = Gio.Settings.new(RESTORE_OPEN_FILES_SCHEMA)
-        settings.set_value('uris', GLib.Variant('as', uris))
+        settings = Gio.Settings(RESTORE_OPEN_FILES_SCHEMA)
+        settings.set_value("uris", GLib.Variant("as", uris))
 
     def restore_open_files(self):
         if self.is_only_window():
-            tab = self.window.get_active_tab()
-            if tab.get_state() == Pluma.TabState.STATE_NORMAL and tab.get_document().get_uri() is None:
-                self.window.close_tab(tab)
+            settings = Gio.Settings(RESTORE_OPEN_FILES_SCHEMA)
+            uris = settings.get_value("uris").unpack()
+            if len(uris):
+                tab = self.window.get_active_tab()
+                if tab.get_state() == Pluma.TabState.STATE_NORMAL and tab.get_document().get_uri() is None:
+                    self.window.close_tab(tab)
 
-            settings = Gio.Settings.new(RESTORE_OPEN_FILES_SCHEMA)
-            for uri in settings.get_value('uris'):
+            for uri in uris:
                 location = Gio.file_new_for_uri(uri)
                 if location.query_exists():
                     if self.window.get_tab_from_location(location) is None:
                         self.window.create_tab_from_uri(location.get_uri(), Pluma.encoding_get_utf8(), 0, False, False)
-
-# vim: ft=python3 ts=4 et
