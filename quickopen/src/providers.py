@@ -139,7 +139,7 @@ def get_files_from_open_documents_dir():
 
 def get_files_from_git_dir():
     if (dirname := get_active_document_dir()) is not None:
-        if top_level_dir := get_git_top_level_dir(dirname):
+        if (top_level_dir := get_git_top_level_dir(dirname)):
             return get_files_from_dir(top_level_dir)
 
     return []

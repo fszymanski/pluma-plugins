@@ -50,21 +50,20 @@ class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
     def save_open_files(self):
         uris = []
         for doc in self.window.get_documents():
-            uri = doc.get_uri()
-            if uri is not None and Pluma.utils_uri_exists(uri):
+            if (uri := doc.get_uri()) is not None and Pluma.utils_uri_exists(uri):
                 uris.append(uri)
 
         settings = Gio.Settings(RESTORE_OPEN_FILES_SCHEMA)
         settings.set_value("uris", GLib.Variant("as", uris))
 
         if (doc := self.window.get_active_document()) is not None:
-            if (uri := doc.get_uri()) is not None:
+            if (uri := doc.get_uri()) is not None and Pluma.utils_uri_exists(uri):
                 settings.set_string("active-document-uri", uri)
 
     def restore_open_files(self):
         if self.is_only_window():
             settings = Gio.Settings(RESTORE_OPEN_FILES_SCHEMA)
-            if uris := settings.get_value("uris").unpack():
+            if (uris := settings.get_value("uris").unpack()):
                 tab = self.window.get_active_tab()
                 if tab.get_state() == Pluma.TabState.STATE_NORMAL and tab.get_document().is_untitled():
                     self.window.close_tab(tab)
@@ -77,7 +76,7 @@ class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
                         if self.window.get_tab_from_location(location) is None:
                             self.window.create_tab_from_uri(uri, Pluma.encoding_get_utf8(), 0, False, False)
 
-                if uri := settings.get_string("active-document-uri"):
+                if (uri := settings.get_string("active-document-uri")):
                     for doc in self.window.get_documents():
                         if uri == doc.get_uri():
                             self.window.set_active_tab(Pluma.Tab.get_from_document(doc))
