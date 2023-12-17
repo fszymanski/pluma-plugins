@@ -14,8 +14,6 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
-# TODO: Once opened, go to the most recently active document (tab)
-
 import gi
 
 gi.require_version("Pluma", "1.0")
@@ -54,7 +52,7 @@ class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
         uris = []
         for doc in self.window.get_documents():
             uri = doc.get_uri()
-            if uri is not None:
+            if uri is not None and Pluma.utils_uri_exists(uri):
                 uris.append(uri)
 
         settings = Gio.Settings(RESTORE_OPEN_FILES_SCHEMA)
@@ -63,14 +61,13 @@ class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
     def restore_open_files(self):
         if self.is_only_window():
             settings = Gio.Settings(RESTORE_OPEN_FILES_SCHEMA)
-            uris = settings.get_value("uris").unpack()
-            if uris:
+            if uris := settings.get_value("uris").unpack():
                 tab = self.window.get_active_tab()
                 if tab.get_state() == Pluma.TabState.STATE_NORMAL and tab.get_document().is_untitled():
                     self.window.close_tab(tab)
 
-                for uri in uris:
-                    location = Gio.file_new_for_uri(uri)
-                    if location.query_exists():
-                        if self.window.get_tab_from_location(location) is None:
-                            self.window.create_tab_from_uri(location.get_uri(), Pluma.encoding_get_utf8(), 0, False, False)
+                    for uri in uris:
+                        location = Gio.file_new_for_uri(uri)
+                        if location.query_exists():
+                            if self.window.get_tab_from_location(location) is None:
+                                self.window.create_tab_from_uri(location.get_uri(), Pluma.encoding_get_utf8(), 0, False, False)
