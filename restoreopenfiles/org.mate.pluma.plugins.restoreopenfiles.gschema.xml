@@ -4,7 +4,12 @@
     <key name="uris" type="as">
       <default>[]</default>
       <summary>File URIs</summary>
-      <description>A list of URIs to restore when pluma starts.</description>
+      <description>A list of file URIs to open when pluma starts.</description>
+    </key>
+    <key name="active-document-uri" type="s">
+      <default>""</default>
+      <summary>Active document URI</summary>
+      <description>A URI used to restore the active tab.</description>
     </key>
   </schema>
 </schemalist>
