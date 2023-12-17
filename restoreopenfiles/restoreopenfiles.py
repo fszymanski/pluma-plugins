@@ -64,13 +64,13 @@ class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
         if self.is_only_window():
             settings = Gio.Settings(RESTORE_OPEN_FILES_SCHEMA)
             uris = settings.get_value("uris").unpack()
-            if len(uris):
+            if uris:
                 tab = self.window.get_active_tab()
-                if tab.get_state() == Pluma.TabState.STATE_NORMAL and tab.get_document().get_uri() is None:
+                if tab.get_state() == Pluma.TabState.STATE_NORMAL and tab.get_document().is_untitled():
                     self.window.close_tab(tab)
 
-            for uri in uris:
-                location = Gio.file_new_for_uri(uri)
-                if location.query_exists():
-                    if self.window.get_tab_from_location(location) is None:
-                        self.window.create_tab_from_uri(location.get_uri(), Pluma.encoding_get_utf8(), 0, False, False)
+                for uri in uris:
+                    location = Gio.file_new_for_uri(uri)
+                    if location.query_exists():
+                        if self.window.get_tab_from_location(location) is None:
+                            self.window.create_tab_from_uri(location.get_uri(), Pluma.encoding_get_utf8(), 0, False, False)
