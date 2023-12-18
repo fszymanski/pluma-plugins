@@ -54,7 +54,7 @@ class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
                 uris.append(uri)
 
         settings = Gio.Settings(RESTORE_OPEN_FILES_SCHEMA)
-        settings.set_value("uris", GLib.Variant("as", uris))
+        settings.set_value("file-uris", GLib.Variant("as", uris))
 
         if (doc := self.window.get_active_document()) is not None:
             if (uri := doc.get_uri()) is not None and Pluma.utils_uri_exists(uri):
@@ -63,7 +63,7 @@ class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
     def restore_open_files(self):
         if self.is_only_window():
             settings = Gio.Settings(RESTORE_OPEN_FILES_SCHEMA)
-            if (uris := settings.get_value("uris").unpack()):
+            if (uris := settings.get_value("file-uris").unpack()):
                 tab = self.window.get_active_tab()
                 if tab.get_state() == Pluma.TabState.STATE_NORMAL and tab.get_document().is_untitled():
                     self.window.close_tab(tab)

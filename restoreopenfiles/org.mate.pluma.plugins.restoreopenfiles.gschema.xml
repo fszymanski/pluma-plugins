@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <schemalist>
   <schema id="org.mate.pluma.plugins.restoreopenfiles" path="/org/mate/pluma/plugins/restoreopenfiles/">
-    <key name="uris" type="as">
+    <key name="file-uris" type="as">
       <default>[]</default>
       <summary>File URIs</summary>
       <description>A list of file URIs to open when pluma starts.</description>
