@@ -1,35 +1,21 @@
-# Copyright (C) 2021 Filip Szymański <fszymanski.pl@gmail.com>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program. If not, see <https://www.gnu.org/licenses/>.
-#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (c) 2021-2023 Filip Szymański <fszymanski.pl@gmail.com>
 
 import os
-from pathlib import Path
 import webbrowser
 
 import gi
 
-gi.require_version('Gtk', '3.0')
-gi.require_version('PeasGtk', '1.0')
-gi.require_version('Pluma', '1.0')
+gi.require_version("Gtk", "3.0")
+gi.require_version("PeasGtk", "1.0")
+gi.require_version("Pluma", "1.0")
 from gi.repository import Gio, GObject, Gtk, PeasGtk, Pluma
 
-WEB_SEARCH_SCHEMA = 'org.mate.pluma.plugins.websearch'
+WEB_SEARCH_SCHEMA = "org.mate.pluma.plugins.websearch"
 
 
 class WebSearchPlugin(GObject.Object, Pluma.ViewActivatable):
-    __gtype_name__ = 'WebSearchPlugin'
+    __gtype_name__ = "WebSearchPlugin"
 
     view = GObject.Property(type=Pluma.View)
 
@@ -37,23 +23,23 @@ class WebSearchPlugin(GObject.Object, Pluma.ViewActivatable):
         super().__init__()
 
     def do_activate(self):
-        if not hasattr(self.view, 'web_search_handler'):
-            self.view.web_search_handler = self.view.connect('populate-popup', self.append_search_to_context_menu)
+        if not hasattr(self.view, "web_search_handler_id"):
+            self.view.web_search_handler_id = self.view.connect("populate-popup", self.append_search_to_context_menu)
 
     def do_deactivate(self):
         app = Pluma.App.get_default()
         window = app.get_active_window()
         for view in window.get_views():
-            if hasattr(view, 'web_search_handler'):
-                view.disconnect(view.web_search_handler)
-                del view.web_search_handler
+            if hasattr(view, "web_search_handler_id"):
+                view.disconnect(view.web_search_handler_id)
+                del view.web_search_handler_id
 
     def do_update_state(self):
         pass
 
     def append_search_to_context_menu(self, view, popup):
-        menu_item = Gtk.MenuItem.new_with_label('Web Search')
-        menu_item.connect('activate', lambda _: self.search())
+        menu_item = Gtk.MenuItem.new_with_label("Web Search")
+        menu_item.connect("activate", lambda _: self.search())
         menu_item.show()
 
         separator = Gtk.SeparatorMenuItem.new()
@@ -83,15 +69,15 @@ class WebSearchPlugin(GObject.Object, Pluma.ViewActivatable):
             settings = Gio.Settings.new(WEB_SEARCH_SCHEMA)
             try:
                 url = (
-                    (settings.get_default_value('query-url').get_string() % query)
-                    if not settings.get_string('query-url')
-                    else (settings.get_string('query-url') % query))
+                    (settings.get_default_value("query-url").get_string() % query)
+                    if not settings.get_string("query-url")
+                    else (settings.get_string("query-url") % query))
             except TypeError:
                 return
 
-            if settings.get_boolean('use-custom-browser'):
+            if settings.get_boolean("use-custom-browser"):
                 try:
-                    webbrowser.get(settings.get_string('browser')).open(url)
+                    webbrowser.get(settings.get_string("browser")).open(url)
 
                     return
                 except webbrowser.Error:
@@ -101,7 +87,7 @@ class WebSearchPlugin(GObject.Object, Pluma.ViewActivatable):
 
 
 class WebSearchConfigurable(GObject.Object, PeasGtk.Configurable):
-    __gtype_name__ = 'WebSearchConfigurable'
+    __gtype_name__ = "WebSearchConfigurable"
 
     def __init__(self):
         super().__init__()
@@ -109,23 +95,21 @@ class WebSearchConfigurable(GObject.Object, PeasGtk.Configurable):
     def do_create_configure_widget(self):
         settings = Gio.Settings.new(WEB_SEARCH_SCHEMA)
 
-        builder = Gtk.Builder()
-        builder.add_from_file(os.fspath(Path(self.plugin_info.get_data_dir(), 'preferences.ui')))
+        builder = Gtk.Builder.new()
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), "configurationbox.ui"))
 
-        browser_entry = builder.get_object('browser_entry')
-        browser_entry.set_text(settings.get_string('browser'))
-        browser_entry.set_sensitive(settings.get_boolean('use-custom-browser'))
-        browser_entry.connect('changed', lambda _: settings.set_string('browser', browser_entry.get_text()))
+        browser_entry = builder.get_object("browser_entry")
+        browser_entry.set_text(settings.get_string("browser"))
+        browser_entry.set_sensitive(settings.get_boolean("use-custom-browser"))
+        browser_entry.connect("changed", lambda _: settings.set_string("browser", browser_entry.get_text()))
 
-        query_url_entry = builder.get_object('query_url_entry')
-        query_url_entry.set_text(settings.get_string('query-url'))
-        query_url_entry.connect('changed', lambda _: settings.set_string('query-url', query_url_entry.get_text()))
+        query_url_entry = builder.get_object("query_url_entry")
+        query_url_entry.set_text(settings.get_string("query-url"))
+        query_url_entry.connect("changed", lambda _: settings.set_string("query-url", query_url_entry.get_text()))
 
-        custom_browser_checkbox = builder.get_object('custom_browser_checkbox')
-        custom_browser_checkbox.set_active(settings.get_boolean('use-custom-browser'))
-        custom_browser_checkbox.connect('toggled', lambda b: settings.set_boolean('use-custom-browser', b.get_active()))
-        custom_browser_checkbox.connect('toggled', lambda b: browser_entry.set_sensitive(b.get_active()))
+        custom_browser_check = builder.get_object("custom_browser_check")
+        custom_browser_check.set_active(settings.get_boolean("use-custom-browser"))
+        custom_browser_check.connect("toggled", lambda b: settings.set_boolean("use-custom-browser", b.get_active()))
+        custom_browser_check.connect("toggled", lambda b: browser_entry.set_sensitive(b.get_active()))
 
-        return builder.get_object('preferences_widget')
-
-# vim: ft=python3 ts=4 et
+        return builder.get_object("configuration_box")

@@ -1,18 +1,5 @@
-# Copyright (C) 2021-2023 Filip Szymański <fszymanski.pl@gmail.com>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program. If not, see <https://www.gnu.org/licenses/>.
-#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (c) 2021-2023 Filip Szymański <fszymanski.pl@gmail.com>
 
 import sys
 from contextlib import suppress
@@ -35,20 +22,20 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
 
     def do_activate(self):
         doc = self.view.get_buffer()
-        if not hasattr(doc, "editorconfig_handler"):
-            doc.editorconfig_handler = doc.connect("loaded", lambda d, _: self.apply_editorconfig(d))
+        if not hasattr(doc, "editorconfig_handler_id"):
+            doc.editorconfig_handler_id = doc.connect("loaded", lambda d, _: self.apply_editorconfig(d))
 
     def do_deactivate(self):
         app = Pluma.App.get_default()
         window = app.get_active_window()
         for doc in window.get_documents():
-            if hasattr(doc, "editorconfig_handler"):
-                doc.disconnect(doc.editorconfig_handler)
-                del doc.editorconfig_handler
+            if hasattr(doc, "editorconfig_handler_id"):
+                doc.disconnect(doc.editorconfig_handler_id)
+                del doc.editorconfig_handler_id
 
-            if hasattr(doc, "editorconfig_trim_trailing_whitespace_handler"):
-                doc.disconnect(doc.editorconfig_trim_trailing_whitespace_handler)
-                del doc.editorconfig_trim_trailing_whitespace_handler
+            if hasattr(doc, "editorconfig_trim_trailing_whitespace_handler_id"):
+                doc.disconnect(doc.editorconfig_trim_trailing_whitespace_handler_id)
+                del doc.editorconfig_trim_trailing_whitespace_handler_id
 
     def do_update_state(self):
         pass
@@ -83,11 +70,11 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
                     doc.set_property("newline-type", Pluma.DocumentNewlineType.CR_LF)
             elif name == "charset":
                 continue
-            elif name == "trim_trailing_whitespace":
-                settings = Gio.Settings("org.mate.pluma")
+            elif name == "trim_trailing_whitespace" and val == "true":
+                settings = Gio.Settings.new("org.mate.pluma")
                 if "trailsave" not in settings.get_value("active-plugins"):
-                    if not hasattr(doc, "editorconfig_trim_trailing_whitespace_handler"):
-                        doc.editorconfig_trim_trailing_whitespace_handler = doc.connect(
+                    if not hasattr(doc, "editorconfig_trim_trailing_whitespace_handler_id"):
+                        doc.editorconfig_trim_trailing_whitespace_handler_id = doc.connect(
                             "save", lambda d, *_: self.trim_trailing_whitespace(d))
             elif name == "insert_final_newline":
                 continue

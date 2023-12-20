@@ -5,5 +5,5 @@ IAge=3
 Name=Select Line
 Description=Select current line
 Authors=Filip Szymański <fszymanski.pl@gmail.com>
-Copyright=Copyright © 2021 Filip Szymański
+Copyright=Copyright © 2021-2023 Filip Szymański
 Website=https://github.com/fszymanski/pluma-plugins

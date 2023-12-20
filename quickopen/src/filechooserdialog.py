@@ -1,18 +1,5 @@
-# Copyright (C) 2023 Filip Szymański <fszymanski.pl@gmail.com>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program. If not, see <https://www.gnu.org/licenses/>.
-#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (c) 2023 Filip Szymański <fszymanski.pl@gmail.com>
 
 from enum import IntEnum
 
@@ -21,7 +8,7 @@ import gi
 gi.require_version("Gdk", "3.0")
 gi.require_version("Gtk", "3.0")
 gi.require_version("Pluma", "1.0")
-from gi.repository import Gio, Gdk, GLib, Gtk, Pluma
+from gi.repository import Gdk, Gio, GLib, Gtk, Pluma
 
 from .helpdialog import HelpDialog
 from .providers import (
@@ -52,13 +39,13 @@ class FileChooserDialog(Gtk.Dialog):
 
         self._window = window
 
-        column = Gtk.TreeViewColumn()
+        column = Gtk.TreeViewColumn.new()
 
-        icon = Gtk.CellRendererPixbuf()
+        icon = Gtk.CellRendererPixbuf.new()
         column.pack_start(icon, False)
         column.add_attribute(icon, "gicon", COLUMN.ICON)
 
-        name = Gtk.CellRendererText()
+        name = Gtk.CellRendererText.new()
         column.pack_start(name, True)
         column.add_attribute(name, "text", COLUMN.NAME)
 
@@ -87,7 +74,7 @@ class FileChooserDialog(Gtk.Dialog):
     def create_and_fill_model(self, provider_func):
         self.set_busy_cursor()
 
-        store = Gtk.ListStore(Gio.Icon, str, Gio.File)
+        store = Gtk.ListStore.new([Gio.Icon, str, Gio.File])
         for location in provider_func():
             if location.is_native():
                 info = location.query_info("standard::*", Gio.FileQueryInfoFlags.NONE, None)

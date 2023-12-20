@@ -1,18 +1,5 @@
-# Copyright (C) 2023 Filip Szymański <fszymanski.pl@gmail.com>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program. If not, see <https://www.gnu.org/licenses/>.
-#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (c) 2023 Filip Szymański <fszymanski.pl@gmail.com>
 
 import os
 
@@ -27,17 +14,7 @@ Gio.Resource._register(resource)
 
 from .filechooserdialog import FileChooserDialog
 
-UI_STR = """
-<ui>
-    <menubar name='MenuBar'>
-        <menu name='FileMenu' action='File'>
-            <placeholder name='FileOps_2'>
-                <menuitem name='FileQuickOpenMenu' action='FileQuickOpen'/>
-            </placeholder>
-        </menu>
-    </menubar>
-</ui>
-"""
+MENU_PATH = "/MenuBar/FileMenu/FileOps_2"
 
 
 class QuickOpenPlugin(GObject.Object, Pluma.WindowActivatable):
@@ -48,22 +25,33 @@ class QuickOpenPlugin(GObject.Object, Pluma.WindowActivatable):
     def __init__(self):
         super().__init__()
 
-    def do_activate(self):
-        action = Gtk.Action("FileQuickOpen", label="Quick Open", icon_name="document-open")
-        action.connect("activate", lambda _: self.search_for_files())
-
-        self.action_group = Gtk.ActionGroup("PlumaQuickOpenPluginActions")
-        self.action_group.add_action_with_accel(action, "<Ctrl><Alt>o")
+    def insert_menu(self):
+        self.action_group = Gtk.ActionGroup.new("PlumaQuickOpenPluginActions")
+        self.action_group.add_actions([
+            ("FileQuickOpen", Gtk.STOCK_OPEN, "Quick Open", "<Ctrl><Alt>O", None, lambda _: self.search_for_files())
+        ])
 
         manager = self.window.get_ui_manager()
-        manager.insert_action_group(self.action_group, -1)
-        self.merge_id = manager.add_ui_from_string(UI_STR)
+        manager.insert_action_group(self.action_group)
+        self.ui_id = manager.new_merge_id()
+        manager.add_ui(self.ui_id,
+                       MENU_PATH,
+                       "FileQuickOpenMenu",
+                       "FileQuickOpen",
+                       Gtk.UIManagerItemType.MENUITEM,
+                       False)
 
-    def do_deactivate(self):
+    def remove_menu(self):
         manager = self.window.get_ui_manager()
-        manager.remove_ui(self.merge_id)
+        manager.remove_ui(self.ui_id)
         manager.remove_action_group(self.action_group)
         manager.ensure_update()
+
+    def do_activate(self):
+        self.insert_menu()
+
+    def do_deactivate(self):
+        self.remove_menu()
 
     def do_update_state(self):
         pass
@@ -79,7 +67,7 @@ class QuickOpenConfigurable(GObject.Object, PeasGtk.Configurable):
         super().__init__()
 
     def do_create_configure_widget(self):
-        settings = Gio.Settings("org.mate.pluma.plugins.quickopen")
+        settings = Gio.Settings.new("org.mate.pluma.plugins.quickopen")
 
         builder = Gtk.Builder.new_from_resource("/org/mate/pluma/plugins/quickopen/ui/configurationbox.ui")
 

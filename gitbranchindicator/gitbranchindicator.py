@@ -1,33 +1,19 @@
-# Copyright (C) 2021 Filip Szymański <fszymanski.pl@gmail.com>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program. If not, see <https://www.gnu.org/licenses/>.
-#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (c) 2021-2023 Filip Szymański <fszymanski.pl@gmail.com>
 
 import os
-from pathlib import Path
 
 import gi
 
-gi.require_version('Gtk', '3.0')
-gi.require_version('Pluma', '1.0')
+gi.require_version("Gtk", "3.0")
+gi.require_version("Pluma", "1.0")
 from gi.repository import GdkPixbuf, GObject, Gtk, Pango, Pluma
 
 from utils import get_current_git_branch, is_git_dir
 
 
 class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
-    __gtype_name__ = 'GitBranchIndicatorPlugin'
+    __gtype_name__ = "GitBranchIndicatorPlugin"
 
     window = GObject.Property(type=Pluma.Window)
 
@@ -36,7 +22,7 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
 
     def do_activate(self):
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
-            os.fspath(Path(self.plugin_info.get_data_dir(), 'icons/git-branch-symbolic.svg')),
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), "icons/git-branch-1.svg"),
             *Gtk.IconSize.lookup(Gtk.IconSize.SMALL_TOOLBAR)[1:], True)
         image = Gtk.Image.new_from_pixbuf(pixbuf)
 
@@ -52,15 +38,15 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
 
         self.window.get_statusbar().pack_start(self.hbox, False, False, 18)
 
-        self.handlers = [
-            self.window.connect('active-tab-changed', lambda _, t: self.show_git_branch(t)),
-            self.window.connect('active-tab-state-changed', lambda w: self.show_git_branch(w.get_active_tab())),
-            self.window.connect('tab-removed', lambda *_: self.hide_if_no_tabs())
+        self.handler_ids = [
+            self.window.connect("active-tab-changed", lambda _, t: self.show_git_branch(t)),
+            self.window.connect("active-tab-state-changed", lambda w: self.show_git_branch(w.get_active_tab())),
+            self.window.connect("tab-removed", lambda *_: self.hide_if_no_tabs())
         ]
 
     def do_deactivate(self):
-        for handler in self.handlers:
-            self.window.disconnect(handler)
+        for handler_id in self.handler_ids:
+            self.window.disconnect(handler_id)
 
         self.hbox.destroy()
 
@@ -69,20 +55,17 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
 
     def show_git_branch(self, tab):
         doc = tab.get_document()
-        location = doc.get_location()
-        if location is not None and location.query_exists():
-            path = Path(location.get_path()).parent
-            if is_git_dir(path):
-                self.label.set_text(get_current_git_branch(path))
+        if (location := doc.get_location()) is not None and location.query_exists():
+            if (parent_dir := location.get_parent()) is not None:
+                if (dirname := parent_dir.get_path()) is not None and is_git_dir(dirname):
+                    self.label.set_text(get_current_git_branch(dirname))
 
-                self.hbox.show()
+                    self.hbox.show()
 
-                return
+                    return
 
         self.hbox.hide()
 
     def hide_if_no_tabs(self):
         if self.window.get_active_tab() is None:
             self.hbox.hide()
-
-# vim: ft=python3 ts=4 et
