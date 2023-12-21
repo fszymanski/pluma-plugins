@@ -74,4 +74,8 @@ class RestoreOpenFilesPlugin(GObject.Object, Pluma.WindowActivatable):
                     for doc in self.window.get_documents():
                         if uri == doc.get_uri():
                             self.window.set_active_tab(Pluma.Tab.get_from_document(doc))
+
                             break
+
+                if not self.window.get_documents():
+                    self.window.create_tab(True)
