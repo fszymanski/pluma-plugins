@@ -26,33 +26,30 @@ HELP_HTML = """
         <th>Command</th>
       </tr>
       <tr>
-        <td>Ctrl + r</td>
+        <td>Ctrl + R</td>
         <td>Show recently opened files. <i>(Default)</i></td>
       </tr>
       <tr>
-        <td>Ctrl + f</td>
-        <td>Show files from <i>File Browser Pane</i> plugin root directory.</td>
+        <td>Ctrl + F</td>
+        <td>Show files from the <i>File Browser Pane</i> plugin root directory.</td>
       </tr>
       <tr>
-        <td>Ctrl + d</td>
-        <td>Show files from directory of currently active document.</td>
+        <td>Ctrl + D</td>
+        <td>Show files from directory of the current active document.</td>
       </tr>
       <tr>
-        <td>Ctrl + g</td>
-        <td>Show files from <i>git</i> directory of currently active document.</td>
+        <td>Ctrl + G</td>
+        <td>Show files from <i>git</i> directory of the current active document.</td>
       </tr>
       <tr>
-        <td>Ctrl + o</td>
-        <td>Show files from directory of currently open documents.</td>
+        <td>Ctrl + O</td>
+        <td>Show files from directory of the current open documents.</td>
       </tr>
       <tr>
-        <td>Ctrl + b</td>
-        <td>Show files from bookmark directories.</td>
+        <td>Ctrl + B</td>
+        <td>Show files from the bookmark directories.</td>
       </tr>
     </table>
-    <p>
-      <b>Note:</b> Recursively searching through directories containing several thousand of files may take 3-5 seconds.
-    </p>
   </body>
 </html>
 """
