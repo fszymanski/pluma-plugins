@@ -2,7 +2,6 @@
 # Copyright (c) 2021-2023 Filip Szymański <fszymanski.pl@gmail.com>
 
 import logging
-import sys
 from contextlib import suppress
 
 import gi
