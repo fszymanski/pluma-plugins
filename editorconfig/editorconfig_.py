@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (c) 2021-2023 Filip Szymański <fszymanski.pl@gmail.com>
 
+import logging
 import sys
 from contextlib import suppress
 
@@ -10,6 +11,8 @@ gi.require_version("Pluma", "1.0")
 from gi.repository import Gio, GObject, Pluma
 
 import editorconfig
+
+logger = logging.getLogger("EditorConfig")
 
 
 class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
@@ -45,7 +48,7 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
             try:
                 return editorconfig.get_properties(location.get_path())
             except editorconfig.EditorConfigError:
-                pass
+                logger.error("Cannot read '.editorconfig' file")
 
     def apply_editorconfig(self, doc):
         if (conf := self.parse_editorconfig(doc)) is None:
@@ -85,7 +88,7 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
                     with suppress(ValueError): self.view.set_right_margin_position(int(val))
                     self.view.set_property("show-right-margin", True)
             else:
-                print(f"EditorConfig: Property not supported: {name}={val}", file=sys.stderr)
+                logger.error(f"Property not supported: '{name}={val}'")
 
     def trim_trailing_whitespace(self, doc):
         for linenr in range(0, doc.get_line_count()):
