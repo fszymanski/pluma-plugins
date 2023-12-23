@@ -47,8 +47,8 @@ class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
         if (location := doc.get_location()) is not None and location.query_exists():
             try:
                 return editorconfig.get_properties(location.get_path())
-            except editorconfig.EditorConfigError:
-                logger.error("Cannot read '.editorconfig' file")
+            except editorconfig.EditorConfigError as err:
+                logger.error("Cannot parse file: '.editorconfig'")
 
     def apply_editorconfig(self, doc):
         if (conf := self.parse_editorconfig(doc)) is None:
