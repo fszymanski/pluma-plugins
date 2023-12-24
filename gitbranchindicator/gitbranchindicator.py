@@ -5,11 +5,10 @@ import os
 
 import gi
 
+gi.require_version("Ggit", "1.0")
 gi.require_version("Gtk", "3.0")
 gi.require_version("Pluma", "1.0")
-from gi.repository import GdkPixbuf, GObject, Gtk, Pango, Pluma
-
-from utils import get_current_git_branch, is_git_dir
+from gi.repository import GdkPixbuf, GObject, Gtk, Pango, Pluma, Ggit
 
 
 class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
@@ -21,6 +20,8 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
         super().__init__()
 
     def do_activate(self):
+        Ggit.init()
+
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
             os.path.join(os.path.dirname(os.path.abspath(__file__)), "icons/git-branch-1.svg"),
             *Gtk.IconSize.lookup(Gtk.IconSize.SMALL_TOOLBAR)[1:], True)
@@ -53,16 +54,23 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
     def do_update_state(self):
         pass
 
+    def get_current_git_branch(self, location):
+        if (repo_location := Ggit.Repository.discover(location)) is not None:
+            if (repo := Ggit.Repository.open(repo_location)) is not None:
+                if (head_ref := repo.lookup_reference("HEAD")) is not None:
+                    if (symbolic_ref := head_ref.get_symbolic_target()) is not None and symbolic_ref:
+                        return os.path.basename(symbolic_ref)
+
     def show_git_branch(self, tab):
         doc = tab.get_document()
         if (location := doc.get_location()) is not None and location.query_exists():
-            if (parent_dir := location.get_parent()) is not None:
-                if (dirname := parent_dir.get_path()) is not None and is_git_dir(dirname):
-                    self.label.set_text(get_current_git_branch(dirname))
-
+            try:
+                if (branch := self.get_current_git_branch(location)) is not None:
+                    self.label.set_text(branch)
                     self.hbox.show()
-
                     return
+            except gi.repository.GLib.Error:
+                pass
 
         self.hbox.hide()
 

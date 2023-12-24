@@ -21,7 +21,7 @@ Currently available plugins:
 Note:
 - All plugins require `Pluma >= 1.25.2`.
 - The *editorconfig* plugin requires `python3-editorconfig`.
-- The *gitbranchindicator* plugin requires `git`.
+- The *gitbranchindicator* plugin requires `libgit2-glib-dev`.
 - The *pastebin* plugin requires `python3-requests`.
 - The *quickopen* plugin requires `git`.
 
