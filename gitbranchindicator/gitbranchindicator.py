@@ -58,7 +58,7 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
         if (repo_location := Ggit.Repository.discover(location)) is not None:
             if (repo := Ggit.Repository.open(repo_location)) is not None:
                 if (head_ref := repo.lookup_reference("HEAD")) is not None:
-                    if (symbolic_ref := head_ref.get_symbolic_target()) is not None and symbolic_ref:
+                    if (symbolic_ref := head_ref.get_symbolic_target()) is not None:
                         return os.path.basename(symbolic_ref)
 
     def show_git_branch(self, tab):
