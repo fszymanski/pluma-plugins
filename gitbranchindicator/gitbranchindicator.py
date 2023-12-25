@@ -8,7 +8,10 @@ import gi
 gi.require_version("Ggit", "1.0")
 gi.require_version("Gtk", "3.0")
 gi.require_version("Pluma", "1.0")
-from gi.repository import GdkPixbuf, GObject, Gtk, Pango, Pluma, Ggit
+from gi.repository import GdkPixbuf, GObject, Gtk, Pango, Pluma, Ggit, Gio
+
+FREEDESKTOP_SCHEMA = "org.freedesktop.appearance"
+GNOME_DESKTOP_SCHEMA = "org.gnome.desktop.interface"
 
 
 class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
@@ -24,7 +27,7 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
 
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
             os.path.join(os.path.dirname(os.path.abspath(__file__)),
-            "icons/git-branch-light.svg" if self.is_dark_theme() else "icons/git-branch-dark.svg"),
+                         "icons/git-branch-light.svg" if self.is_dark_theme() else "icons/git-branch-dark.svg"),
             *Gtk.IconSize.lookup(Gtk.IconSize.SMALL_TOOLBAR)[1:], True)
         image = Gtk.Image.new_from_pixbuf(pixbuf)
 
@@ -55,21 +58,23 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
     def do_update_state(self):
         pass
 
-    # https://lzone.de/blog/Detecting-a-Dark-Theme-in-GTK
     def is_dark_theme(self):
-        style = self.window.get_style_context()
-        found, txt_color = style.lookup_color("theme_text_color")
-        if not found:
-            txt_color = style.get_color(Gtk.StateFlags.NORMAL)
+        dark = False
 
-        found, bg_color = style.lookup_color("theme_bg_color")
-        if not found:
-            bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
+        source = Gio.SettingsSchemaSource.get_default()
+        if source.lookup(GNOME_DESKTOP_SCHEMA, True) is not None:
+            settings = Gio.Settings.new(GNOME_DESKTOP_SCHEMA)
+            if "color-scheme" in settings.keys():
+                if (scheme := settings.get_string("color-scheme")):
+                    dark = scheme == "prefer-dark"
+        elif source.lookup(FREEDESKTOP_SCHEMA, True) is not None:
+            settings = Gio.Settings.new(FREEDESKTOP_SCHEMA)
+            if "color-scheme" in settings.keys():
+                scheme = settings.get_int("color-scheme")
+                # https://github.com/flatpak/xdg-desktop-portal/blob/main/data/org.freedesktop.impl.portal.Settings.xml
+                dark = scheme == 1
 
-        txt_avg = txt_color.blue / 256 + txt_color.green / 256 + txt_color.red / 256
-        bg_avg = bg_color.blue / 256 + bg_color.green / 256 + bg_color.red / 256
-
-        return txt_avg > bg_avg
+        return dark
 
     def get_current_git_branch(self, location):
         if (repo_location := Ggit.Repository.discover(location)) is not None:
