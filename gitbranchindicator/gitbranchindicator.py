@@ -23,7 +23,8 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
         Ggit.init()
 
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), "icons/git-branch-1.svg"),
+            os.path.join(os.path.dirname(os.path.abspath(__file__)),
+            "icons/git-branch-light.svg" if self.is_dark_theme() else "icons/git-branch-dark.svg"),
             *Gtk.IconSize.lookup(Gtk.IconSize.SMALL_TOOLBAR)[1:], True)
         image = Gtk.Image.new_from_pixbuf(pixbuf)
 
@@ -53,6 +54,25 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
 
     def do_update_state(self):
         pass
+
+    # https://lzone.de/blog/Detecting-a-Dark-Theme-in-GTK
+    def is_dark_theme(self):
+        style = self.window.get_style_context()
+        found, txt_color = style.lookup_color("theme_text_color")
+        if not found:
+            txt_color = style.get_color(Gtk.StateFlags.NORMAL)
+
+        found, bg_color = style.lookup_color("theme_bg_color")
+        if not found:
+            # TODO: `get_background_color()` is deprecated, rewrite it in the future
+            # https://gitlab.gnome.org/GNOME/pygobject/-/issues/119 and
+            # https://www.titanwolf.org/Network/q/11077cf0-7647-485d-a48d-8c17a2c26788/y
+            bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
+
+        txt_avg = txt_color.blue / 256 + txt_color.green / 256 + txt_color.red / 256
+        bg_avg = bg_color.blue / 256 + bg_color.green / 256 + bg_color.red / 256
+
+        return txt_avg > bg_avg
 
     def get_current_git_branch(self, location):
         if (repo_location := Ggit.Repository.discover(location)) is not None:
