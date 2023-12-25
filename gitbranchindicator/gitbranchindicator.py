@@ -72,6 +72,9 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
             if "color-scheme" in settings.keys():
                 scheme = settings.get_int("color-scheme")
                 # https://github.com/flatpak/xdg-desktop-portal/blob/main/data/org.freedesktop.impl.portal.Settings.xml
+                # 0 = no preference
+                # 1 = prefer dark appearance
+                # 2 = prefer light appearance
                 dark = scheme == 1
 
         return dark
