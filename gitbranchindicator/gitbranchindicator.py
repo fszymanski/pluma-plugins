@@ -64,9 +64,6 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
 
         found, bg_color = style.lookup_color("theme_bg_color")
         if not found:
-            # TODO: `get_background_color()` is deprecated, rewrite it in the future
-            # https://gitlab.gnome.org/GNOME/pygobject/-/issues/119 and
-            # https://www.titanwolf.org/Network/q/11077cf0-7647-485d-a48d-8c17a2c26788/y
             bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
 
         txt_avg = txt_color.blue / 256 + txt_color.green / 256 + txt_color.red / 256
