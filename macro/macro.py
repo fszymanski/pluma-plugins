@@ -60,7 +60,7 @@ class MacroPlugin(GObject.Object, Pluma.WindowActivatable):
         self.remove_menu()
 
     def do_update_state(self):
-        pass
+        self.action_group.set_sensitive(self.window.get_active_document() is not None)
 
     def start_recording_macro(self):
         self.macro = []

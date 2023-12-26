@@ -47,8 +47,7 @@ class SelectLinePlugin(GObject.Object, Pluma.WindowActivatable):
         self.remove_menu()
 
     def do_update_state(self):
-        view = self.window.get_active_view()
-        self.action_group.set_sensitive(bool(view))
+        self.action_group.set_sensitive(self.window.get_active_document() is not None)
 
     def select_line(self):
         doc = self.window.get_active_document()
