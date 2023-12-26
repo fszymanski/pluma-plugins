@@ -31,7 +31,7 @@ def get_files_from_dir(dirname):
 
 def get_file_browser_virtual_root_dir():
     settings = Gio.Settings.new("org.mate.pluma")
-    if "filebrowser" in settings.get_value("active-plugins"):
+    if "filebrowser" in settings.get_value("active-plugins").unpack():
         settings = Gio.Settings.new("org.mate.pluma.plugins.filebrowser.on-load")
         uri = settings.get_string("virtual-root")
         return GLib.filename_from_uri(uri)[0]
