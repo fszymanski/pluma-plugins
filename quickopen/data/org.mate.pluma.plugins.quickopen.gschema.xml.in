@@ -3,11 +3,13 @@
   <schema id="org.mate.pluma.plugins.quickopen" path="/org/mate/pluma/plugins/quickopen/">
     <key name="recursive-file-search" type="b">
       <default>false</default>
-      <summary>Search for files under each directory, recursively.</summary>
+      <summary>Recursive file search</summary>
+      <description>Search for files under each directory, recursively.</description>
     </key>
     <key name="exclude-dirs" type="as">
       <default>['.git']</default>
-      <summary>Exclude these directories from file searches.</summary>
+      <summary>Exclude directories</summary>
+      <description>Exclude these directories from file searches.</description>
     </key>
   </schema>
 </schemalist>
