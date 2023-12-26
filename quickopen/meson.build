@@ -22,4 +22,4 @@ configure_file(input: '__init__.py.in',
 
 install_subdir('src', install_dir: pkgdatadir, strip_directory : true)
 
-meson.add_install_script('build-aux/meson/post_install.py', pkgdatadir)
+meson.add_install_script('../build-aux/meson/post_install.py', pkgdatadir)
