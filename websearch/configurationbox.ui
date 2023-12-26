@@ -6,7 +6,7 @@
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="orientation">vertical</property>
-    <property name="spacing">2</property>
+    <property name="spacing">6</property>
     <child>
       <object class="GtkCheckButton" id="custom_browser_check">
         <property name="label" translatable="yes">Use custom browser</property>
@@ -26,8 +26,8 @@
       <object class="GtkGrid">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="row-spacing">2</property>
-        <property name="column-spacing">2</property>
+        <property name="row-spacing">6</property>
+        <property name="column-spacing">6</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
@@ -56,8 +56,10 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">&lt;i&gt;URL with %s in place of query&lt;/i&gt;</property>
-            <property name="use-markup">True</property>
+            <property name="label" translatable="yes">URL with %s in place of query</property>
+            <attributes>
+              <attribute name="style" value="italic"/>
+            </attributes>
           </object>
           <packing>
             <property name="left-attach">1</property>
