@@ -65,17 +65,15 @@ class GitBranchIndicatorPlugin(GObject.Object, Pluma.WindowActivatable):
         if source.lookup(GNOME_DESKTOP_SCHEMA, True) is not None:
             settings = Gio.Settings.new(GNOME_DESKTOP_SCHEMA)
             if "color-scheme" in settings.keys():
-                scheme = settings.get_string("color-scheme")
-                dark = scheme == "prefer-dark"
+                dark = settings.get_string("color-scheme") == "prefer-dark"
         elif source.lookup(FREEDESKTOP_SCHEMA, True) is not None:
             settings = Gio.Settings.new(FREEDESKTOP_SCHEMA)
             if "color-scheme" in settings.keys():
-                scheme = settings.get_int("color-scheme")
                 # https://github.com/flatpak/xdg-desktop-portal/blob/main/data/org.freedesktop.impl.portal.Settings.xml
                 # 0 = no preference
                 # 1 = prefer dark appearance
                 # 2 = prefer light appearance
-                dark = scheme == 1
+                dark = settings.get_int("color-scheme") == 1
 
         return dark
 
