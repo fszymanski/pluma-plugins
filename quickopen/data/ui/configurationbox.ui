@@ -10,7 +10,7 @@
     <property name="margin-top">5</property>
     <property name="margin-bottom">5</property>
     <property name="orientation">vertical</property>
-    <property name="spacing">2</property>
+    <property name="spacing">6</property>
     <child>
       <object class="GtkCheckButton" id="recursive_search_check">
         <property name="label" translatable="yes">Search for files under each directory, recursively</property>
@@ -29,7 +29,7 @@
       <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="spacing">2</property>
+        <property name="spacing">6</property>
         <child>
           <object class="GtkLabel" id="exclude_dirs_label">
             <property name="visible">True</property>

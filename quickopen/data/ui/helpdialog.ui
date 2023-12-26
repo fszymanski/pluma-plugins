@@ -5,6 +5,7 @@
   <requires lib="webkit2gtk" version="2.28"/>
   <template class="QuickOpenHelpDialog" parent="GtkDialog">
     <property name="can-focus">False</property>
+    <property name="border-width">6</property>
     <property name="title" translatable="yes">Quick Open Help</property>
     <property name="modal">True</property>
     <property name="default-width">640</property>
@@ -15,7 +16,7 @@
       <object class="GtkBox">
         <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
+        <property name="spacing">6</property>
         <child internal-child="action_area">
           <object class="GtkButtonBox">
             <property name="can-focus">False</property>
