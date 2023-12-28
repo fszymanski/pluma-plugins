@@ -142,12 +142,14 @@ class SearchDialog(Gtk.Dialog):
         store = self.panel.get_model()
         for line in lines.split("\n"):
             if (result := RG_SEARCH_RESULT_RE.search(line)) is not None:
+                is_tempfile = RG_TEMPFILE_RE.match(result.group("filename")) is not None
+
                 store.append([
-                    result.group("filename") if RG_TEMPFILE_RE.match(result.group("filename")) is None else doc.get_short_name_for_display(),
+                    doc.get_short_name_for_display() if is_tempfile else result.group("filename"),
                     result.group("line"),
                     result.group("column"),
                     result.group("match"),
-                    None if RG_TEMPFILE_RE.match(result.group("filename")) is None else doc
+                    doc if is_tempfile else None
                 ])
 
     def on_stderr_data(self, _, lines):
