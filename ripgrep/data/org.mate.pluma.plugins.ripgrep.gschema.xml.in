@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schemalist>
+  <schema id="org.mate.pluma.plugins.ripgrep" path="/org/mate/pluma/plugins/ripgrep/">
+    <key name="search-history" type="as">
+      <default>[]</default>
+      <summary>Search history</summary>
+      <description>Search patterns history.</description>
+    </key>
+  </schema>
+</schemalist>

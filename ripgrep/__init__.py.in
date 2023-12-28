@@ -1,0 +1,71 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (c) 2024 Filip Szymański <fszymanski.pl@gmail.com>
+
+import os
+
+import gi
+
+gi.require_version("Gtk", "3.0")
+gi.require_version("Pluma", "1.0")
+from gi.repository import GObject, Pluma, Gtk, Gio
+
+resource = Gio.resource_load(os.path.join(@PKG_DATA_DIR@, "ripgrep.gresource"))
+Gio.Resource._register(resource)
+
+from .resultspanel import ResultsPanel
+from .searchdialog import SearchDialog
+
+MENU_PATH = "/MenuBar/SearchMenu/SearchOps_2"
+
+
+class RipgrepPlugin(GObject.Object, Pluma.WindowActivatable):
+    __gtype_name__ = "RipgrepPlugin"
+
+    window = GObject.Property(type=Pluma.Window)
+
+    def __init__(self):
+        super().__init__()
+
+    def insert_menu(self):
+        self.action_group = Gtk.ActionGroup.new("RipgrepPluginActions")
+        self.action_group.add_actions([
+            ("SearchFindInFiles", Gtk.STOCK_FIND, "Find in File(s)...", "<Ctrl><Alt>F", None, lambda _: self.find_in_files())
+        ])
+
+        manager = self.window.get_ui_manager()
+        manager.insert_action_group(self.action_group)
+        self.ui_id = manager.new_merge_id()
+        manager.add_ui(self.ui_id,
+                       MENU_PATH,
+                       "SearchFindInFilesMenu",
+                       "SearchFindInFiles",
+                       Gtk.UIManagerItemType.MENUITEM,
+                       False)
+
+    def remove_menu(self):
+        manager = self.window.get_ui_manager()
+        manager.remove_ui(self.ui_id)
+        manager.remove_action_group(self.action_group)
+        manager.ensure_update()
+
+    def do_activate(self):
+        self.insert_menu()
+
+        self.panel = ResultsPanel(self.window)
+
+        bottom_panel = self.window.get_bottom_panel()
+        bottom_panel.add_item_with_icon(self.panel, "Ripgrep", "edit-find")
+
+    def do_deactivate(self):
+        self.remove_menu()
+
+        bottom_panel = self.window.get_bottom_panel()
+        bottom_panel.remove_item(self.panel)
+
+    def do_update_state(self):
+        pass
+
+    def find_in_files(self):
+        SearchDialog(self.window, self.panel)
+
+# vim: ft=python3
