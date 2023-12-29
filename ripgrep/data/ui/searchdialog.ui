@@ -38,6 +38,8 @@
                 <property name="label">gtk-find</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
+                <property name="can-default">True</property>
+                <property name="has-default">True</property>
                 <property name="receives-default">True</property>
                 <property name="use-stock">True</property>
                 <signal name="clicked" handler="on_find_button_clicked" swapped="no"/>
@@ -81,6 +83,7 @@
                   <object class="GtkEntry" id="search_entry">
                     <property name="can-focus">True</property>
                     <property name="has-focus">True</property>
+                    <property name="activates-default">True</property>
                   </object>
                 </child>
               </object>
