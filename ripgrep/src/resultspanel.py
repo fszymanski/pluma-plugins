@@ -5,7 +5,7 @@ import gi
 
 gi.require_version("Gtk", "3.0")
 gi.require_version("Pluma", "1.0")
-from gi.repository import Gtk, Pluma
+from gi.repository import Gtk, Pluma, Gio
 
 
 class ResultsPanel(Gtk.ScrolledWindow):
@@ -27,6 +27,8 @@ class ResultsPanel(Gtk.ScrolledWindow):
 
         self.add(self.result_view)
 
+        self.result_view.connect("row-activated", self.goto_match)
+
         self.show_all()
 
     def clear(self):
@@ -39,5 +41,34 @@ class ResultsPanel(Gtk.ScrolledWindow):
         bottom_panel = self.window_.get_bottom_panel()
         bottom_panel.props.visible = True
         bottom_panel.activate_item(self)
+
+    def goto_match(self, result_view, path, _):
+        model = result_view.get_model()
+        iter_ = model.get_iter(path)
+
+        if (doc := model.get_value(iter_, 4)) is None:
+            location = Gio.File.new_for_path(model.get_value(iter_, 0))
+            if location.query_exists():
+                if (tab := self.window_.get_tab_from_location(location)) is None:
+                    self.window_.create_tab_from_uri(location.get_uri(), Pluma.encoding_get_utf8(), 0, False, True)
+                else:
+                    self.window_.set_active_tab(tab)
+            else:
+                return
+        else:
+            if doc in self.window_.get_documents():
+                self.window_.set_active_tab(Pluma.Tab.get_from_document(doc))
+            else:
+                return
+
+        line = int(model.get_value(iter_, 1))
+        column = int(model.get_value(iter_, 2))
+        if line > 0 and column > 0:
+            if (view := self.window_.get_active_view()) is not None:
+                buf = view.get_buffer()
+                iter_ = buf.get_iter_at_line_offset(line - 1, column - 1)
+                buf.place_cursor(iter_)
+                view.scroll_to_iter(iter_, 0.25, False, 0, 0)
+                view.grab_focus()
 
 # vim: ft=python3
