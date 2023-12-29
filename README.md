@@ -25,7 +25,7 @@ Note:
 - The *gitbranchindicator* plugin requires `libgit2-glib, gir1.2-ggit`.
 - The *pastebin* plugin requires `python3-requests`.
 - The *quickopen* plugin requires `git`.
-- The *ripgrep* plugin requires `rg`.
+- The *ripgrep* plugin requires `ripgrep`.
 
 ## Installation
 
