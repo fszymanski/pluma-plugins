@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (c) 2024 Filip Szymański <fszymanski.pl@gmail.com>
 
+import logging
 import os
 import re
 import tempfile
@@ -13,6 +14,8 @@ from gi.repository import Gio, GLib, Gtk
 
 from .utils import AsyncSpawn, StatusbarFlashMessage
 
+logger = logging.getLogger("Ripgrep")
+
 MAX_SEARCH_HISTORY = 100
 RG_COMMAND = [
     "rg",
@@ -21,7 +24,8 @@ RG_COMMAND = [
     "--with-filename",
     "--line-number",
     "--column",
-    "--smart-case"
+    "--smart-case",
+    "--fixed-strings"
 ]
 RG_SCHEMA = "org.mate.pluma.plugins.ripgrep"
 RG_SEARCH_RESULT_RE = re.compile(r"^(?P<filename>.+):(?P<line>\d+):(?P<column>\d+):(?P<match>.+)$")
@@ -156,6 +160,6 @@ class SearchDialog(Gtk.Dialog, StatusbarFlashMessage):
                 ])
 
     def on_stderr_data(self, _, lines):
-        pass # TODO: Some logging
+        logger.error(lines)
 
 # vim: ft=python3

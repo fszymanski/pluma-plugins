@@ -68,6 +68,7 @@ class ResultsPanel(Gtk.ScrolledWindow, StatusbarFlashMessage):
 
         line = int(model.get_value(iter_, 1))
         column = int(model.get_value(iter_, 2))
+
         if (view := self.window_.get_active_view()) is not None:
             buf = view.get_buffer()
             iter_ = buf.get_iter_at_line_offset(line - 1, column - 1)
