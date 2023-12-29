@@ -14,6 +14,7 @@ Currently available plugins:
 - **pastebin** - *Store any text on Pastebin.com for easy sharing.*
 - **quickopen** - *Quickly open files. (WORK IN PROGRESS!!!)*
 - **restoreopenfiles** - *Restore previously open files.*
+- **ripgrep** - *Recursively search the current file/directory for lines matching a pattern.*
 - **selectline** - *Select current line.*
 - **togglepanel** - *Show/hide panels with one click.*
 - **websearch** - *Search for the current word/selection on the web.*
@@ -24,6 +25,7 @@ Note:
 - The *gitbranchindicator* plugin requires `libgit2-glib, gir1.2-ggit`.
 - The *pastebin* plugin requires `python3-requests`.
 - The *quickopen* plugin requires `git`.
+- The *ripgrep* plugin requires `rg`.
 
 ## Installation
 
@@ -31,10 +33,10 @@ Note:
 $ git clone https://github.com/fszymanski/pluma-plugins.git
 ```
 
-**Note:** `quickopen` plugin installation requires [meson](https://mesonbuild.com/).
+**Note:** `quickopen` and `ripgrep` plugin installation requires [meson](https://mesonbuild.com/).
 
 ```sh
-$ cd pluma-plugins/quickopen
+$ cd path/to/plugin
 $ ./install.sh
 ```
 
