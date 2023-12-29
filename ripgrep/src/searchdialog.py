@@ -14,7 +14,7 @@ from gi.repository import Gio, GLib, Gtk
 
 from .utils import AsyncSpawn, StatusbarFlashMessage
 
-logger = logging.getLogger("Ripgrep")
+logger = logging.getLogger("pluma-ripgrep")
 
 MAX_SEARCH_HISTORY = 100
 RG_COMMAND = [
@@ -55,9 +55,9 @@ class SearchDialog(Gtk.Dialog, StatusbarFlashMessage):
 
         self.connect("destroy", lambda _: self.save_search_history())
 
+        self.search_entry.connect("changed", lambda e: self.find_button.set_sensitive(e.get_text() != ""))
         self.current_doc_radio.connect(
             "toggled", lambda b: self.choose_folder_button.set_sensitive(not b.get_active()))
-        self.search_entry.connect("changed", lambda e: self.find_button.set_sensitive(e.get_text() != ""))
 
         self.spawn = AsyncSpawn()
         self.spawn.connect("process-started", lambda _: self.panel.clear())
@@ -133,8 +133,10 @@ class SearchDialog(Gtk.Dialog, StatusbarFlashMessage):
                     self.tempfile_tracker[pid] = path
 
                 self.panel.show()
-            except GLib.Error:
+            except GLib.Error as err:
                 self.flash_message(self.window_.get_statusbar(), "Failed to start the 'rg' process")
+
+                logger.error(err)
 
     def on_process_finished(self, _, pid):
         GLib.spawn_close_pid(pid)
