@@ -7,12 +7,15 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Pluma", "1.0")
 from gi.repository import Gtk, Pluma, Gio
 
+from .utils import StatusbarFlashMessage
 
-class ResultsPanel(Gtk.ScrolledWindow):
+
+class ResultsPanel(Gtk.ScrolledWindow, StatusbarFlashMessage):
     __gtype_name__ = "RipgrepResultsPanel"
 
     def __init__(self, window):
         super().__init__()
+        StatusbarFlashMessage.__init__(self)
 
         self.window_ = window
 
@@ -54,21 +57,22 @@ class ResultsPanel(Gtk.ScrolledWindow):
                 else:
                     self.window_.set_active_tab(tab)
             else:
+                self.flash_message(self.window_.get_statusbar(), "Cannot open this file")
                 return
         else:
             if doc in self.window_.get_documents():
                 self.window_.set_active_tab(Pluma.Tab.get_from_document(doc))
             else:
+                self.flash_message(self.window_.get_statusbar(), "Cannot jump to this tab")
                 return
 
         line = int(model.get_value(iter_, 1))
         column = int(model.get_value(iter_, 2))
-        if line > 0 and column > 0:
-            if (view := self.window_.get_active_view()) is not None:
-                buf = view.get_buffer()
-                iter_ = buf.get_iter_at_line_offset(line - 1, column - 1)
-                buf.place_cursor(iter_)
-                view.scroll_to_iter(iter_, 0.25, False, 0, 0)
-                view.grab_focus()
+        if (view := self.window_.get_active_view()) is not None:
+            buf = view.get_buffer()
+            iter_ = buf.get_iter_at_line_offset(line - 1, column - 1)
+            buf.place_cursor(iter_)
+            view.scroll_to_iter(iter_, 0.25, False, 0, 0)
+            view.grab_focus()
 
 # vim: ft=python3

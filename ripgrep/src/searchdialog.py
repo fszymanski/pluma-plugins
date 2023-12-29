@@ -11,7 +11,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gio, GLib, Gtk
 
-from .utils import AsyncSpawn
+from .utils import AsyncSpawn, StatusbarFlashMessage
 
 MAX_SEARCH_HISTORY = 100
 RG_COMMAND = [
@@ -29,7 +29,7 @@ RG_TEMPFILE_RE = re.compile(r"^/tmp/pluma\.ripgrep\.")
 
 
 @Gtk.Template(resource_path="/org/mate/pluma/plugins/ripgrep/ui/searchdialog.ui")
-class SearchDialog(Gtk.Dialog):
+class SearchDialog(Gtk.Dialog, StatusbarFlashMessage):
     __gtype_name__ = "RipgrepSearchDialog"
 
     search_combo = Gtk.Template.Child()
@@ -40,6 +40,7 @@ class SearchDialog(Gtk.Dialog):
 
     def __init__(self, window, panel):
         super().__init__(parent=window)
+        StatusbarFlashMessage.__init__(self)
 
         self.window_ = window
         self.panel = panel
@@ -120,12 +121,14 @@ class SearchDialog(Gtk.Dialog):
                 path = self.choose_folder_button.get_filename()
 
             if path is not None and os.path.exists(path):
-                with suppress(GLib.Error):
+                try:
                     pid = self.spawn.run(RG_COMMAND + [pattern, path])
                     if RG_TEMPFILE_RE.match(path) is not None:
                         self.tempfile_tracker[pid] = path
 
                     self.panel.show()
+                except GLib.Error:
+                    self.flash_message(self.window_.get_statusbar(), "Failed to start the 'rg' process")
 
     def on_process_finished(self, _, pid):
         GLib.spawn_close_pid(pid)
@@ -153,6 +156,6 @@ class SearchDialog(Gtk.Dialog):
                 ])
 
     def on_stderr_data(self, _, lines):
-        pass
+        pass # TODO: Some logging
 
 # vim: ft=python3
