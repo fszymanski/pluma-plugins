@@ -41,6 +41,7 @@ class SearchDialog(Gtk.Dialog, StatusbarFlashMessage):
     current_doc_radio = Gtk.Template.Child()
     folder_radio = Gtk.Template.Child()
     choose_folder_button = Gtk.Template.Child()
+    find_button = Gtk.Template.Child()
 
     def __init__(self, window, panel):
         super().__init__(parent=window)
@@ -56,6 +57,7 @@ class SearchDialog(Gtk.Dialog, StatusbarFlashMessage):
 
         self.current_doc_radio.connect(
             "toggled", lambda b: self.choose_folder_button.set_sensitive(not b.get_active()))
+        self.search_entry.connect("changed", lambda e: self.find_button.set_sensitive(e.get_text() != ""))
 
         self.spawn = AsyncSpawn()
         self.spawn.connect("process-started", lambda _: self.panel.clear())
@@ -104,35 +106,35 @@ class SearchDialog(Gtk.Dialog, StatusbarFlashMessage):
 
     @Gtk.Template.Callback()
     def on_find_button_clicked(self, _):
-        if (pattern := self.search_entry.get_text()):
-            self.append_pattern_to_search_history(pattern)
+        pattern = self.search_entry.get_text()
+        self.append_pattern_to_search_history(pattern)
 
-            path = None
-            if self.current_doc_radio.get_active():
-                if (doc := self.window_.get_active_document()) is not None:
-                    if (location := doc.get_location()) is not None and location.query_exists():
-                        path = location.get_path()
-                    else:
-                        start, end = doc.get_bounds()
-                        text = doc.get_text(start, end, True)
+        path = None
+        if self.current_doc_radio.get_active():
+            if (doc := self.window_.get_active_document()) is not None:
+                if (location := doc.get_location()) is not None and location.query_exists():
+                    path = location.get_path()
+                else:
+                    start, end = doc.get_bounds()
+                    text = doc.get_text(start, end, True)
 
-                        with tempfile.NamedTemporaryFile(
-                                mode="w", prefix="pluma.ripgrep.", dir="/tmp", delete=False) as f:
-                            f.write(text)
+                    with tempfile.NamedTemporaryFile(
+                            mode="w", prefix="pluma.ripgrep.", dir="/tmp", delete=False) as f:
+                        f.write(text)
 
-                        path = f.name
-            else:
-                path = self.choose_folder_button.get_filename()
+                    path = f.name
+        else:
+            path = self.choose_folder_button.get_filename()
 
-            if path is not None and os.path.exists(path):
-                try:
-                    pid = self.spawn.run(RG_COMMAND + [pattern, path])
-                    if RG_TEMPFILE_RE.match(path) is not None:
-                        self.tempfile_tracker[pid] = path
+        if path is not None and os.path.exists(path):
+            try:
+                pid = self.spawn.run(RG_COMMAND + [pattern, path])
+                if RG_TEMPFILE_RE.match(path) is not None:
+                    self.tempfile_tracker[pid] = path
 
-                    self.panel.show()
-                except GLib.Error:
-                    self.flash_message(self.window_.get_statusbar(), "Failed to start the 'rg' process")
+                self.panel.show()
+            except GLib.Error:
+                self.flash_message(self.window_.get_statusbar(), "Failed to start the 'rg' process")
 
     def on_process_finished(self, _, pid):
         GLib.spawn_close_pid(pid)
