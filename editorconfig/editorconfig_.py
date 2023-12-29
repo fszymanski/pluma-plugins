@@ -11,7 +11,7 @@ from gi.repository import Gio, GObject, Pluma
 
 import editorconfig
 
-logger = logging.getLogger("EditorConfig")
+logger = logging.getLogger("pluma-editorconfig")
 
 
 class EditorConfigPlugin(GObject.Object, Pluma.ViewActivatable):
