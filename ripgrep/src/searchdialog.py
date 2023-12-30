@@ -17,14 +17,14 @@ from .utils import AsyncSpawn, StatusbarFlashMessage
 logger = logging.getLogger("pluma-ripgrep")
 
 MAX_SEARCH_HISTORY = 100
-RG_COMMAND = [
+RG_DEFAULT_COMMAND = [
     "rg",
     "--color=never",
     "--no-heading",
     "--with-filename",
     "--line-number",
     "--column",
-    "--smart-case",
+    "--ignore-case",
     "--fixed-strings"
 ]
 RG_SCHEMA = "org.mate.pluma.plugins.ripgrep"
@@ -128,7 +128,7 @@ class SearchDialog(Gtk.Dialog, StatusbarFlashMessage):
             path = self.choose_folder_button.get_filename()
 
         if path is not None and os.path.exists(path):
-            cmd = RG_COMMAND[:]
+            cmd = RG_DEFAULT_COMMAND[:]
             if self.match_case_check.get_active():
                 cmd.append("--case-sensitive")
 
