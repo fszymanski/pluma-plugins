@@ -5,6 +5,8 @@ pluginsdir = datadir / 'pluma' / 'plugins'
 schemasdir = datadir / 'glib-2.0' / 'schemas'
 pkgdatadir = pluginsdir / meson.project_name()
 
+rg = find_program('rg', required: true)
+
 conf_data = configuration_data()
 conf_data.set_quoted('PKG_DATA_DIR', pkgdatadir)
 
