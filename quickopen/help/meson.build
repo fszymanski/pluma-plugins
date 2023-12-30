@@ -1,2 +1,2 @@
-gnome.yelp('pluma-plugin-' + meson.project_name(),
+gnome.yelp('pluma-plugins-' + meson.project_name(),
            sources: ['index.page'])
