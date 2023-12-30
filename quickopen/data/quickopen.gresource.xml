@@ -3,6 +3,5 @@
   <gresource prefix="/org/mate/pluma/plugins/quickopen">
     <file preprocess="xml-stripblanks">ui/configurationbox.ui</file>
     <file preprocess="xml-stripblanks">ui/filechooserdialog.ui</file>
-    <file preprocess="xml-stripblanks">ui/helpdialog.ui</file>
   </gresource>
 </gresources>

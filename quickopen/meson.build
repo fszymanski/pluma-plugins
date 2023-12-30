@@ -1,5 +1,7 @@
 project('quickopen', license: 'GPL-3.0-or-later')
 
+gnome = import('gnome')
+
 datadir = get_option('prefix') / get_option('datadir')
 pluginsdir = datadir / 'pluma' / 'plugins'
 schemasdir = datadir / 'glib-2.0' / 'schemas'
@@ -21,5 +23,7 @@ configure_file(input: '__init__.py.in',
                install_dir: pkgdatadir)
 
 install_subdir('src', install_dir: pkgdatadir, strip_directory : true)
+
+subdir('help')
 
 meson.add_install_script('../build-aux/meson/post_install.py', pkgdatadir)

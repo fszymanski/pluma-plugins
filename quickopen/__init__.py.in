@@ -89,3 +89,5 @@ class QuickOpenConfigurable(GObject.Object, PeasGtk.Configurable):
         recursive_search_check.connect("toggled", lambda b: exclude_dirs_entry.set_sensitive(b.get_active()))
 
         return builder.get_object("configuration_box")
+
+# vim: ft=python3

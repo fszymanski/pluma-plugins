@@ -1,5 +1,3 @@
-gnome = import('gnome')
-
 gnome.compile_resources('quickopen',
                         'quickopen.gresource.xml',
                         gresource_bundle: true,

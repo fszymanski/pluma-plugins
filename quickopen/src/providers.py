@@ -141,3 +141,5 @@ def get_files_from_bookmark_dirs():
         pass
 
     return locations
+
+# vim: ft=python3

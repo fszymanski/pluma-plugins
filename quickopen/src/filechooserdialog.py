@@ -10,7 +10,6 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Pluma", "1.0")
 from gi.repository import Gdk, Gio, GLib, Gtk, Pluma
 
-from .helpdialog import HelpDialog
 from .providers import (
     get_files_from_active_document_dir, get_files_from_bookmark_dirs, get_files_from_git_dir,
     get_files_from_open_documents_dir, get_files_from_virtual_root_dir, get_recent_files
@@ -30,14 +29,11 @@ class FileChooserDialog(Gtk.Dialog):
     file_label = Gtk.Template.Child()
     file_view = Gtk.Template.Child()
     filter_entry = Gtk.Template.Child()
-    cancel_button = Gtk.Template.Child()
-    help_button = Gtk.Template.Child()
-    open_button = Gtk.Template.Child()
 
     def __init__(self, window):
         super().__init__(parent=window)
 
-        self._window = window
+        self.window_ = window
 
         column = Gtk.TreeViewColumn.new()
 
@@ -58,11 +54,7 @@ class FileChooserDialog(Gtk.Dialog):
 
 #        self.filter_entry.connect("search-changed", self.select_first_row)
 
-        self.file_view.connect("row-activated", self.open_file)
-
-        self.cancel_button.connect("clicked", lambda _: self.destroy())
-        self.help_button.connect("clicked", lambda _: HelpDialog(self))
-        self.open_button.connect("clicked", self.open_file)
+        self.file_view.connect("row-activated", self.on_open_button_clicked)
 
         self.connect("key-press-event", self.on_key_press)
 
@@ -130,24 +122,33 @@ class FileChooserDialog(Gtk.Dialog):
         else:
             self.file_label.set_text("")
 
-    def open_file(self, *_):
-        selection = self.file_view.get_selection()
-        model, iter_ = selection.get_selected()
-        if iter_ is not None:
-            location = model.get_value(iter_, COLUMN.LOCATION)
-            if location.query_exists():
-                if (tab := self._window.get_tab_from_location(location)) is None:
-                    self._window.create_tab_from_uri(location.get_uri(), Pluma.encoding_get_utf8(), 0, False, True)
-                else:
-                    self._window.set_active_tab(tab)
-
-            self.destroy()
-
     def switch_model(self, provider_func, title):
         self.set_title(f"Quick Open - {title}")
 
         self.model = self.create_and_fill_model(provider_func)
         self.file_view.set_model(self.model)
+
+    @Gtk.Template.Callback()
+    def on_help_button_clicked(self, _):
+        Gtk.show_uri(None, "help:pluma-plugin-quickopen", Gdk.CURRENT_TIME)
+
+    @Gtk.Template.Callback()
+    def on_cancel_button_clicked(self, _):
+        self.destroy()
+
+    @Gtk.Template.Callback()
+    def on_open_button_clicked(self, *_):
+        selection = self.file_view.get_selection()
+        model, iter_ = selection.get_selected()
+        if iter_ is not None:
+            location = model.get_value(iter_, COLUMN.LOCATION)
+            if location.query_exists():
+                if (tab := self.window_.get_tab_from_location(location)) is None:
+                    self.window_.create_tab_from_uri(location.get_uri(), Pluma.encoding_get_utf8(), 0, False, True)
+                else:
+                    self.window_.set_active_tab(tab)
+
+            self.destroy()
 
     def on_key_press(self, _, event):
         ctrl = (event.state & Gdk.ModifierType.CONTROL_MASK)
@@ -169,3 +170,5 @@ class FileChooserDialog(Gtk.Dialog):
             self.switch_model(get_files_from_bookmark_dirs, "Bookmark Directories")
 
         return False
+
+# vim: ft=python3
