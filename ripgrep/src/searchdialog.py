@@ -36,12 +36,13 @@ RG_TEMPFILE_RE = re.compile(r"^/tmp/pluma\.ripgrep\.")
 class SearchDialog(Gtk.Dialog, StatusbarFlashMessage):
     __gtype_name__ = "RipgrepSearchDialog"
 
+    choose_folder_button = Gtk.Template.Child()
+    current_doc_radio = Gtk.Template.Child()
+    find_button = Gtk.Template.Child()
+    folder_radio = Gtk.Template.Child()
+    match_case_check = Gtk.Template.Child()
     search_combo = Gtk.Template.Child()
     search_entry = Gtk.Template.Child()
-    current_doc_radio = Gtk.Template.Child()
-    folder_radio = Gtk.Template.Child()
-    choose_folder_button = Gtk.Template.Child()
-    find_button = Gtk.Template.Child()
 
     def __init__(self, window, panel):
         super().__init__(parent=window)
@@ -127,8 +128,13 @@ class SearchDialog(Gtk.Dialog, StatusbarFlashMessage):
             path = self.choose_folder_button.get_filename()
 
         if path is not None and os.path.exists(path):
+            cmd = RG_COMMAND[:]
+            if self.match_case_check.get_active():
+                cmd.append("--case-sensitive")
+
+            cmd += [pattern, path]
             try:
-                pid = self.spawn.run(RG_COMMAND + [pattern, path])
+                pid = self.spawn.run(cmd)
                 if RG_TEMPFILE_RE.match(path) is not None:
                     self.tempfile_tracker[pid] = path
 
