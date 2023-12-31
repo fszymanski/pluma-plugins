@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright (c) 2023 Filip Szymański <fszymanski.pl@gmail.com>
+# Copyright (c) 2023-2024 Filip Szymański <fszymanski.pl@gmail.com>
 
 from enum import IntEnum
 

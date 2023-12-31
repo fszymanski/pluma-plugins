@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright (c) 2023 Filip Szymański <fszymanski.pl@gmail.com>
+# Copyright (c) 2023-2024 Filip Szymański <fszymanski.pl@gmail.com>
 
 import os
 
@@ -69,7 +69,7 @@ class QuickOpenConfigurable(GObject.Object, PeasGtk.Configurable):
     def do_create_configure_widget(self):
         settings = Gio.Settings.new("org.mate.pluma.plugins.quickopen")
 
-        builder = Gtk.Builder.new_from_resource("/org/mate/pluma/plugins/quickopen/ui/configurationbox.ui")
+        builder = Gtk.Builder.new_from_resource("/org/mate/pluma/plugins/quickopen/ui/configurevbox.ui")
 
         recursive_search_check = builder.get_object("recursive_search_check")
         recursive_search_check.set_active(settings.get_boolean("recursive-file-search"))
@@ -88,6 +88,6 @@ class QuickOpenConfigurable(GObject.Object, PeasGtk.Configurable):
         recursive_search_check.connect("toggled", lambda b: exclude_dirs_label.set_sensitive(b.get_active()))
         recursive_search_check.connect("toggled", lambda b: exclude_dirs_entry.set_sensitive(b.get_active()))
 
-        return builder.get_object("configuration_box")
+        return builder.get_object("configure_vbox")
 
 # vim: ft=python3
