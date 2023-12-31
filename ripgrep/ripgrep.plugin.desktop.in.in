@@ -4,6 +4,7 @@ Module=ripgrep
 IAge=3
 Name=Ripgrep
 Description=Recursively search the current file/directory for lines matching a pattern
+Icon=edit-find
 Authors=Filip Szymański <fszymanski.pl@gmail.com>
 Copyright=Copyright © 2024 Filip Szymański
 Website=https://github.com/fszymanski/pluma-plugins
