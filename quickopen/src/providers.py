@@ -2,6 +2,7 @@
 # Copyright (c) 2023-2024 Filip Szymański <fszymanski.pl@gmail.com>
 
 import subprocess
+from contextlib import suppress
 from pathlib import Path
 
 import gi
@@ -134,11 +135,9 @@ def get_files_from_git_dir():
 
 def get_files_from_bookmark_dirs():
     locations = []
-    try:
+    with suppress(TypeError):
         for dirname in get_bookmark_dirs():
             locations += get_files_from_dir(dirname)
-    except TypeError:
-        pass
 
     return locations
 
