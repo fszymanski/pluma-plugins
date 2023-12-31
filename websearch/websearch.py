@@ -96,7 +96,7 @@ class WebSearchConfigurable(GObject.Object, PeasGtk.Configurable):
         settings = Gio.Settings.new(WEB_SEARCH_SCHEMA)
 
         builder = Gtk.Builder.new()
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), "configurationbox.ui"))
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), "configurevbox.ui"))
 
         browser_entry = builder.get_object("browser_entry")
         browser_entry.set_text(settings.get_string("browser"))
@@ -112,4 +112,4 @@ class WebSearchConfigurable(GObject.Object, PeasGtk.Configurable):
         custom_browser_check.connect("toggled", lambda b: settings.set_boolean("use-custom-browser", b.get_active()))
         custom_browser_check.connect("toggled", lambda b: browser_entry.set_sensitive(b.get_active()))
 
-        return builder.get_object("configuration_box")
+        return builder.get_object("configure_vbox")
