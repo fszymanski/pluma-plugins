@@ -47,42 +47,40 @@ class FileChooserDialog(Gtk.Dialog):
 
         self.file_view.append_column(column)
 
-        self.filter_entry.connect("search-changed", lambda _: self.model.refilter())
+        self.store = Gtk.ListStore.new([Gio.Icon, str, Gio.File])
+        sortable = Gtk.TreeModelSort.new_with_model(self.store)
+        sortable.set_sort_func(COLUMN.NAME, self.compare_names, None)
+        sortable.set_sort_column_id(COLUMN.NAME, Gtk.SortType.ASCENDING)
+        file_filter = sortable.filter_new()
+        file_filter.set_visible_func(self.file_filter_func)
+        self.file_view.set_model(file_filter)
+
+        self.filter_entry.connect("search-changed", lambda _: file_filter.refilter())
+#        self.filter_entry.connect("search-changed", self.select_first_row)
+        self.file_view.connect("row-activated", self.on_open_button_clicked)
 
         selection = self.file_view.get_selection()
         selection.connect("changed", self.file_selection_changed)
-
-#        self.filter_entry.connect("search-changed", self.select_first_row)
-
-        self.file_view.connect("row-activated", self.on_open_button_clicked)
 
         self.connect("key-press-event", self.on_key_press)
 
         self.show_all()
 
-        self.model = self.create_and_fill_model(get_recent_files)
-        self.file_view.set_model(self.model)
+        self.fill_model(get_recent_files, "Recent Files")
 
-    def create_and_fill_model(self, provider_func):
+    def fill_model(self, provider_func, title):
+        self.set_title(f"Quick Open - {title}")
+
         self.set_busy_cursor()
 
-        store = Gtk.ListStore.new([Gio.Icon, str, Gio.File])
+        self.store.clear()
         for location in provider_func():
             if location.is_native():
                 info = location.query_info("standard::*", Gio.FileQueryInfoFlags.NONE, None)
                 if info is not None:
-                    store.append([info.get_icon(), info.get_display_name(), location])
-
-        sortable = Gtk.TreeModelSort.new_with_model(store)
-        sortable.set_sort_func(COLUMN.NAME, self.compare_names, None)
-        sortable.set_sort_column_id(COLUMN.NAME, Gtk.SortType.ASCENDING)
-
-        file_filter = sortable.filter_new()
-        file_filter.set_visible_func(self.file_filter_func)
+                    self.store.append([info.get_icon(), info.get_display_name(), location])
 
         self.set_busy_cursor(False)
-
-        return file_filter
 
     def set_busy_cursor(self, busy=True):
         if busy:
@@ -122,12 +120,6 @@ class FileChooserDialog(Gtk.Dialog):
         else:
             self.file_label.set_text("")
 
-    def switch_model(self, provider_func, title):
-        self.set_title(f"Quick Open - {title}")
-
-        self.model = self.create_and_fill_model(provider_func)
-        self.file_view.set_model(self.model)
-
     @Gtk.Template.Callback()
     def on_help_button_clicked(self, _):
         Gtk.show_uri(None, "help:pluma-plugins", Gdk.CURRENT_TIME)
@@ -157,17 +149,17 @@ class FileChooserDialog(Gtk.Dialog):
             self.destroy()
 
         if ctrl and event.keyval == Gdk.KEY_r:
-            self.switch_model(get_recent_files, "Recent Files")
+            self.fill_model(get_recent_files, "Recent Files")
         elif ctrl and event.keyval == Gdk.KEY_f:
-            self.switch_model(get_files_from_virtual_root_dir, "Virtual Root Directory")
+            self.fill_model(get_files_from_virtual_root_dir, "Virtual Root Directory")
         elif ctrl and event.keyval == Gdk.KEY_d:
-            self.switch_model(get_files_from_active_document_dir, "Active Document Directory")
+            self.fill_model(get_files_from_active_document_dir, "Active Document Directory")
         elif ctrl and event.keyval == Gdk.KEY_g:
-            self.switch_model(get_files_from_git_dir, "Active Document Git Directory")
+            self.fill_model(get_files_from_git_dir, "Active Document Git Directory")
         elif ctrl and event.keyval == Gdk.KEY_o:
-            self.switch_model(get_files_from_open_documents_dir, "Open Documents Directory")
+            self.fill_model(get_files_from_open_documents_dir, "Open Documents Directory")
         elif ctrl and event.keyval == Gdk.KEY_b:
-            self.switch_model(get_files_from_bookmark_dirs, "Bookmark Directories")
+            self.fill_model(get_files_from_bookmark_dirs, "Bookmark Directories")
 
         return False
 
