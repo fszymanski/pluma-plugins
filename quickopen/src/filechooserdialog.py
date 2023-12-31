@@ -130,7 +130,7 @@ class FileChooserDialog(Gtk.Dialog):
 
     @Gtk.Template.Callback()
     def on_help_button_clicked(self, _):
-        Gtk.show_uri(None, "help:pluma-plugins-quickopen", Gdk.CURRENT_TIME)
+        Gtk.show_uri(None, "help:pluma-plugins", Gdk.CURRENT_TIME)
 
     @Gtk.Template.Callback()
     def on_cancel_button_clicked(self, _):

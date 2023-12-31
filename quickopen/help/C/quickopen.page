@@ -1,0 +1,54 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      xmlns:its="http://www.w3.org/2005/11/its"
+      type="topic" style="task"
+      id="plugin-quickopen">
+
+  <info>
+    <link type="guide" xref="index#pluma-additional-plugins"/>
+    <revision version="1.26" date="2024-01-01" status="review"/>
+
+    <credit type="author">
+      <name>Filip Szymański</name>
+      <email its:translate="no">fszymanski.pl@gmail.com</email>
+    </credit>
+
+    <desc>Quickly open files.</desc>
+  </info>
+
+  <title>Quickopen</title>
+
+  <table frame="top bottom">
+    <title>Keyboard shortcuts</title>
+    <thead>
+      <tr>
+        <td><p>Shortcut</p></td><td><p>Description</p></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><p><keyseq><key>Ctrl</key><key>R</key></keyseq></p></td>
+        <td><p>Show recently opened files. <em>(Default)</em></p></td>
+      </tr>
+      <tr>
+        <td><p><keyseq><key>Ctrl</key><key>F</key></keyseq></p></td>
+        <td><p>Show files from the <em>File Browser Pane</em> plugin root directory.</p></td>
+      </tr>
+      <tr>
+        <td><p><keyseq><key>Ctrl</key><key>D</key></keyseq></p></td>
+        <td><p>Show files from directory of the current active document.</p></td>
+      </tr>
+      <tr>
+        <td><p><keyseq><key>Ctrl</key><key>G</key></keyseq></p></td>
+        <td><p>Show files from <em>git</em> directory of the current active document.</p></td>
+      </tr>
+      <tr>
+        <td><p><keyseq><key>Ctrl</key><key>O</key></keyseq></p></td>
+        <td><p>Show files from directory of the current open documents.</p></td>
+      </tr>
+      <tr>
+        <td><p><keyseq><key>Ctrl</key><key>B</key></keyseq></p></td>
+        <td><p>Show files from the bookmark directories.</p></td>
+      </tr>
+    </tbody>
+  </table>
+</page>

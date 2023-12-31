@@ -1,40 +1,35 @@
 <page xmlns="http://projectmallard.org/1.0/"
-      type="guide"
+      xmlns:its="http://www.w3.org/2005/11/its"
+      type="guide" style="task"
       id="index">
 
-  <title>Keyboard shortcuts</title>
+  <info>
+    <title type="link">Pluma Plugins</title>
+    <title type="text">Pluma Plugins</title>
+    <link type="guide" xref="index#pluma-plugins"/>
+    <desc>Use plugins to customize how pluma works for you.</desc>
+    <credit type="author">
+      <name>Jim Campbell</name>
+      <email its:translate="no">jcampbell@gnome.org</email>
+    </credit>
+    <credit type="editor">
+      <name>Robert Buj</name>
+      <email its:translate="no">robert.buj@gmail.com</email>
+    </credit>
+    <include href="legal-plugins.xml" xmlns="http://www.w3.org/2001/XInclude"/>
+  </info>
 
-  <table frame="top bottom">
-    <thead>
-      <tr>
-        <td><p>Shortcut</p></td><td><p>Description</p></td>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><p><keyseq><key>Ctrl</key><key>R</key></keyseq></p></td>
-        <td><p>Show recently opened files. <em>(Default)</em></p></td>
-      </tr>
-      <tr>
-        <td><p><keyseq><key>Ctrl</key><key>F</key></keyseq></p></td>
-        <td><p>Show files from the <em>File Browser Pane</em> plugin root directory.</p></td>
-      </tr>
-      <tr>
-        <td><p><keyseq><key>Ctrl</key><key>D</key></keyseq></p></td>
-        <td><p>Show files from directory of the current active document.</p></td>
-      </tr>
-      <tr>
-        <td><p><keyseq><key>Ctrl</key><key>G</key></keyseq></p></td>
-        <td><p>Show files from <em>git</em> directory of the current active document.</p></td>
-      </tr>
-      <tr>
-        <td><p><keyseq><key>Ctrl</key><key>O</key></keyseq></p></td>
-        <td><p>Show files from directory of the current open documents.</p></td>
-      </tr>
-      <tr>
-        <td><p><keyseq><key>Ctrl</key><key>B</key></keyseq></p></td>
-        <td><p>Show files from the bookmark directories.</p></td>
-      </tr>
-    </tbody>
-  </table>
+  <title>
+    <media type="image" mime="image/png" src="figures/pluma-icon.png" its:translate="no" />
+    <media type="image" mime="image/png" src="figures/pluma-plugin-icon.png" its:translate="no" />
+    Pluma Plugins
+  </title>
+  <p>You can do more with <app>pluma</app> by using plugins. Several plugins
+  are installed by default, but a large number of other plugins are available
+  separately.</p>
+
+  <section id="pluma-additional-plugins" style="2column">
+    <title>Additional Pluma Plugins</title>
+  </section>
+
 </page>
