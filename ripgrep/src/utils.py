@@ -6,7 +6,7 @@ import os
 from gi.repository import GLib, GObject
 
 
-class StatusbarFlashMessage:
+class StatusbarMessage:
     def __init__(self):
         self.__timeout = 0
         self.__context_id = None

@@ -7,15 +7,15 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Pluma", "1.0")
 from gi.repository import Gtk, Pluma, Gio
 
-from .utils import StatusbarFlashMessage
+from .utils import StatusbarMessage
 
 
-class ResultsPanel(Gtk.ScrolledWindow, StatusbarFlashMessage):
+class ResultsPanel(Gtk.ScrolledWindow, StatusbarMessage):
     __gtype_name__ = "RipgrepResultsPanel"
 
     def __init__(self, window):
         super().__init__()
-        StatusbarFlashMessage.__init__(self)
+        StatusbarMessage.__init__(self)
 
         self.window_ = window
 

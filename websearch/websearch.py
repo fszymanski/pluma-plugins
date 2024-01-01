@@ -37,7 +37,7 @@ class WebSearchPlugin(GObject.Object, Pluma.ViewActivatable):
     def do_update_state(self):
         pass
 
-    def append_search_to_context_menu(self, view, popup):
+    def append_search_to_context_menu(self, _, popup):
         menu_item = Gtk.MenuItem.new_with_label("Web Search")
         menu_item.connect("activate", lambda _: self.search())
         menu_item.show()

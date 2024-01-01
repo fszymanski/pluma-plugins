@@ -12,7 +12,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gio, GLib, Gtk
 
-from .utils import AsyncSpawn, StatusbarFlashMessage
+from .utils import AsyncSpawn, StatusbarMessage
 
 logger = logging.getLogger("pluma-ripgrep")
 
@@ -33,7 +33,7 @@ RG_TEMPFILE_RE = re.compile(r"^/tmp/pluma\.ripgrep\.")
 
 
 @Gtk.Template(resource_path="/org/mate/pluma/plugins/ripgrep/ui/searchdialog.ui")
-class SearchDialog(Gtk.Dialog, StatusbarFlashMessage):
+class SearchDialog(Gtk.Dialog, StatusbarMessage):
     __gtype_name__ = "RipgrepSearchDialog"
 
     choose_folder_button = Gtk.Template.Child()
@@ -46,7 +46,7 @@ class SearchDialog(Gtk.Dialog, StatusbarFlashMessage):
 
     def __init__(self, window, panel):
         super().__init__(parent=window)
-        StatusbarFlashMessage.__init__(self)
+        StatusbarMessage.__init__(self)
 
         self.window_ = window
         self.panel = panel
