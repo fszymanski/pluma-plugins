@@ -50,7 +50,7 @@ class OpenURIPlugin(GObject.Object, Pluma.ViewActivatable):
 
         return False
 
-    def open_uri(self):
+    def open_uri(self, uri):
         cmd = ["xdg-open", uri]
         if os.getuid() == 0 and "SUDO_USER" in os.environ:
             cmd = ["sudo", "-u", os.environ["SUDO_USER"]] + cmd
@@ -84,7 +84,7 @@ class OpenURIPlugin(GObject.Object, Pluma.ViewActivatable):
 
         if self.is_valid_uri(uri):
             menu_item = Gtk.MenuItem.new_with_label(f"Open {uri if len(uri) < 64 else uri[:64] + '...'}")
-            menu_item.connect("activate", lambda _: self.open_uri())
+            menu_item.connect("activate", lambda _: self.open_uri(uri))
             menu_item.show()
 
             separator = Gtk.SeparatorMenuItem.new()
