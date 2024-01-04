@@ -25,6 +25,7 @@ Note:
 - All plugins require `Pluma >= 1.25.2`.
 - The *editorconfig* plugin requires `python3-editorconfig`.
 - The *gitbranchindicator* plugin requires `libgit2-glib, gir1.2-ggit`.
+- The *openuri* plugin requires `xdg-open`.
 - The *pastebin* plugin requires `python3-requests`.
 - The *quickopen* plugin requires `git`.
 - The *ripgrep* plugin requires `ripgrep`.
