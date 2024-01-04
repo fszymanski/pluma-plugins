@@ -9,5 +9,5 @@
 
 ## New plugins:
 
-- [ ] Port [open-uri-context-menu](https://github.com/linuxmint/xed/tree/master/plugins/open-uri-context-menu)
+- [X] Port [open-uri-context-menu](https://github.com/linuxmint/xed/tree/master/plugins/open-uri-context-menu)
 - [ ] Write a linter

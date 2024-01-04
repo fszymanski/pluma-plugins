@@ -11,6 +11,7 @@ Currently available plugins:
 - **gitbranchindicator** - *Show the current git branch on status bar.*
 - **joinlines** - *Join selected lines.*
 - **macro** - *Record and playback a macro.*
+- **openuri** - *Opens URI in the user's preferred application.*
 - **pastebin** - *Store any text on Pastebin.com for easy sharing.*
 - **quickopen** - *Quickly open files. (WORK IN PROGRESS!!!)*
 - **restoreopenfiles** - *Restore previously open files.*
@@ -34,14 +35,14 @@ Note:
 $ git clone https://github.com/fszymanski/pluma-plugins.git
 ```
 
-**Note:** `quickopen` and `ripgrep` plugin installation requires [meson](https://mesonbuild.com/).
+Plugins that use [meson](https://mesonbuild.com/):
 
 ```sh
 $ cd path/to/plugin
 $ ./install.sh
 ```
 
-For the rest of the plugins just:
+the remaining rest:
 
 ```sh
 $ mkdir -p ~/.local/share/pluma/plugins

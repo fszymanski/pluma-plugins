@@ -1,0 +1,9 @@
+[Plugin]
+Loader=python3
+Module=openuri
+IAge=3
+Name=Open URI
+Description=Opens URI in the user's preferred application
+Authors=Filip Szymański <fszymanski.pl@gmail.com>
+Copyright=Copyright © 2024 Filip Szymański
+Website=https://github.com/fszymanski/pluma-plugins
