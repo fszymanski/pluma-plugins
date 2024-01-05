@@ -12,7 +12,7 @@ gi.require_version("Pluma", "1.0")
 from gi.repository import GObject, Gtk, Pluma
 
 # Because of the Markdown syntax skip "(" and ")"
-RFC_3986_URI_VALID_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~:/?#[]@!$&'*+,;="
+RFC_3986_URI_VALID_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~:/?#[]@!$&'*+,;=%"
 
 
 class OpenURIPlugin(GObject.Object, Pluma.ViewActivatable):
@@ -44,7 +44,9 @@ class OpenURIPlugin(GObject.Object, Pluma.ViewActivatable):
         except:
             return False
 
-        if all([result.scheme, result.netloc]) or (all([result.scheme, result.path]) and result.scheme == "file"):
+        if all([result.scheme, result.netloc]) or \
+                (all([result.scheme, result.path]) and result.scheme == "file") or \
+                (all([result.scheme, result.path]) and result.scheme == "mailto"):
             return True
 
         return False
