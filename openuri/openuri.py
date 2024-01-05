@@ -45,8 +45,7 @@ class OpenURIPlugin(GObject.Object, Pluma.ViewActivatable):
             return False
 
         if all([result.scheme, result.netloc]) or \
-                (all([result.scheme, result.path]) and result.scheme == "file") or \
-                (all([result.scheme, result.path]) and result.scheme == "mailto"):
+                (all([result.scheme, result.path]) and result.scheme in ["file", "mailto"]):
             return True
 
         return False
