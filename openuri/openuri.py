@@ -2,6 +2,7 @@
 # Copyright (c) 2024 Filip Szymański <fszymanski.pl@gmail.com>
 
 import os
+import re
 import subprocess
 from urllib.parse import urlparse
 
@@ -12,7 +13,7 @@ gi.require_version("Pluma", "1.0")
 from gi.repository import GObject, Gtk, Pluma
 
 # Because of the Markdown syntax skip "(" and ")"
-RFC_3986_URI_VALID_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~:/?#[]@!$&'*+,;=%"
+RFC_3986_URI_VALID_CHARS_RE = re.compile(r"[\w!\#%\&'\*\+,\-\./:;=\?@\[\]\~\$]+")
 
 
 class OpenURIPlugin(GObject.Object, Pluma.ViewActivatable):
@@ -71,11 +72,11 @@ class OpenURIPlugin(GObject.Object, Pluma.ViewActivatable):
             end = start.copy()
 
             while start.forward_char():
-                if start.get_char() not in RFC_3986_URI_VALID_CHARS:
+                if RFC_3986_URI_VALID_CHARS_RE.match(start.get_char()) is None:
                     break
 
             while end.backward_char():
-                if end.get_char() not in RFC_3986_URI_VALID_CHARS:
+                if RFC_3986_URI_VALID_CHARS_RE.match(end.get_char()) is None:
                     end.forward_char()
                     break
 
